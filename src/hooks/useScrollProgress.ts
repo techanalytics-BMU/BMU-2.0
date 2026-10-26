@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
 type ScrollProgressOptions = {
   /**
    * 'enter'  – 0 when the element's top reaches the bottom of the screen, 1 after scrolling
-   *            `distance` screen heights (or once the whole element is visible, if shorter).
+   *            `distance` screen heights (sooner if the page ends before that).
    * 'pinned' – for a tall element with a `position: sticky` child: 0 when its top reaches the
    *            top of the screen, 1 when its bottom reaches the bottom (the whole "pinned" stretch).
    */
@@ -41,7 +41,10 @@ export function useScrollProgress<T extends HTMLElement>({
       if (!reduceMotion && mode === 'pinned') {
         progress = clamp(-top / Math.max(height - viewportHeight, 1));
       } else if (!reduceMotion) {
-        const span = Math.min(viewportHeight * distance, height);
+        // Never longer than the scrolling left on the page, so it always completes
+        const maxScroll = document.documentElement.scrollHeight - viewportHeight;
+        const reachable = viewportHeight - (top + window.scrollY) + maxScroll;
+        const span = Math.max(Math.min(viewportHeight * distance, reachable), 1);
         progress = clamp((viewportHeight - top) / span);
       }
       element.style.setProperty('--progress', progress.toFixed(4));

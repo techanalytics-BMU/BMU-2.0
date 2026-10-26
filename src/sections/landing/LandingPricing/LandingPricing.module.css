@@ -8,7 +8,7 @@
   /* Soft green glow at the top */
   background:
     radial-gradient(ellipse 60% 45% at 50% 0%, rgba(140, 198, 63, 0.16), transparent 70%),
-    #0d1014;
+    var(--color-bg);
 }
 
 /* ---------- Header ---------- */

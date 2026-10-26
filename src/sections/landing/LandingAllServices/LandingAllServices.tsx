@@ -1,14 +1,16 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { landingAllServices } from '@/data/landing/landingAllServices';
 import { useDragRotate } from '@/hooks/useDragRotate';
 import styles from './LandingAllServices.module.css';
 
 // The tiles sit on the inside of a 3D cylinder (the "ring"), seen from just outside it,
 // so the far side is visible: small in the centre, large and angled at the edges.
-// The ring spins continuously; swiping / dragging spins it faster or reverses it
-// (see src/hooks/useDragRotate.ts).
+// The ring spins continuously; dragging / swiping sideways spins it, up / down moves it
+// to show the top and bottom cards (see src/hooks/useDragRotate.ts).
+// Hovering (or tapping) a card reveals its "View More" button.
 const COLUMNS = 8; // tiles around the ring – 360 / 8 = 45° apart
 const ROWS = 5; // rows -2 … 2, row 0 sits behind the centre text.
 // Every column has the same rows – perspective alone decides how many fit on screen:
@@ -19,6 +21,7 @@ export default function LandingAllServices() {
   const { areaRef, targetRef } = useDragRotate<HTMLDivElement, HTMLDivElement>({
     autoSpeed: 6, // one full turn every 60 seconds
     sensitivity: 0.12,
+    verticalRange: 0.3, // up/down by up to 30% of the screen height
   });
 
   // 40 places (8 × 5), one per service. If there are fewer services
@@ -39,20 +42,37 @@ export default function LandingAllServices() {
       <div ref={areaRef} className={styles.stage}>
         <div ref={targetRef} className={styles.ring}>
           {slots.map(({ tile, angle, row, isDuplicate }, index) => (
-            <button
+            <div
               key={index}
-              type="button"
               className={styles.tile}
               style={{ '--angle': `${angle}deg`, '--row': row } as React.CSSProperties}
               aria-hidden={isDuplicate || undefined}
-              tabIndex={isDuplicate ? -1 : undefined}
             >
               {tile.image ? (
                 <Image src={tile.image} alt={tile.title} fill sizes="300px" draggable={false} />
               ) : (
                 <span className={styles.tileTitle}>{tile.title}</span>
               )}
-            </button>
+              {tile.href ? (
+                <Link
+                  href={tile.href}
+                  className={styles.viewMore}
+                  tabIndex={isDuplicate ? -1 : undefined}
+                  aria-label={`View more about ${tile.title}`}
+                >
+                  View More <span aria-hidden="true">→</span>
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  className={styles.viewMore}
+                  tabIndex={isDuplicate ? -1 : undefined}
+                  aria-label={`View more about ${tile.title}`}
+                >
+                  View More <span aria-hidden="true">→</span>
+                </button>
+              )}
+            </div>
           ))}
         </div>
 

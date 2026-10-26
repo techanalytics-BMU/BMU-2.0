@@ -7,7 +7,7 @@
   --head: clamp(0, calc((var(--progress) - 0.2) / 0.3), 1);
 
   overflow: hidden;
-  background: #0d1014;
+  background: var(--color-bg);
   font-family: var(--font-family-roboto);
 }
 
@@ -25,7 +25,7 @@
       rgba(255, 255, 255, 0.05) 50%,
       transparent calc(50% + 0.5px)
     ),
-    #0a0a0a;
+    var(--color-bg);
   box-shadow: 0 -20px 60px rgba(0, 0, 0, calc(0.5 * (1 - var(--card))));
   transform: translateY(calc((1 - var(--card)) * 140px)) scale(calc(0.86 + 0.14 * var(--card)));
   transform-origin: top center;

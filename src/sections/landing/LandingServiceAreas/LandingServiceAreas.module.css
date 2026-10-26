@@ -1,6 +1,6 @@
 .section {
   padding: var(--space-7) var(--space-4);
-  background: #050505;
+  background: var(--color-bg);
 }
 
 .inner {
@@ -60,19 +60,26 @@
   font-weight: 700;
 }
 
+/* Each column is as wide as its longest item, so nothing wraps;
+   the columns spread across the full width */
 .list {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-3) var(--space-4);
+  grid-template-columns: repeat(4, max-content);
+  justify-content: space-between;
+  gap: 0.7rem var(--space-4);
   margin: var(--space-5) 0 0;
   padding: 0;
   list-style: none;
 }
 
+.list li {
+  line-height: 1.3;
+}
+
 .item {
   color: #b8b8b8;
   font-size: 0.8125rem;
-  line-height: 1.4;
+  white-space: nowrap; /* one line per item */
   transition: color 0.2s ease;
 }
 
@@ -87,10 +94,12 @@ a.item:hover {
   }
 }
 
-/* ---------- Tablet: 2 columns ---------- */
-@media (max-width: 1024px) {
+/* ---------- Tablet / small laptop: 2 columns (4 single-line columns no longer fit) ---------- */
+@media (max-width: 1200px) {
   .list {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, max-content);
+    justify-content: start;
+    column-gap: var(--space-7);
   }
 }
 
@@ -113,6 +122,11 @@ a.item:hover {
 
   .list {
     grid-template-columns: 1fr;
+  }
+
+  /* Very narrow phones: allow the longest names to wrap rather than run off screen */
+  .item {
+    white-space: normal;
   }
 }
 

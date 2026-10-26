@@ -6,9 +6,7 @@
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+/* Smooth page scrolling is handled by Lenis (components/layout/SmoothScroll) */
 
 body {
   margin: 0;

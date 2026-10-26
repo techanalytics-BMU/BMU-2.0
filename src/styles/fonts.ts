@@ -1,4 +1,4 @@
-import { Albert_Sans, Audiowide, Roboto } from 'next/font/google';
+import { Albert_Sans, Audiowide, Instrument_Serif, Roboto } from 'next/font/google';
 
 // Fonts are downloaded at build time and self-hosted – no request to Google at runtime.
 // The CSS variables below are used in src/styles/variables.css.
@@ -15,6 +15,14 @@ export const audiowide = Audiowide({
   subsets: ['latin'],
   weight: '400',
   variable: '--font-audiowide',
+  display: 'swap',
+});
+
+// Serif accent heading (All Services)
+export const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-instrument-serif',
   display: 'swap',
 });
 

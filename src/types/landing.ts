@@ -11,6 +11,7 @@ export type LandingHeroContent = {
 
 export type LandingAllServicesTile = {
   title: string;
+  href?: string; // "View More" link – a plain button until set
   image?: string; // .webp screenshot – a white placeholder with the title is shown until set
 };
 

@@ -1,7 +1,7 @@
 /* Design tokens – change colours, fonts and sizes here and they update across the site */
 :root {
   /* Colours */
-  --color-bg: #030303;
+  --color-bg: #000000; /* page background – every section uses this */
   --color-surface: #0b121b;
   --color-text: #ffffff;
   --color-text-muted: #b5bac2;
@@ -16,6 +16,7 @@
     sans-serif;
   --font-family-display: var(--font-audiowide), var(--font-family-body);
   --font-family-roboto: var(--font-roboto), var(--font-family-body);
+  --font-family-serif: var(--font-instrument-serif), Georgia, serif;
 
   /* Font sizes */
   --font-size-xs: 0.75rem;
@@ -39,10 +40,10 @@
   --radius-md: 12px;
   --radius-pill: 999px;
 
-  /* Green planet rim – shared by LandingHero (top of arc) and LandingAllServices (rest of arc) */
+  /* Green planet arch at the bottom of LandingHero */
   --planet-width: 220vw;
   --planet-height: 240vw;
-  --planet-overlap: 0px; /* how far the arc reaches up into the Hero (0 = top of arc on the boundary) */
+  --planet-arch: 13vw; /* height of the visible arch: top of the arc → where it meets the screen edges */
 
   /* Layout */
   --container-width: 1100px;
