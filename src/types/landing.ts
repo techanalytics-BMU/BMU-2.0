@@ -70,6 +70,42 @@ export type LandingCoreContent = {
   items: LandingCoreItem[];
 };
 
+// Left panel of the website-builder mock-up
+export type LandingFreeTrialEditor = {
+  back: string; // small "‹ PAGES" link at the top
+  title: string; // page being edited
+  search: string; // search box placeholder
+  queue: string; // heading of the question queue, which moves on with each question
+};
+
+// A question people search on Google / ask AI tools, typed out as the post title
+export type LandingFreeTrialQuestion = {
+  service: string; // shown with the industry in the small green tag above the question
+  industry: string;
+  question: string; // keep it under ~55 characters so it fits on two lines
+};
+
+// The website being edited in the mock-up (its navbar mirrors the real one)
+export type LandingFreeTrialSite = {
+  url: string; // shown in the browser bar
+  links: string[];
+  cta: string; // pill button in the site's navbar
+  author: string; // byline under the question
+  status: string; // next to the byline, while the answer is "being written"
+  questions: LandingFreeTrialQuestion[]; // a new one every 6 seconds, in this order
+};
+
+export type LandingFreeTrialContent = {
+  badge: string; // small pill above the heading
+  headingLine1: string;
+  headingLine2: string;
+  note: string; // small print under the heading
+  cta: NavLink;
+  chip: NavLink; // glass pill on the green horizon under the mock-up
+  editor: LandingFreeTrialEditor;
+  site: LandingFreeTrialSite;
+};
+
 export type LandingServiceAreasItem = {
   label: string;
   href?: string; // plain text until a link is added

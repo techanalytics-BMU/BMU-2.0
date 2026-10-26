@@ -1,0 +1,710 @@
+/* Scroll-driven, like LandingCore: useScrollProgress sets --progress (0 → 1) on the section
+   (header rises in over 0 – 0.4) and, separately, on the stage, where it becomes --lift
+   (the window stands up from a laid-back tilt until it is fully on screen). */
+.section {
+  --progress: 0;
+  --head: clamp(0, calc(var(--progress) / 0.4), 1);
+
+  overflow: hidden;
+  padding: clamp(4.5rem, 8vw, 7rem) var(--space-3) clamp(4rem, 7vw, 6rem);
+  /* Starts on LandingCore's background so there's no seam, then fades to black */
+  background: linear-gradient(to bottom, #0a0a0a, #000000 14rem);
+}
+
+/* ---------- Header (above the stage's glow, which reaches up behind it) ---------- */
+.header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  opacity: var(--head);
+  transform: translateY(calc((1 - var(--head)) * 40px));
+}
+
+/* White fading softly to silver towards the bottom */
+.heading {
+  margin-top: var(--space-4);
+  padding-bottom: 0.08em; /* keeps descenders inside the clipped gradient */
+  background: linear-gradient(180deg, #ffffff 45%, rgba(255, 255, 255, 0.74));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(2.25rem, 5vw + 0.45rem, 5.25rem);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+}
+
+.heading span {
+  display: block;
+}
+
+.note {
+  margin-top: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+  text-wrap: balance;
+}
+
+/* Cream pill with the navbar's arrow icon (overrides the shared Button's padding) */
+.header .cta {
+  min-width: 0;
+  margin-top: var(--space-5);
+  padding: 0.4rem 0.4rem 0.4rem 1.5rem;
+  gap: 0.9rem;
+  font-size: 0.95rem;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.3s ease;
+}
+
+.header .cta:hover {
+  box-shadow: 0 12px 40px -10px rgba(140, 198, 63, 0.5);
+}
+
+.header .cta img {
+  transition: transform 0.3s ease;
+}
+
+.header .cta:hover img {
+  transform: rotate(45deg);
+}
+
+/* ---------- Stage: glow, perspective for the tilt, and the horizon ---------- */
+.stage {
+  --lift: var(--progress);
+
+  position: relative;
+  isolation: isolate;
+  max-width: 1240px;
+  margin: clamp(3rem, 5vw, 4.5rem) auto 0;
+  perspective: 2000px;
+}
+
+/* Soft glow behind the window: a hint of the logo green over charcoal */
+.stage::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  width: 240vw;
+  height: 190%;
+  background:
+    radial-gradient(
+      closest-side,
+      rgba(140, 198, 63, 0.07),
+      rgba(140, 198, 63, 0.02) 45%,
+      transparent 75%
+    ),
+    radial-gradient(closest-side, #171918 0%, #101211 40%, #080908 70%, transparent 100%);
+  opacity: calc(0.35 + 0.65 * var(--lift));
+  transform: translate(-50%, -52%);
+  pointer-events: none;
+}
+
+/* ---------- Window: glassy frame, fading out towards the bottom ----------
+   Everything inside is sized in --u (1% of the window's width), so the mock-up scales
+   like a screenshot. Hinged at the bottom, it stands up from a 28° tilt as --lift goes 0 → 1. */
+.device {
+  --u: 1cqw;
+  --radius: clamp(14px, 1.6vw, 22px);
+  --bezel: clamp(5px, 0.6vw, 8px);
+
+  container-type: inline-size;
+  position: relative;
+  padding: var(--bezel);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 40px 120px -30px rgba(0, 0, 0, 0.9);
+  -webkit-mask-image: linear-gradient(to bottom, #000000 70%, transparent 99%);
+  mask-image: linear-gradient(to bottom, #000000 70%, transparent 99%);
+  transform-origin: 50% 100%;
+  transform: rotateX(calc((1 - var(--lift)) * 28deg)) scale(calc(0.9 + 0.1 * var(--lift)));
+  will-change: transform;
+}
+
+.screen {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: calc(var(--radius) - var(--bezel));
+  background: #0c0f12;
+}
+
+/* ---------- Browser bar ---------- */
+.browserBar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: max(30px, calc(var(--u) * 3.4));
+  padding: 0 calc(var(--u) * 1.1) 0 calc(var(--u) * 1.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: #0e1114;
+}
+
+.dots {
+  display: flex;
+  gap: max(4px, calc(var(--u) * 0.55));
+}
+
+.dots span {
+  width: max(6px, calc(var(--u) * 0.75));
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.url {
+  position: absolute;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 0.5);
+  padding: max(3px, calc(var(--u) * 0.45)) calc(var(--u) * 1.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.04);
+  color: #8b919a;
+  font-size: max(9px, calc(var(--u) * 0.95));
+  line-height: 1.2;
+  transform: translateX(-50%);
+}
+
+.url img {
+  width: max(9px, calc(var(--u) * 0.95));
+  height: auto;
+}
+
+/* Pause / play – the only real control inside the mock-up */
+.pause {
+  display: grid;
+  place-items: center;
+  width: max(24px, calc(var(--u) * 2.3));
+  aspect-ratio: 1;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  color: #c9cdd1;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.pause:hover {
+  border-color: rgba(140, 198, 63, 0.45);
+  background: rgba(140, 198, 63, 0.1);
+}
+
+.pause:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.pauseIcon {
+  width: 28%;
+  height: 32%;
+  background: linear-gradient(to right, currentColor 0 34%, transparent 34% 66%, currentColor 66%);
+}
+
+.playIcon {
+  width: 30%;
+  height: 34%;
+  margin-left: 8%;
+  background: currentColor;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.body {
+  display: grid;
+  grid-template-columns: 24% 1fr;
+  height: calc(var(--u) * 36);
+}
+
+/* ---------- Builder panel ---------- */
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: calc(var(--u) * 2.2) calc(var(--u) * 1.6) 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  background: #0a0d0f;
+  color: #c9cdd1;
+  font-size: calc(var(--u) * 1);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.back {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 0.4);
+  color: #6f767d;
+  font-size: calc(var(--u) * 0.75);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.back img {
+  width: calc(var(--u) * 0.85);
+  height: auto;
+}
+
+.panelTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: calc(var(--u) * 1.6);
+  color: #f5f3ee;
+  font-size: calc(var(--u) * 1.5);
+  font-weight: 600;
+}
+
+.panelTitle img {
+  width: calc(var(--u) * 1.2);
+  height: auto;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 0.8);
+  height: calc(var(--u) * 3.2);
+  margin-top: calc(var(--u) * 1.8);
+  padding: 0 calc(var(--u) * 1);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: calc(var(--u) * 0.8);
+  background: rgba(255, 255, 255, 0.03);
+  color: #6f767d;
+}
+
+.search img {
+  width: calc(var(--u) * 1.1);
+  height: auto;
+}
+
+.queueLabel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: calc(var(--u) * 2.4);
+  color: #6f767d;
+  font-size: calc(var(--u) * 0.75);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.count {
+  padding: calc(var(--u) * 0.2) calc(var(--u) * 0.65);
+  border-radius: var(--radius-pill);
+  background: rgba(140, 198, 63, 0.12);
+  color: var(--color-accent);
+  letter-spacing: 0;
+}
+
+/* Up next – the first row is the question being written */
+.queue {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--u) * 0.45);
+  margin: calc(var(--u) * 1.1) 0 0;
+  padding: 0;
+  list-style: none;
+  animation: queue-advance 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.queue li {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 0.8);
+  height: calc(var(--u) * 3.4);
+  padding: 0 calc(var(--u) * 1);
+  border: 1px solid transparent;
+  border-radius: calc(var(--u) * 0.8);
+  color: #747a81;
+  font-size: calc(var(--u) * 0.95);
+}
+
+.queue li:first-child {
+  border-color: rgba(140, 198, 63, 0.22);
+  background: rgba(140, 198, 63, 0.07);
+  color: #f5f3ee;
+}
+
+.queueDot {
+  flex-shrink: 0;
+  width: calc(var(--u) * 0.5);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.queue li:first-child .queueDot {
+  background: var(--color-accent);
+  box-shadow: 0 0 calc(var(--u) * 0.8) var(--color-accent);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.queueText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Starts one row lower, so the list appears to move up by one */
+@keyframes queue-advance {
+  from {
+    transform: translateY(calc(var(--u) * 3.85));
+  }
+}
+
+/* ---------- The BMU website being edited ---------- */
+.site {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: calc(var(--u) * 2.4) calc(var(--u) * 3.6) 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 75% 0%, rgba(140, 198, 63, 0.06), transparent 70%),
+    linear-gradient(to bottom, #111518, #0c0f12);
+  white-space: nowrap;
+}
+
+/* Mirrors the real navbar: dark pill bar, logo, links, cream pill CTA */
+.siteNav {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  height: calc(var(--u) * 4.4);
+  padding: 0 calc(var(--u) * 0.6) 0 calc(var(--u) * 1.8);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius-pill);
+  background: rgba(11, 16, 22, 0.85);
+}
+
+.siteLogo {
+  width: auto;
+  height: calc(var(--u) * 2.1);
+}
+
+.siteLinks {
+  display: flex;
+  gap: calc(var(--u) * 2.6);
+  margin: 0 auto;
+  color: #9aa0a6;
+  font-size: calc(var(--u) * 1);
+  font-weight: 500;
+}
+
+.siteCta {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 0.7);
+  height: calc(var(--u) * 3.1);
+  padding: 0 calc(var(--u) * 0.45) 0 calc(var(--u) * 1.3);
+  border-radius: var(--radius-pill);
+  background: var(--color-light);
+  color: var(--color-dark);
+  font-size: calc(var(--u) * 0.95);
+  font-weight: 600;
+}
+
+.siteCta img {
+  width: calc(var(--u) * 2.2);
+  height: auto;
+}
+
+/* Service · industry of the question being typed – fades in with each new question */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--u) * 0.6);
+  margin-top: calc(var(--u) * 4.4);
+  padding: calc(var(--u) * 0.55) calc(var(--u) * 1.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--color-text-muted);
+  font-size: calc(var(--u) * 0.95);
+  line-height: 1.2;
+  animation: tag-in 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tagDot {
+  width: calc(var(--u) * 0.5);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 calc(var(--u) * 0.8) var(--color-accent);
+}
+
+@keyframes tag-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--u) * 0.8));
+  }
+}
+
+/* The question – up to two lines */
+.postTitle {
+  margin-top: calc(var(--u) * 1.6);
+  color: #f5f3ee;
+  font-size: calc(var(--u) * 4);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  white-space: normal;
+}
+
+/* Text cursor – takes no space, so the text doesn't shift */
+.caret {
+  display: inline-block;
+  width: max(2px, 0.05em);
+  height: 0.95em;
+  margin-right: min(-2px, -0.05em);
+  margin-left: 0.04em;
+  border-radius: 1px;
+  background: var(--color-accent);
+  box-shadow: 0 0 0.3em rgba(140, 198, 63, 0.6);
+  vertical-align: -0.12em;
+  animation: blink 1.05s steps(1) infinite;
+}
+
+/* Paused or reduced motion: no cursor */
+.screen[data-typing='false'] .caret {
+  display: none;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 0.8);
+  margin-top: calc(var(--u) * 2.2);
+  color: #e4e2dc;
+  font-size: calc(var(--u) * 0.95);
+  font-weight: 500;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: calc(var(--u) * 2.2);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #b4e36b, #5f8f2a);
+  color: var(--color-dark);
+  font-size: calc(var(--u) * 1);
+  font-weight: 700;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 0.5);
+  margin-left: calc(var(--u) * 0.4);
+  color: #6f767d;
+  font-weight: 400;
+}
+
+.status::before {
+  content: '';
+  width: calc(var(--u) * 0.45);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--color-accent);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+/* Skeleton paragraph with a slow shimmer */
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--u) * 1.2);
+  align-self: stretch;
+  margin-top: calc(var(--u) * 2.4);
+}
+
+.lines span {
+  height: calc(var(--u) * 1);
+  border-radius: var(--radius-pill);
+  background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.05) 30%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.05) 70%
+    )
+    0 0 / 250% 100%;
+  animation: shimmer 2.6s linear infinite;
+}
+
+.lines span:nth-child(2) {
+  width: 90%;
+}
+
+.lines span:nth-child(3) {
+  width: 62%;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -150% 0;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* ---------- Green horizon at the foot of the window (centred on its bottom edge,
+   where the window has faded out completely) ---------- */
+.horizon {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 86%;
+  aspect-ratio: 6 / 1;
+  transform: translate(-50%, 50%);
+  pointer-events: none;
+}
+
+/* Soft bloom of light, rising into the faded window */
+.horizon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    closest-side,
+    rgba(140, 198, 63, 0.34),
+    rgba(140, 198, 63, 0.12) 45%,
+    transparent 100%
+  );
+  opacity: calc(0.3 + 0.7 * var(--lift));
+}
+
+/* Thin bright line, fading out at both ends */
+.horizon::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(206, 242, 150, 0.95) 50%, transparent);
+  box-shadow: 0 0 18px 1px rgba(140, 198, 63, 0.55);
+  opacity: calc(0.3 + 0.7 * var(--lift));
+}
+
+/* Glass pill sitting on the line */
+.chip {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 1.15rem 0.55rem 0.95rem;
+  border: 1px solid rgba(140, 198, 63, 0.35);
+  border-radius: var(--radius-pill);
+  background: rgba(10, 14, 9, 0.72);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  color: var(--color-light);
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow:
+    0 0 0 4px rgba(140, 198, 63, 0.06),
+    0 10px 30px rgba(0, 0, 0, 0.5);
+  pointer-events: auto;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.3s ease;
+}
+
+.chip:hover {
+  border-color: rgba(140, 198, 63, 0.7);
+  box-shadow:
+    0 0 0 4px rgba(140, 198, 63, 0.1),
+    0 10px 30px rgba(0, 0, 0, 0.5),
+    0 0 28px rgba(140, 198, 63, 0.35);
+  transform: translateY(-1px);
+}
+
+.chip:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.chipDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 8px var(--color-accent);
+}
+
+/* ---------- Narrow windows: drop the builder panel and the site's links,
+   and scale the rest up so the site preview stays readable ---------- */
+@container (max-width: 640px) {
+  .screen {
+    --u: 1.7cqw;
+  }
+
+  .body {
+    grid-template-columns: 1fr;
+  }
+
+  .panel,
+  .siteLinks {
+    display: none;
+  }
+
+  .siteCta {
+    margin-left: auto;
+  }
+
+  /* Keep the small print legible on phones */
+  .siteCta,
+  .tag,
+  .author {
+    font-size: max(8px, calc(var(--u) * 0.95));
+  }
+
+  .postTitle {
+    font-size: calc(var(--u) * 3.5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .queue,
+  .queue li:first-child .queueDot,
+  .tag,
+  .caret,
+  .status::before,
+  .lines span {
+    animation: none;
+  }
+}

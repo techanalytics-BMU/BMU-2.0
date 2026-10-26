@@ -2,6 +2,7 @@ import {
   LandingAllServices,
   LandingConversionRate,
   LandingCore,
+  LandingFreeTrial,
   LandingHero,
   LandingPricing,
   LandingServiceAreas,
@@ -16,6 +17,7 @@ export default function Home() {
       <LandingConversionRate />
       <LandingPricing />
       <LandingCore />
+      <LandingFreeTrial />
       <LandingServiceAreas />
     </main>
   );
