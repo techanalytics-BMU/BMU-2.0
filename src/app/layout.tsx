@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Navbar from '@/components/layout/Navbar/Navbar';
-import { audiowide, inter } from '@/styles/fonts';
+import { albertSans, audiowide } from '@/styles/fonts';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${audiowide.variable}`}>
+    <html lang="en" className={`${albertSans.variable} ${audiowide.variable}`}>
       <body>
         <Navbar />
         {children}

@@ -1,14 +1,16 @@
-import { Audiowide, Inter } from 'next/font/google';
+import { Albert_Sans, Audiowide } from 'next/font/google';
 
 // Fonts are downloaded at build time and self-hosted – no request to Google at runtime.
 // The CSS variables below are used in src/styles/variables.css.
 
-export const inter = Inter({
+// Body text: navbar, paragraphs, buttons, cards
+export const albertSans = Albert_Sans({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-albert-sans',
   display: 'swap',
 });
 
+// Display headings (Hero)
 export const audiowide = Audiowide({
   subsets: ['latin'],
   weight: '400',

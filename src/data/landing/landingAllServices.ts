@@ -1,0 +1,52 @@
+import type { LandingAllServicesContent } from '@/types/landing';
+
+// One card per service – the ring has 40 places (8 columns × 5 rows), so up to 40
+// services show without repeating. Edit or reorder the titles freely.
+// Add `image: '/images/landing/all-services/landing-all-services-<name>.webp'` to a tile
+// to show a screenshot instead of the title.
+export const landingAllServices: LandingAllServicesContent = {
+  heading: 'All Services',
+  subheading: 'Built by BMU',
+  tiles: [
+    { title: 'Marketing Strategy' },
+    { title: 'Search Engine Optimisation' },
+    { title: 'Google Ads' },
+    { title: 'Meta Ads' },
+    { title: 'Social Media Management' },
+    { title: 'Content Writing' },
+    { title: 'Copywriting' },
+    { title: 'Video Production' },
+    { title: 'Photography' },
+    { title: 'Motion Graphics' },
+    { title: 'Graphic Design' },
+    { title: 'Brand Identity' },
+    { title: 'Logo Design' },
+    { title: 'Packaging Design' },
+    { title: 'Website Design' },
+    { title: 'Website Development' },
+    { title: 'E-commerce Stores' },
+    { title: 'Landing Pages' },
+    { title: 'Email Marketing' },
+    { title: 'WhatsApp Marketing' },
+    { title: 'Influencer Marketing' },
+    { title: 'Marketing Automation' },
+    { title: 'Online Reputation Management' },
+    { title: 'Analytics & Reporting' },
+    { title: 'Performance Marketing' },
+    { title: 'Lead Generation' },
+    { title: 'YouTube Marketing' },
+    { title: 'LinkedIn Marketing' },
+    { title: 'UI/UX Design' },
+    { title: 'Public Relations' },
+    { title: 'Event Promotion' },
+    { title: 'Market Research' },
+    { title: 'Brand Strategy' },
+    { title: 'Local SEO' },
+    { title: 'Social Media Ads' },
+    { title: 'Conversion Optimisation' },
+    { title: 'Product Photography' },
+    { title: 'Corporate Videos' },
+    { title: 'Chatbot Development' },
+    { title: 'Google Business Profile' },
+  ],
+};

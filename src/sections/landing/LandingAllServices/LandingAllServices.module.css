@@ -1,0 +1,191 @@
+/* The section is exactly one screen tall: from the green line to the bottom of the browser.
+   All sizes use --u, which scales with the screen so the cylinder fills any device:
+   - landscape (laptop, desktop, TV): 1% of the width
+   - portrait (phone, tablet): at least 1.6% of the height (see media query at the end)
+   - very wide (ultra-wide monitor): at most 2% of the height, so rows are not cut off */
+.section {
+  --u: min(max(1vw, 1.25svh), 2svh);
+  --radius: calc(var(--u) * 37); /* cylinder radius */
+  --camera: calc(var(--u) * 40); /* camera distance – just outside the cylinder */
+  --tile-w: calc(var(--u) * 22); /* landscape rectangle, about 1.6 : 1 */
+  --tile-h: calc(var(--u) * 14);
+  --row-gap: calc(var(--u) * 16.5); /* distance between row centres (gap = row-gap − tile-h) */
+  --ring-y: calc(50% + var(--u) * 1); /* vertical centre of the gallery */
+
+  position: relative;
+  height: 100vh; /* fallback for older browsers */
+  height: 100svh; /* full screen, ignoring mobile browser bars */
+  overflow: hidden;
+  /* Dark navy outside the planet dome */
+  background: linear-gradient(to bottom, #0d1622, #070b10 60%, var(--color-bg));
+}
+
+/* Planet dome: bright lime rim + soft green glow just inside it, fading to black */
+.section::before {
+  content: '';
+  position: absolute;
+  top: calc(var(--planet-overlap) * -1);
+  left: 50%;
+  width: var(--planet-width);
+  height: var(--planet-height);
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      55vw 32vw at 50% 0,
+      rgba(140, 198, 63, 0.3),
+      rgba(90, 130, 35, 0.12) 45%,
+      transparent 75%
+    ),
+    var(--color-bg);
+  box-shadow:
+    0 -1px 0 rgba(200, 240, 130, 0.95),
+    0 -6px 24px rgba(140, 198, 63, 0.35),
+    inset 0 2px 4px rgba(200, 240, 130, 0.7),
+    inset 0 12px 40px rgba(140, 198, 63, 0.3);
+  pointer-events: none;
+}
+
+/* ---------- 3D gallery ---------- */
+.stage {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  perspective: var(--camera);
+  perspective-origin: 50% var(--ring-y); /* camera looks at the gallery centre */
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-y; /* horizontal swipe rotates, vertical swipe still scrolls the page */
+  /* Keep the gallery inside the planet dome (below the green line),
+     and fade it out at the bottom and at the far left/right edges */
+  --dome: radial-gradient(
+    calc(var(--planet-width) / 2) calc(var(--planet-height) / 2) at 50%
+      calc(var(--planet-height) / 2 - var(--planet-overlap)),
+    #000 98.5%,
+    transparent 100%
+  );
+  -webkit-mask-image:
+    var(--dome),
+    linear-gradient(to bottom, #000 97%, transparent),
+    linear-gradient(to right, transparent 2%, #000 11%, #000 89%, transparent 98%);
+  -webkit-mask-composite: source-in, source-in;
+  mask-image:
+    var(--dome),
+    linear-gradient(to bottom, #000 97%, transparent),
+    linear-gradient(to right, transparent 2%, #000 11%, #000 89%, transparent 98%);
+  mask-composite: intersect;
+}
+
+.stage:active {
+  cursor: grabbing;
+}
+
+/* Rotated by useDragRotate (inline transform: rotateY) */
+.ring {
+  position: absolute;
+  top: var(--ring-y);
+  left: 50%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.tile {
+  position: absolute;
+  top: calc(var(--tile-h) / -2);
+  left: calc(var(--tile-w) / -2);
+  display: grid;
+  place-items: center;
+  width: var(--tile-w);
+  height: var(--tile-h);
+  padding: var(--u);
+  overflow: hidden;
+  border: 1px solid rgba(140, 198, 63, 0.3);
+  border-radius: calc(var(--u) * 0.5);
+  /* Green → black card */
+  background: linear-gradient(
+    150deg,
+    rgba(140, 198, 63, 0.55) 0%,
+    rgba(50, 75, 20, 0.9) 40%,
+    #060906 100%
+  );
+  box-shadow: inset 0 1px 0 rgba(200, 240, 130, 0.35);
+  color: var(--color-text);
+  cursor: inherit;
+  transform: rotateY(var(--angle)) translateZ(calc(var(--radius) * -1))
+    translateY(calc(var(--row) * var(--row-gap)));
+  backface-visibility: hidden;
+}
+
+/* Dark overlay that dims the tile (cheaper than `filter` while the ring is spinning) */
+.tile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #000000;
+  opacity: 0.25;
+  transition: opacity 0.3s ease;
+}
+
+.tile:hover::after,
+.tile:focus-visible::after {
+  opacity: 0;
+}
+
+.tile:focus-visible {
+  outline: none;
+}
+
+.tileTitle {
+  font-family: var(--font-family-body);
+  font-size: calc(var(--u) * 2);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* ---------- Centre text ---------- */
+.text {
+  position: absolute;
+  top: var(--ring-y);
+  left: 0;
+  right: 0;
+  height: calc(var(--u) * 24);
+  transform: translateY(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--u) * 0.8);
+  text-align: center;
+  /* Soft dark spot behind the text so it reads over the tiles */
+  background: radial-gradient(ellipse 24% 50% at center, rgba(0, 0, 0, 0.75), transparent);
+  pointer-events: none; /* clicks pass through to the tiles behind */
+}
+
+.heading {
+  font-family: var(--font-family-body);
+  font-size: calc(var(--u) * 4.4);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  text-shadow: 0 0 calc(var(--u) * 3) rgba(0, 0, 0, 0.9);
+}
+
+/* Tall screens (phones, tablets in portrait): bigger cards so the titles stay readable */
+@media (orientation: portrait) {
+  .section {
+    --u: min(max(1vw, 1.6svh), 2svh);
+    --ring-y: 50%;
+  }
+}
+
+.subheading {
+  color: var(--color-accent);
+  font-size: max(calc(var(--u) * 1.4), var(--font-size-xs));
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow: 0 0 calc(var(--u) * 2) rgba(0, 0, 0, 0.9);
+}

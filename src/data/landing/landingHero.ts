@@ -5,7 +5,7 @@ export const landingHero: LandingHeroContent = {
   headingLine1: "Build Your Brand's Universe",
   headingLine2: 'We Make It Grow',
   description:
-    'We transform ambitious ideas into powerful brands through strategic marketing, exceptional design, and digital experiences built to drive growth.',
+    "We don't just post content we run your SEO, social, reels, ads and website as one team, so your business gets found and chosen",
   primaryCta: { label: 'Build Your Brand', href: '/contact' },
   secondaryCta: { label: 'Explore', href: '/services' },
 };

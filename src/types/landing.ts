@@ -8,3 +8,14 @@ export type LandingHeroContent = {
   primaryCta: NavLink;
   secondaryCta: NavLink;
 };
+
+export type LandingAllServicesTile = {
+  title: string;
+  image?: string; // .webp screenshot – a white placeholder with the title is shown until set
+};
+
+export type LandingAllServicesContent = {
+  heading: string;
+  subheading: string;
+  tiles: LandingAllServicesTile[];
+};

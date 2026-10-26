@@ -12,7 +12,8 @@
   --color-border: rgba(255, 255, 255, 0.12);
 
   /* Fonts (font files are set up in src/styles/fonts.ts) */
-  --font-family-body: var(--font-inter), system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-family-body: var(--font-albert-sans), system-ui, -apple-system, 'Segoe UI', Roboto,
+    sans-serif;
   --font-family-display: var(--font-audiowide), var(--font-family-body);
 
   /* Font sizes */
@@ -35,6 +36,11 @@
   /* Radius */
   --radius-md: 12px;
   --radius-pill: 999px;
+
+  /* Green planet rim – shared by LandingHero (top of arc) and LandingAllServices (rest of arc) */
+  --planet-width: 220vw;
+  --planet-height: 240vw;
+  --planet-overlap: 0px; /* how far the arc reaches up into the Hero (0 = top of arc on the boundary) */
 
   /* Layout */
   --container-width: 1100px;

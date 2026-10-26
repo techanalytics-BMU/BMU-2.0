@@ -47,14 +47,14 @@
   opacity: 0.7;
 }
 
-/* Green planet glow at the bottom */
+/* Green planet glow at the bottom – the arc continues in LandingAllServices */
 .hero::after {
   content: '';
   position: absolute;
-  top: calc(100% - 50px);
+  top: calc(100% - var(--planet-overlap));
   left: 50%;
-  width: min(1000px, 90%);
-  height: 600px;
+  width: var(--planet-width);
+  height: var(--planet-height);
   transform: translateX(-50%);
   border-radius: 50%;
   background: var(--color-bg);
