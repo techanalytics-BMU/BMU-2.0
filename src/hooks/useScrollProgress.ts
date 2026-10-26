@@ -3,17 +3,25 @@
 import { useEffect, useRef } from 'react';
 
 type ScrollProgressOptions = {
-  distance?: number; // how much scrolling (in screen heights) takes progress from 0 to 1
+  /**
+   * 'enter'  – 0 when the element's top reaches the bottom of the screen, 1 after scrolling
+   *            `distance` screen heights (or once the whole element is visible, if shorter).
+   * 'pinned' – for a tall element with a `position: sticky` child: 0 when its top reaches the
+   *            top of the screen, 1 when its bottom reaches the bottom (the whole "pinned" stretch).
+   */
+  mode?: 'enter' | 'pinned';
+  distance?: number; // 'enter' mode only
 };
 
 /**
- * Sets a `--progress` CSS variable (0 → 1) on the element as it scrolls into view:
- * 0 when its top reaches the bottom of the screen, 1 after scrolling `distance` screen heights
- * (or once the whole element is visible, if it is shorter).
- * CSS can then tie animations directly to the scroll position. Scrolling back reverses it.
+ * Sets a `--progress` CSS variable (0 → 1) on the element as the page scrolls,
+ * so CSS can tie animations directly to the scroll position. Scrolling back reverses it.
  * Updates once per frame and never re-renders React.
  */
-export function useScrollProgress<T extends HTMLElement>({ distance = 0.8 }: ScrollProgressOptions = {}) {
+export function useScrollProgress<T extends HTMLElement>({
+  mode = 'enter',
+  distance = 0.8,
+}: ScrollProgressOptions = {}) {
   const ref = useRef<T>(null);
 
   useEffect(() => {
@@ -22,16 +30,20 @@ export function useScrollProgress<T extends HTMLElement>({ distance = 0.8 }: Scr
 
     // Respect the device's "reduce motion" setting: show the end state
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const clamp = (value: number) => Math.min(Math.max(value, 0), 1);
     let frame = 0;
 
     const update = () => {
       frame = 0;
       const viewportHeight = window.innerHeight;
       const { top, height } = element.getBoundingClientRect();
-      // Finish after `distance` screens, or once the whole element is on screen if it is
-      // shorter than that – so it always completes, even at the very end of the page.
-      const span = Math.min(viewportHeight * distance, height);
-      const progress = reduceMotion ? 1 : Math.min(Math.max((viewportHeight - top) / span, 0), 1);
+      let progress = 1;
+      if (!reduceMotion && mode === 'pinned') {
+        progress = clamp(-top / Math.max(height - viewportHeight, 1));
+      } else if (!reduceMotion) {
+        const span = Math.min(viewportHeight * distance, height);
+        progress = clamp((viewportHeight - top) / span);
+      }
       element.style.setProperty('--progress', progress.toFixed(4));
     };
 
@@ -48,7 +60,7 @@ export function useScrollProgress<T extends HTMLElement>({ distance = 0.8 }: Scr
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
     };
-  }, [distance]);
+  }, [mode, distance]);
 
   return ref;
 }

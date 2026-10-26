@@ -1,0 +1,123 @@
+.section {
+  padding: var(--space-7) var(--space-4);
+  background: #050505;
+}
+
+.inner {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+/* ---------- Tabs ---------- */
+.tabs {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.tab {
+  flex-shrink: 0;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: inherit;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.tab:hover {
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.tabActive,
+.tabActive:hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-dark);
+  font-weight: 600;
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* ---------- Heading + list ---------- */
+.panel {
+  margin-top: var(--space-5);
+  animation: fade-in 0.4s ease;
+}
+
+.heading {
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 700;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3) var(--space-4);
+  margin: var(--space-5) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  color: #b8b8b8;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  transition: color 0.2s ease;
+}
+
+a.item:hover {
+  color: var(--color-accent);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* ---------- Tablet: 2 columns ---------- */
+@media (max-width: 1024px) {
+  .list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---------- Phone: 1 column, tabs swipe sideways ---------- */
+@media (max-width: 600px) {
+  .section {
+    padding-inline: var(--space-3);
+  }
+
+  .tabs {
+    margin-inline: calc(-1 * var(--space-3));
+    padding: 2px var(--space-3);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+}

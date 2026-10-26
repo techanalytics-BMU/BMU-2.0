@@ -5,7 +5,8 @@
   align-items: center;
   gap: var(--space-7);
   padding: var(--space-8) var(--space-3);
-  overflow: hidden;
+  /* clip (not hidden) – hidden would stop the pinned timeline's position: sticky from working */
+  overflow: clip;
   background: linear-gradient(to bottom, #0b0f15, #111418 30%, #121418);
 }
 

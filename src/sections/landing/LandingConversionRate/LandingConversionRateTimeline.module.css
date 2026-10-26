@@ -1,13 +1,46 @@
-/* Sizes use container units (cqw / cqh = 1% of the panel's width / height)
-   so the panel scales as one piece on every screen. */
+/* Scroll-driven timeline. --progress (0 → 1) is set by useScrollProgress({ mode: 'pinned' })
+   while the sticky panel is pinned on screen. Three phases:
+     0    – 0.12  grow:   card → full screen          (--grow 0 → 1)
+     0.12 – 0.88  pan:    move left → right           (--pan  0 → 1)
+     0.88 – 1     shrink: full screen → card again    (--grow 1 → 0)
+   Steps are spaced a quarter of the panel width apart, so 3 are visible in the card. */
+.scroller {
+  --progress: 0;
+  --grow: min(
+    clamp(0, calc(var(--progress) / 0.12), 1),
+    clamp(0, calc((1 - var(--progress)) / 0.12), 1)
+  );
+  --pan: clamp(0, calc((var(--progress) - 0.12) / 0.76), 1);
+  --card-w: min(620px, 100vw - 32px);
+  --card-h: calc(var(--card-w) / 1.9);
+
+  position: relative;
+  width: 100vw;
+  height: 350vh; /* 100vh on screen + 250vh of scrolling while pinned */
+  height: 350svh;
+  /* The pinned area is a full screen tall; pull it in so the card keeps its normal spacing */
+  margin-block: calc((100svh - var(--card-h)) / -2);
+  pointer-events: none;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  height: 100svh;
+}
+
 .panel {
   position: relative;
   container-type: size;
-  width: min(100%, 620px);
-  aspect-ratio: 1.9;
+  width: calc(var(--card-w) + (100vw - var(--card-w)) * var(--grow));
+  height: calc(var(--card-h) + (100svh - var(--card-h)) * var(--grow));
   overflow: hidden;
-  border-radius: 4px;
+  border-radius: calc(6px * (1 - var(--grow)));
   background: #050605;
+  pointer-events: auto;
 }
 
 /* Film-grain texture */
@@ -20,7 +53,19 @@
   pointer-events: none;
 }
 
-/* Glowing horizontal line – brightest in the middle */
+/* The long strip holding all steps – slides left as --pan goes 0 → 1 */
+.track {
+  --track-w: calc(100cqw * (var(--n) + 1) / 4);
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--track-w);
+  transform: translateX(calc(var(--pan) * (100cqw - var(--track-w))));
+}
+
+/* Glowing line, drawn up to the right edge of the screen as it pans */
 .line {
   position: absolute;
   left: 0;
@@ -30,15 +75,14 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(140, 198, 63, 0.35) 15%,
+    rgba(140, 198, 63, 0.5) 6%,
     #b9ef6a 50%,
-    rgba(140, 198, 63, 0.35) 85%,
+    rgba(140, 198, 63, 0.5) 94%,
     transparent
   );
   box-shadow: 0 0 12px rgba(140, 198, 63, 0.6);
-  transform: scaleX(0);
+  transform: scaleX(calc((4 + var(--pan) * (var(--n) - 3)) / (var(--n) + 1)));
   transform-origin: left;
-  transition: transform 1.2s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .markers {
@@ -48,9 +92,16 @@
 }
 
 .marker {
+  /* 0 → 1 as this step comes into view from the right */
+  --show: clamp(
+    0,
+    calc((1 + var(--pan) * (var(--n) - 3) / 4 - (var(--i) + 1) / 4 - 0.06) * 8),
+    1
+  );
+
   position: absolute;
   bottom: 18%;
-  left: var(--x);
+  left: calc(100cqw * (var(--i) + 1) / 4);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -58,31 +109,29 @@
 }
 
 .label {
-  max-width: max(26cqw, 116px);
+  max-width: max(22cqw, 116px);
   margin-bottom: 2.5cqh;
   color: var(--color-text);
-  font-size: max(3.2cqh, 0.6rem);
+  font-size: max(min(3.2cqh, 4.2cqw), 0.6rem);
   font-weight: 600;
   letter-spacing: 0.04em;
   line-height: 1.35;
   text-align: center;
   text-transform: uppercase;
-  opacity: 0;
-  transform: translateY(6px);
-  transition:
-    opacity 0.6s ease,
-    transform 0.6s ease;
-  transition-delay: calc(var(--delay) + 0.35s);
+  opacity: var(--show);
+  transform: translateY(calc((1 - var(--show)) * 8px));
 }
 
 .stem {
   width: 1px;
   height: 30cqh;
   background: linear-gradient(to top, rgba(140, 198, 63, 0.9), rgba(255, 255, 255, 0.35));
-  transform: scaleY(0);
+  transform: scaleY(var(--show));
   transform-origin: bottom;
-  transition: transform 0.5s ease;
-  transition-delay: var(--delay);
+}
+
+.tall .stem {
+  height: 52cqh;
 }
 
 .dot {
@@ -92,41 +141,17 @@
   border-radius: 50%;
   background: var(--color-accent);
   box-shadow: 0 0 10px var(--color-accent);
-  transform: scale(0);
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  transition-delay: var(--delay);
+  transform: scale(var(--show));
 }
 
-/* Middle marker: taller stem + hollow ring */
-.highlight .stem {
-  height: 52cqh;
-}
-
+/* Ring marker for the key moments */
 .highlight .dot {
   width: 13px;
   height: 13px;
   margin-bottom: -6.5px;
   border: 2px solid var(--color-accent);
   background: #050605;
-}
-
-/* ---------- Visible state ---------- */
-[data-in-view='true'] .line {
-  transform: scaleX(1);
-}
-
-[data-in-view='true'] .stem,
-[data-in-view='true'] .dot {
-  transform: none;
-}
-
-[data-in-view='true'] .label {
-  opacity: 1;
-  transform: none;
-}
-
-[data-in-view='true'] .highlight .dot {
-  animation: ring-pulse 2.4s ease-out 2.4s infinite;
+  animation: ring-pulse 2.4s ease-out infinite;
 }
 
 @keyframes ring-pulse {
@@ -139,17 +164,38 @@
   }
 }
 
+/* Reduce motion: no pinning – a normal card you can scroll sideways */
 @media (prefers-reduced-motion: reduce) {
-  .line,
-  .stem,
-  .dot,
-  .label {
-    transform: none;
-    opacity: 1;
-    transition: none;
+  .scroller {
+    width: var(--card-w);
+    height: auto;
+    margin: 0;
   }
 
-  [data-in-view='true'] .highlight .dot {
+  .sticky {
+    position: static;
+    height: auto;
+  }
+
+  .panel {
+    width: var(--card-w);
+    height: var(--card-h);
+    overflow-x: auto;
+  }
+
+  .track {
+    transform: none;
+  }
+
+  .line {
+    transform: none;
+  }
+
+  .marker {
+    --show: 1;
+  }
+
+  .highlight .dot {
     animation: none;
   }
 }

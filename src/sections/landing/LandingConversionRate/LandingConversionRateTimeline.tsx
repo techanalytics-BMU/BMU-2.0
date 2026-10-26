@@ -1,6 +1,6 @@
 'use client';
 
-import { useInView } from '@/hooks/useInView';
+import { useScrollProgress } from '@/hooks/useScrollProgress';
 import type { LandingConversionRateMarker } from '@/types/landing';
 import styles from './LandingConversionRateTimeline.module.css';
 
@@ -8,32 +8,38 @@ type Props = {
   markers: LandingConversionRateMarker[];
 };
 
-// A website's life on one line: the line draws in, then each marker's stem
-// grows and its label appears, left to right. The highlighted marker keeps pulsing.
+// A website's life on one line, driven by the scroll (see the CSS for the three phases):
+// the card grows to fill the screen and stays pinned → scrolling pans it left to right,
+// revealing each step → it shrinks back into its card and the page carries on.
 export default function LandingConversionRateTimeline({ markers }: Props) {
-  const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.4 });
+  const ref = useScrollProgress<HTMLDivElement>({ mode: 'pinned' });
 
   return (
-    <div ref={ref} className={styles.panel} data-in-view={inView}>
-      <span className={styles.line} aria-hidden="true" />
-      <ol className={styles.markers}>
-        {markers.map((marker, index) => (
-          <li
-            key={marker.label}
-            className={`${styles.marker} ${marker.highlight ? styles.highlight : ''}`}
-            style={
-              {
-                '--x': `${((index + 1) / (markers.length + 1)) * 100}%`,
-                '--delay': `${0.9 + index * 0.35}s`,
-              } as React.CSSProperties
-            }
-          >
-            <span className={styles.label}>{marker.label}</span>
-            <span className={styles.stem} aria-hidden="true" />
-            <span className={styles.dot} aria-hidden="true" />
-          </li>
-        ))}
-      </ol>
+    <div ref={ref} className={styles.scroller} style={{ '--n': markers.length } as React.CSSProperties}>
+      <div className={styles.sticky}>
+        <div className={styles.panel}>
+          <div className={styles.track}>
+            <span className={styles.line} aria-hidden="true" />
+            <ol className={styles.markers}>
+              {markers.map((marker, i) => (
+                <li
+                  key={marker.label}
+                  className={[
+                    styles.marker,
+                    marker.tall ? styles.tall : '',
+                    marker.highlight ? styles.highlight : '',
+                  ].join(' ')}
+                  style={{ '--i': i } as React.CSSProperties}
+                >
+                  <span className={styles.label}>{marker.label}</span>
+                  <span className={styles.stem} aria-hidden="true" />
+                  <span className={styles.dot} aria-hidden="true" />
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

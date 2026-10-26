@@ -16,7 +16,8 @@ export type LandingAllServicesTile = {
 
 export type LandingConversionRateMarker = {
   label: string;
-  highlight?: boolean; // taller stem + ring marker
+  highlight?: boolean; // ring marker instead of a dot
+  tall?: boolean; // taller stem – alternate with short ones so labels never overlap
 };
 
 export type LandingConversionRateContent = {
@@ -67,6 +68,23 @@ export type LandingCoreContent = {
   eyebrow: string;
   heading: string;
   items: LandingCoreItem[];
+};
+
+export type LandingServiceAreasItem = {
+  label: string;
+  href?: string; // plain text until a link is added
+};
+
+export type LandingServiceAreasTab = {
+  id: string;
+  label: string; // tab button
+  heading: string;
+  items: LandingServiceAreasItem[];
+};
+
+export type LandingServiceAreasContent = {
+  defaultTab: string; // id of the tab shown first
+  tabs: LandingServiceAreasTab[];
 };
 
 export type LandingAllServicesContent = {
