@@ -1,4 +1,10 @@
-import { LandingAllServices, LandingHero } from '@/sections/landing';
+import {
+  LandingAllServices,
+  LandingConversionRate,
+  LandingCore,
+  LandingHero,
+  LandingPricing,
+} from '@/sections/landing';
 
 // Landing page – add new sections below in display order
 export default function Home() {
@@ -6,6 +12,9 @@ export default function Home() {
     <main>
       <LandingHero />
       <LandingAllServices />
+      <LandingConversionRate />
+      <LandingPricing />
+      <LandingCore />
     </main>
   );
 }

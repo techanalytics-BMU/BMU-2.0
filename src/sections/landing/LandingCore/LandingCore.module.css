@@ -1,0 +1,172 @@
+/* Everything here is driven by --progress (0 → 1), set by useScrollProgress as the
+   section scrolls into view. Each part works out its own 0 → 1 value from it:
+   card 0 – 0.7 · header 0.2 – 0.5 · columns 0.35 + 0.1 each, lasting 0.3 */
+.section {
+  --progress: 0;
+  --card: clamp(0, calc(var(--progress) / 0.7), 1);
+  --head: clamp(0, calc((var(--progress) - 0.2) / 0.3), 1);
+
+  overflow: hidden;
+  background: #0d1014;
+  font-family: var(--font-family-roboto);
+}
+
+/* Starts as a smaller rounded card coming up from below, grows into the full-width section */
+.card {
+  position: relative;
+  padding: var(--space-7) var(--space-4) var(--space-8);
+  border: 1px solid rgba(255, 255, 255, calc(0.08 * (1 - var(--card))));
+  border-radius: calc(36px * (1 - var(--card)));
+  /* Faint grid lines: one vertical line down the middle */
+  background:
+    linear-gradient(
+      to right,
+      transparent calc(50% - 0.5px),
+      rgba(255, 255, 255, 0.05) 50%,
+      transparent calc(50% + 0.5px)
+    ),
+    #0a0a0a;
+  box-shadow: 0 -20px 60px rgba(0, 0, 0, calc(0.5 * (1 - var(--card))));
+  transform: translateY(calc((1 - var(--card)) * 140px)) scale(calc(0.86 + 0.14 * var(--card)));
+  transform-origin: top center;
+  will-change: transform;
+}
+
+/* ---------- Header ---------- */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  text-align: center;
+  opacity: var(--head);
+  transform: translateY(calc((1 - var(--head)) * 30px));
+}
+
+.eyebrow {
+  color: #8a8a8a;
+  font-size: var(--font-size-md);
+  font-weight: 500;
+}
+
+.heading {
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+/* ---------- Columns ---------- */
+.items {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 1200px;
+  margin: var(--space-7) auto 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  /* This column's own 0 → 1, starting a little later than the one before */
+  --step: clamp(0, calc((var(--progress) - 0.35 - var(--i) * 0.1) / 0.3), 1);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 var(--space-4);
+  text-align: center;
+  opacity: var(--step);
+  transform: translateY(calc((1 - var(--step)) * 100px));
+}
+
+.letter {
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+/* Horizontal line through the dots – each column draws its own piece */
+.marker {
+  position: relative;
+  align-self: stretch;
+  display: grid;
+  place-items: center;
+  height: 12px;
+  margin: var(--space-5) calc(-1 * var(--space-4)) 0;
+}
+
+.marker::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+  transform: scaleX(var(--step));
+}
+
+.dot {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 10px rgba(140, 198, 63, 0.7);
+  transform: scale(var(--step));
+}
+
+/* Big faded number with the title on top of it */
+.titleWrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin-top: var(--space-4);
+}
+
+.number {
+  grid-area: 1 / 1;
+  color: rgba(255, 255, 255, 0.08);
+  font-size: clamp(3.5rem, 6vw, 5.25rem);
+  font-weight: 700;
+  line-height: 1;
+  transform: translateY(-28%);
+}
+
+.title {
+  grid-area: 1 / 1;
+  align-self: end;
+  font-size: clamp(1.25rem, 1.9vw, 1.6rem);
+  font-weight: 500;
+}
+
+.description {
+  max-width: 260px;
+  margin-top: var(--space-4);
+  color: #7d7d7d;
+  font-size: var(--font-size-sm);
+  line-height: 1.65;
+}
+
+/* ---------- Mobile: 2 × 2 grid ---------- */
+@media (max-width: 720px) {
+  .card {
+    padding: var(--space-6) var(--space-2) var(--space-7);
+  }
+
+  .items {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: var(--space-6);
+    margin-top: var(--space-6);
+  }
+
+  .item {
+    padding: 0 var(--space-2);
+  }
+
+  .marker {
+    margin-inline: calc(-1 * var(--space-2));
+  }
+
+  .description {
+    font-size: var(--font-size-xs);
+  }
+}

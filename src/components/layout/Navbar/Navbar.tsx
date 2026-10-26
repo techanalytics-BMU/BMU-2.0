@@ -17,15 +17,14 @@ export default function Navbar() {
   return (
     <header className={styles.navbar}>
       <div className={styles.bar}>
-        {/* Logo – replace the "B" mark with the logo SVG when available */}
         <Link href="/" className={styles.logo} onClick={closeMenu}>
-          <span className={styles.logoMark} aria-hidden="true">
-            B
-          </span>
-          <span className={styles.logoText}>
-            BMU <em>Marketing</em>
-            <span className={styles.accent}>.</span>
-          </span>
+          <Image
+            src="/images/common/bmu-logo-light.webp"
+            alt="BMU Marketing"
+            width={75}
+            height={36}
+            priority
+          />
         </Link>
 
         <nav aria-label="Main" className={`${styles.nav} ${menuOpen ? styles.navOpen : ''}`}>

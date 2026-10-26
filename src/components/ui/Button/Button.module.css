@@ -4,8 +4,9 @@
   justify-content: center;
   gap: var(--space-2);
   border: 1px solid transparent;
-  border-radius: var(--radius-pill);
+  font-family: inherit;
   font-weight: 600;
+  cursor: pointer;
   white-space: nowrap;
   transition:
     transform 0.2s ease,
@@ -41,6 +42,26 @@
   border-color: rgba(255, 255, 255, 0.3);
 }
 
+.accent {
+  background: var(--color-accent);
+  color: var(--color-dark);
+  box-shadow: 0 0 24px rgba(140, 198, 63, 0.45);
+}
+
+.accent:hover {
+  background: #9ad64a;
+}
+
+/* Shapes */
+.pill {
+  border-radius: var(--radius-pill);
+}
+
+.rounded {
+  border-radius: var(--radius-sm);
+}
+
+/* Sizes */
 .md {
   min-width: 150px;
   padding: 0.75rem 1.75rem;

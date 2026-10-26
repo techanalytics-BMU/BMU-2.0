@@ -1,0 +1,155 @@
+/* Sizes use container units (cqw / cqh = 1% of the panel's width / height)
+   so the panel scales as one piece on every screen. */
+.panel {
+  position: relative;
+  container-type: size;
+  width: min(100%, 620px);
+  aspect-ratio: 1.9;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #050605;
+}
+
+/* Film-grain texture */
+.panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+/* Glowing horizontal line – brightest in the middle */
+.line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(140, 198, 63, 0.35) 15%,
+    #b9ef6a 50%,
+    rgba(140, 198, 63, 0.35) 85%,
+    transparent
+  );
+  box-shadow: 0 0 12px rgba(140, 198, 63, 0.6);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.2s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.markers {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.marker {
+  position: absolute;
+  bottom: 18%;
+  left: var(--x);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateX(-50%);
+}
+
+.label {
+  max-width: max(26cqw, 116px);
+  margin-bottom: 2.5cqh;
+  color: var(--color-text);
+  font-size: max(3.2cqh, 0.6rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  text-align: center;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+  transition-delay: calc(var(--delay) + 0.35s);
+}
+
+.stem {
+  width: 1px;
+  height: 30cqh;
+  background: linear-gradient(to top, rgba(140, 198, 63, 0.9), rgba(255, 255, 255, 0.35));
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.5s ease;
+  transition-delay: var(--delay);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  margin-bottom: -4px; /* half its size, so the dot centre sits on the line */
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 10px var(--color-accent);
+  transform: scale(0);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition-delay: var(--delay);
+}
+
+/* Middle marker: taller stem + hollow ring */
+.highlight .stem {
+  height: 52cqh;
+}
+
+.highlight .dot {
+  width: 13px;
+  height: 13px;
+  margin-bottom: -6.5px;
+  border: 2px solid var(--color-accent);
+  background: #050605;
+}
+
+/* ---------- Visible state ---------- */
+[data-in-view='true'] .line {
+  transform: scaleX(1);
+}
+
+[data-in-view='true'] .stem,
+[data-in-view='true'] .dot {
+  transform: none;
+}
+
+[data-in-view='true'] .label {
+  opacity: 1;
+  transform: none;
+}
+
+[data-in-view='true'] .highlight .dot {
+  animation: ring-pulse 2.4s ease-out 2.4s infinite;
+}
+
+@keyframes ring-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(140, 198, 63, 0.6);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 12px rgba(140, 198, 63, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line,
+  .stem,
+  .dot,
+  .label {
+    transform: none;
+    opacity: 1;
+    transition: none;
+  }
+
+  [data-in-view='true'] .highlight .dot {
+    animation: none;
+  }
+}

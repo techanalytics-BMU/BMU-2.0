@@ -1,0 +1,295 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-8) var(--space-3);
+  overflow: hidden;
+  /* Soft green glow at the top */
+  background:
+    radial-gradient(ellipse 60% 45% at 50% 0%, rgba(140, 198, 63, 0.16), transparent 70%),
+    #0d1014;
+}
+
+/* ---------- Header ---------- */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+}
+
+.heading {
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.description {
+  max-width: 560px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-md);
+  line-height: 1.6;
+}
+
+.dim {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ---------- Toggle ---------- */
+.toggle {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: repeat(var(--tabs), 1fr);
+  padding: 4px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: #0a0d10;
+}
+
+/* Lime highlight that slides to the active tab */
+.toggleIndicator {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc((100% - 8px) / var(--tabs));
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
+  transform: translateX(calc(var(--active) * 100%));
+  transition: transform 0.35s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.tab {
+  position: relative;
+  z-index: 1;
+  padding: 0.5rem 1.1rem;
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.35s ease;
+}
+
+.tabActive {
+  color: var(--color-dark);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-pill);
+}
+
+/* ---------- Cards ---------- */
+.panel {
+  width: 100%;
+  max-width: 1000px;
+  margin-top: var(--space-3);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-5) var(--space-4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  background: linear-gradient(to bottom, #171b21, #11151a);
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+/* Highlighted plan: green gradient + glowing border */
+.featured {
+  border-color: rgba(140, 198, 63, 0.6);
+  background: linear-gradient(to bottom, #4a6a1f 0%, #26381a 40%, #141c12 100%);
+}
+
+.featured:hover {
+  border-color: rgba(140, 198, 63, 0.9);
+}
+
+/* Glow around the highlighted card that gently "breathes" */
+.featured::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  box-shadow: 0 0 40px rgba(140, 198, 63, 0.3);
+  animation: breathe 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.name {
+  font-size: var(--font-size-md);
+  font-weight: 600;
+}
+
+.featured .name {
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.price {
+  margin-top: var(--space-3);
+  font-size: clamp(1.75rem, 2.6vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.period {
+  margin-left: 4px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: 400;
+}
+
+.tagline {
+  min-height: 2.8em;
+  margin-top: var(--space-2);
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
+  line-height: 1.4;
+}
+
+.featured .tagline {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.cta {
+  width: 100%;
+  min-width: 0;
+  margin-top: var(--space-4);
+}
+
+.features {
+  display: grid;
+  gap: 14px;
+  margin: var(--space-4) 0 0;
+  padding: var(--space-4) 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  list-style: none;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--font-size-sm);
+}
+
+.feature img {
+  flex-shrink: 0;
+}
+
+.empty {
+  padding: var(--space-7) var(--space-4);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 18px;
+  color: var(--color-text-muted);
+  text-align: center;
+  animation: card-in 0.5s ease backwards;
+}
+
+/* ---------- Entrance: cards rise in one after another ---------- */
+.panel:not([data-in-view='true']) .card {
+  opacity: 0;
+}
+
+[data-in-view='true'] .card {
+  animation: card-in 0.6s ease backwards;
+  animation-delay: calc(var(--i) * 0.12s);
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ---------- Mobile: swipe carousel – one card fully visible, a quarter of the next ---------- */
+@media (max-width: 720px) {
+  .panel {
+    /* let the carousel run to the screen edges */
+    width: calc(100% + 2 * var(--space-3));
+    margin-inline: calc(-1 * var(--space-3));
+  }
+
+  .cards {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-3) var(--space-4);
+    overflow-x: auto;
+    scroll-padding-inline: var(--space-3);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .cards::-webkit-scrollbar {
+    display: none;
+  }
+
+  .card {
+    flex: 0 0 78%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always; /* one card per swipe */
+  }
+
+  .card:hover {
+    transform: none;
+  }
+
+  .empty {
+    margin-inline: var(--space-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel:not([data-in-view='true']) .card {
+    opacity: 1;
+  }
+
+  [data-in-view='true'] .card,
+  .featured::after,
+  .empty {
+    animation: none;
+  }
+
+  .toggleIndicator {
+    transition: none;
+  }
+}

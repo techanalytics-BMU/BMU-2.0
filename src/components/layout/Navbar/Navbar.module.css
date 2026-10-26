@@ -25,32 +25,11 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
 }
 
-.logoMark {
-  display: grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: var(--color-accent);
-  color: var(--color-dark);
-  font-family: var(--font-family-display);
-  font-size: var(--font-size-sm);
-}
-
-.logoText {
-  font-weight: 600;
-  font-size: var(--font-size-md);
-}
-
-.logoText em {
-  font-weight: 600;
-}
-
-.accent {
-  color: var(--color-accent);
+.logo img {
+  width: 75px;
+  height: auto;
 }
 
 /* Links */
