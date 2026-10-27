@@ -10,12 +10,12 @@ export const landingFreeTrial: LandingFreeTrialContent = {
   // Website-builder mock-up (labels are shown in capitals where the design uses them)
   editor: {
     back: 'Pages',
-    title: 'Blog',
+    title: 'We Are Good At',
     search: 'Search questions',
     queue: 'Top questions',
   },
   site: {
-    url: 'bmumarketing.in/blog',
+    url: 'bmumarketing.in/we-are-good-at',
     links: ['Services', 'Industries', 'Work'],
     cta: 'Book a Call',
     author: 'BMU Marketing',
