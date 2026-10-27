@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f6f7f8"/>
+      <stop offset=".25" stop-color="#9ea1a6"/>
+      <stop offset=".5" stop-color="#26272a"/>
+      <stop offset=".75" stop-color="#8d9095"/>
+      <stop offset="1" stop-color="#d5d7da"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2c2d31"/>
+      <stop offset=".55" stop-color="#101113"/>
+      <stop offset="1" stop-color="#060607"/>
+    </linearGradient>
+    <linearGradient id="chrome" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset=".35" stop-color="#bfc2c6"/>
+      <stop offset=".52" stop-color="#3e4044"/>
+      <stop offset=".7" stop-color="#7f8287"/>
+      <stop offset="1" stop-color="#e3e4e6"/>
+    </linearGradient>
+    <linearGradient id="lime" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ecffc4"/>
+      <stop offset=".5" stop-color="#a6dc58"/>
+      <stop offset="1" stop-color="#6a9f2c"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="shadow">
+      <stop offset="0" stop-color="#000" stop-opacity=".8"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <ellipse cx="100" cy="182" rx="60" ry="10" fill="url(#shadow)"/>
+  <g transform="rotate(-14 100 100)">
+    <rect x="62" y="26" width="76" height="144" rx="17" fill="url(#frame)"/>
+    <rect x="67" y="31" width="66" height="134" rx="13" fill="url(#screen)"/>
+    <rect x="89" y="37" width="22" height="5" rx="2.5" fill="#000000" opacity=".7"/>
+    <path d="M67 44 C67 37 72 31 80 31 L104 31 L74 160 C70 158 67 154 67 148 Z" fill="#ffffff" opacity=".04"/>
+    <circle cx="100" cy="98" r="23" fill="#121315" stroke="url(#chrome)" stroke-width="3"/>
+    <path d="M94 86 L113 98 L94 110 Z" fill="url(#lime)" stroke="url(#lime)" stroke-width="2" stroke-linejoin="round" filter="url(#glow)"/>
+    <rect x="78" y="134" width="44" height="5" rx="2.5" fill="#ffffff" opacity=".14"/>
+    <rect x="78" y="144" width="30" height="5" rx="2.5" fill="#ffffff" opacity=".09"/>
+  </g>
+  <g transform="translate(146 50)">
+    <circle r="21" fill="url(#chrome)"/>
+    <circle r="21" stroke="#ffffff" stroke-opacity=".35" stroke-width="1"/>
+    <path d="M0 10 C-15 0 -13 -11 -6.5 -12 C-2.8 -12.5 -0.6 -10 0 -7.6 C0.6 -10 2.8 -12.5 6.5 -12 C13 -11 15 0 0 10 Z" fill="#141517"/>
+  </g>
+</svg>

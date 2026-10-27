@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <linearGradient id="body" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2e2f32"/>
+      <stop offset=".16" stop-color="#cfd1d4"/>
+      <stop offset=".3" stop-color="#fbfbfc"/>
+      <stop offset=".46" stop-color="#8c8f94"/>
+      <stop offset=".68" stop-color="#1b1c1e"/>
+      <stop offset=".86" stop-color="#6c6f74"/>
+      <stop offset="1" stop-color="#252628"/>
+    </linearGradient>
+    <linearGradient id="nib" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5e6166"/>
+      <stop offset=".3" stop-color="#f6f7f8"/>
+      <stop offset=".52" stop-color="#a5a8ad"/>
+      <stop offset=".78" stop-color="#34363a"/>
+      <stop offset="1" stop-color="#8f9297"/>
+    </linearGradient>
+    <linearGradient id="ribbon" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f5f6"/>
+      <stop offset=".3" stop-color="#7d8085"/>
+      <stop offset=".55" stop-color="#1c1d20"/>
+      <stop offset=".8" stop-color="#aeb1b5"/>
+      <stop offset="1" stop-color="#e8e9eb"/>
+    </linearGradient>
+    <linearGradient id="ribbonBack" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#3b3d41"/>
+      <stop offset=".5" stop-color="#121315"/>
+      <stop offset="1" stop-color="#55585d"/>
+    </linearGradient>
+    <radialGradient id="spark" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#f4ffd9"/>
+      <stop offset=".35" stop-color="#a6dc58"/>
+      <stop offset="1" stop-color="#8cc63f" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="shadow">
+      <stop offset="0" stop-color="#000" stop-opacity=".8"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <ellipse cx="104" cy="182" rx="64" ry="10" fill="url(#shadow)"/>
+  <path d="M42 120 C28 92 62 70 106 76 C148 82 172 110 152 134" stroke="url(#ribbonBack)" stroke-width="15" stroke-linecap="round"/>
+  <g transform="translate(100 102) scale(1.16) rotate(-38) translate(-100 -104)">
+    <rect x="88" y="80" width="24" height="98" rx="12" fill="url(#body)"/>
+    <rect x="86" y="76" width="28" height="9" rx="3" fill="url(#body)"/>
+    <rect x="87" y="150" width="26" height="5" rx="2" fill="url(#body)" opacity=".9"/>
+    <path d="M90 77 L110 77 L106 58 L94 58 Z" fill="url(#body)"/>
+    <path d="M93 60 L107 60 L109 47 C109 33 104 20 100 8 C96 20 91 33 91 47 Z" fill="url(#nib)"/>
+    <path d="M100 13 L100 44" stroke="#17181a" stroke-width="1.6" stroke-linecap="round"/>
+    <circle cx="100" cy="46" r="3.2" fill="#17181a"/>
+    <circle cx="100" cy="5" r="9" fill="url(#spark)"/>
+  </g>
+  <path d="M152 134 C134 160 84 166 58 148 C42 137 37 127 42 120" stroke="url(#ribbon)" stroke-width="15" stroke-linecap="round"/>
+  <path d="M146 140 C128 158 88 161 64 147" stroke="#ffffff" stroke-opacity=".45" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#494b4f"/>
+      <stop offset=".5" stop-color="#18191b"/>
+      <stop offset="1" stop-color="#2e3033"/>
+    </linearGradient>
+    <linearGradient id="chrome" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset=".3" stop-color="#b0b3b7"/>
+      <stop offset=".55" stop-color="#2e2f32"/>
+      <stop offset=".8" stop-color="#999ca1"/>
+      <stop offset="1" stop-color="#e2e3e5"/>
+    </linearGradient>
+    <linearGradient id="handle" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2a2b2e"/>
+      <stop offset=".3" stop-color="#e6e7e9"/>
+      <stop offset=".55" stop-color="#6d7075"/>
+      <stop offset="1" stop-color="#1c1d1f"/>
+    </linearGradient>
+    <radialGradient id="lens" cx=".35" cy=".3" r=".8">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".18"/>
+      <stop offset=".5" stop-color="#ffffff" stop-opacity=".04"/>
+      <stop offset="1" stop-color="#000000" stop-opacity=".35"/>
+    </radialGradient>
+    <linearGradient id="lime" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ecffc4"/>
+      <stop offset=".5" stop-color="#a6dc58"/>
+      <stop offset="1" stop-color="#6a9f2c"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="shadow">
+      <stop offset="0" stop-color="#000" stop-opacity=".8"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <ellipse cx="104" cy="182" rx="68" ry="10" fill="url(#shadow)"/>
+  <rect x="26" y="42" width="110" height="84" rx="18" transform="rotate(-8 81 84)" fill="url(#tile)" stroke="#6d7075" stroke-opacity=".6"/>
+  <rect x="140" y="124" width="20" height="58" rx="10" transform="rotate(-45 150 153)" fill="url(#handle)"/>
+  <path d="M98 84 L126 100 L98 116 Z" fill="url(#lime)" stroke="url(#lime)" stroke-width="2" stroke-linejoin="round" filter="url(#glow)"/>
+  <circle cx="108" cy="100" r="40" fill="url(#lens)"/>
+  <circle cx="108" cy="100" r="40" stroke="url(#chrome)" stroke-width="12"/>
+  <path d="M80 82 A34 34 0 0 1 104 66" stroke="#ffffff" stroke-opacity=".55" stroke-width="3" stroke-linecap="round"/>
+</svg>

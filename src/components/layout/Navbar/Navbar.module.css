@@ -17,8 +17,9 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-pill);
   background: rgba(11, 18, 27, 0.85);
-  backdrop-filter: blur(12px);
+  /* -webkit- line first: if it comes after, the CSS build drops both and there's no blur */
   -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
 }
 
 /* Logo */
@@ -62,51 +63,377 @@
   color: var(--color-text);
 }
 
-.menuToggle {
-  display: none;
-  padding: var(--space-2);
+/* "Services" – opens the services panel (hover or click). While open it turns bold lime. */
+.menuButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
   border: 0;
   background: none;
+  font-family: inherit;
   cursor: pointer;
 }
 
-/* Mobile */
+/* Phone-only list of services inside the menu sheet */
+.subMenu {
+  display: none;
+}
+
+.menuButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.chevron {
+  width: 5px;
+  height: 5px;
+  margin-top: -3px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  transition:
+    transform 0.25s ease,
+    margin 0.25s ease;
+}
+
+.menuButton[aria-expanded='true'] .chevron {
+  margin-top: 2px;
+  transform: rotate(-135deg);
+}
+
+.menuButton[aria-expanded='true'] {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+/* The label is always as wide as its bold version (a hidden bold copy sets the width),
+   so turning bold doesn't nudge the other links sideways */
+.menuLabel {
+  display: inline-grid;
+}
+
+.menuLabel::after {
+  content: attr(data-label);
+  height: 0;
+  overflow: hidden;
+  font-weight: 700;
+  visibility: hidden;
+}
+
+/* Desktop: no arrow – the bold lime label shows the panel is open
+   (phones keep it, as the only sign that "Services" expands in the menu) */
+@media (min-width: 901px) {
+  .chevron {
+    display: none;
+  }
+}
+
+/* Dims the page behind the services panel or the phone menu (sits just under the navbar).
+   It lets the pointer through, except behind the phone menu, where a tap closes the menu. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: rgba(0, 0, 0, 0.55);
+  /* strong blur: the frameless services cards stand cleanly over a soft, frosted page */
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.25s ease,
+    visibility 0s linear 0.25s;
+}
+
+.backdrop[data-open='true'] {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 0.25s ease,
+    visibility 0s;
+}
+
+.backdrop[data-sheet='true'] {
+  pointer-events: auto;
+}
+
+/* Burger: two lines that turn into a cross when open */
+.menuToggle {
+  display: none;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.menuToggle:hover,
+.menuToggle[data-open='true'] {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.menuToggle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.menuIcon {
+  position: relative;
+  display: block;
+  width: 18px;
+  height: 10px;
+}
+
+.menuIcon::before,
+.menuIcon::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  border-radius: 2px;
+  background: var(--color-text);
+  transition:
+    top 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.menuIcon::before {
+  top: 0;
+}
+
+.menuIcon::after {
+  top: calc(100% - 1.5px);
+}
+
+.menuToggle[data-open='true'] .menuIcon::before,
+.menuToggle[data-open='true'] .menuIcon::after {
+  top: calc(50% - 0.75px);
+}
+
+.menuToggle[data-open='true'] .menuIcon::before {
+  transform: rotate(45deg);
+}
+
+.menuToggle[data-open='true'] .menuIcon::after {
+  transform: rotate(-45deg);
+}
+
+/* ---------- Phones and tablets: the links move into a frosted sheet under the bar ---------- */
 @media (max-width: 900px) {
   .menuToggle {
-    display: block;
+    display: grid;
   }
 
   .nav {
     position: absolute;
-    top: calc(100% + var(--space-2));
+    top: calc(100% + 8px);
     left: 0;
     right: 0;
-    display: none;
     flex-direction: column;
     align-items: stretch;
     gap: var(--space-4);
+    max-height: calc(100svh - var(--navbar-offset) - var(--navbar-height) - 24px);
     margin: 0;
-    padding: var(--space-4);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    background: rgba(11, 18, 27, 0.97);
+    padding: 6px 18px 18px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 22px;
+    /* Fully opaque – the bar's own blur stops a blur working here, so a see-through
+       sheet would show sharp page text behind it */
+    background: linear-gradient(to bottom, #141518, #0b0c0e);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 30px 60px -20px rgba(0, 0, 0, 0.85);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px) scale(0.98);
+    transform-origin: top center;
+    transition:
+      opacity 0.2s ease,
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0.35s;
   }
 
   .navOpen {
-    display: flex;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity 0.2s ease,
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s;
   }
 
   .links {
     flex-direction: column;
-    gap: var(--space-3);
+    gap: 0;
     margin: 0;
   }
 
+  /* Big, easy-to-tap rows separated by hairlines; they rise in one after another */
+  .links > li {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .navOpen .links > li,
+  .navOpen .cta {
+    animation: item-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation-delay: calc(60ms + var(--i, 5) * 45ms);
+  }
+
   .link {
-    font-size: var(--font-size-sm);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 18px 4px;
+    color: #e6e7e9;
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    text-transform: none;
+  }
+
+  /* Current page: a small green dot on the right */
+  .link.active::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 8px var(--color-accent);
+  }
+
+  .menuButton.active::after {
+    display: none;
+  }
+
+  .chevron {
+    width: 8px;
+    height: 8px;
+    margin-right: 6px;
+    opacity: 0.7;
+  }
+
+  /* Services list: height animates by switching the grid row from 0fr to 1fr */
+  .subMenu {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .subMenu[data-open='true'] {
+    grid-template-rows: 1fr;
+  }
+
+  .subList {
+    display: grid;
+    gap: 4px;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    list-style: none;
+  }
+
+  /* Space under the list as a margin (clipped when collapsed – padding would stay visible) */
+  .subList > li:last-child {
+    margin-bottom: 14px;
+  }
+
+  .subMenu[data-open='true'] .subList > li {
+    animation: item-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation-delay: calc(var(--j) * 40ms);
+  }
+
+  .subItem {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 8px;
+    border-radius: 14px;
+    transition: background-color 0.2s ease;
+  }
+
+  a.subItem:active {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  /* Chrome icon in a small dark tile */
+  .subIcon {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 14px;
+    background: linear-gradient(145deg, #1d1d1f, #121213);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .subIcon img {
+    width: 42px;
+    height: 42px;
+  }
+
+  .subText {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .subTitle {
+    color: #ececec;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .subDescription {
+    overflow: hidden;
+    color: #7c7c7c;
+    font-size: 0.8125rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .cta {
-    align-self: flex-start;
+    align-self: stretch;
+    justify-content: center;
+    height: 50px;
+    margin-top: var(--space-2);
+  }
+}
+
+@keyframes item-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navOpen .links > li,
+  .navOpen .cta,
+  .subMenu[data-open='true'] .subList > li {
+    animation: none;
+  }
+
+  .nav,
+  .subMenu,
+  .menuIcon::before,
+  .menuIcon::after {
+    transition: none;
   }
 }

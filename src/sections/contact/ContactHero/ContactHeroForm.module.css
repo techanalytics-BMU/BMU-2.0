@@ -7,8 +7,9 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 14px;
   background: rgba(15, 20, 26, 0.85);
-  backdrop-filter: blur(6px);
+  /* -webkit- line first: if it comes after, the CSS build drops both and there's no blur */
   -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
 }
 
 .field {
