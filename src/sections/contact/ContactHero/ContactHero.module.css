@@ -1,0 +1,221 @@
+/* Fills exactly the first screen: the "CONTACT" word on top (fully visible),
+   then the form and details centred in the space below it */
+.section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  padding: calc(var(--navbar-height) + var(--navbar-offset)) var(--space-4) clamp(16px, 4svh, 48px);
+  overflow: hidden;
+  background-color: var(--color-bg);
+  /* Scattered faint stars */
+  background-image:
+    radial-gradient(1px 1px at 40px 60px, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 230px 180px, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1.5px 1.5px at 340px 90px, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 120px 320px, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 400px 280px, rgba(255, 255, 255, 0.35), transparent);
+  background-size: 460px 400px;
+}
+
+/* Large thin green ring sweeping behind the form */
+.section::before {
+  content: '';
+  position: absolute;
+  top: 48%;
+  left: 52%;
+  width: min(1300px, 140vw);
+  aspect-ratio: 1;
+  border: 1px solid rgba(140, 198, 63, 0.55);
+  border-radius: 50%;
+  box-shadow: 0 0 18px rgba(140, 198, 63, 0.15);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* Soft green glow from the top behind the word, with fine vertical grid lines inside it */
+.glow {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(1200px, 100%);
+  height: calc(var(--navbar-height) + var(--navbar-offset) + clamp(160px, 30svh, 340px));
+  transform: translateX(-50%);
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 26px),
+    radial-gradient(ellipse 55% 95% at 50% 0%, rgba(140, 198, 63, 0.5), rgba(90, 130, 35, 0.22) 50%, transparent 85%);
+  /* fade the edges and bottom so it blends into the black */
+  -webkit-mask-image: radial-gradient(ellipse 60% 100% at 50% 0%, #000 55%, transparent 100%);
+  mask-image: radial-gradient(ellipse 60% 100% at 50% 0%, #000 55%, transparent 100%);
+  pointer-events: none;
+}
+
+/* Huge faded word in its own space at the top – sized by the screen's width and height
+   so it always fits, and never covered by the form */
+.watermark {
+  position: relative;
+  align-self: center;
+  margin-top: clamp(8px, 2svh, 32px);
+  /* Solid grey letters, lighter at the top, fading downwards */
+  color: transparent;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.06));
+  -webkit-background-clip: text;
+  background-clip: text;
+  font-family: var(--font-family-display);
+  font-size: clamp(3rem, 15.5vw, 22rem); /* spans ~90% of the screen width */
+  line-height: 0.85;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Circuit decoration at the side edges */
+/* Starts at the navbar, so its first line runs alongside the "CONTACT" word */
+.circuitLeft,
+.circuitRight {
+  position: absolute;
+  top: calc(var(--navbar-height) + var(--navbar-offset) - 20px);
+  width: clamp(120px, 15vw, 220px);
+  height: auto;
+  pointer-events: none;
+}
+
+.circuitLeft {
+  left: 0;
+}
+
+.circuitRight {
+  right: 0;
+  transform: scaleX(-1);
+}
+
+/* ---------- Content ---------- */
+.inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(var(--space-5), 5vw, var(--space-8));
+  align-items: center;
+  width: 100%;
+  max-width: 1080px;
+  margin: auto; /* centred in the space below the word */
+  padding-top: clamp(12px, 2.5svh, 32px);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.heading {
+  margin-top: var(--space-4);
+  font-family: var(--font-family-display);
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.accent {
+  color: var(--color-accent);
+}
+
+.description {
+  max-width: 440px;
+  margin-top: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-md);
+  line-height: 1.6;
+}
+
+.details {
+  display: grid;
+  gap: 18px;
+  margin: var(--space-5) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.detail {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.detailText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detailLabel {
+  color: var(--color-text-dim);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.detailValue {
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.35);
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.2s ease;
+}
+
+a.detailValue:hover {
+  text-decoration-color: var(--color-accent);
+}
+
+/* ---------- Short laptop screens: smaller word and outer spacing (form and details keep their size) ---------- */
+@media (min-width: 861px) and (max-height: 680px) {
+  .section {
+    padding-bottom: 12px;
+  }
+
+  .watermark {
+    margin-top: 4px;
+  }
+
+  .inner {
+    padding-top: 10px;
+  }
+}
+
+/* ---------- Tablet / phone: heading and details first, then the form ---------- */
+@media (max-width: 860px) {
+  .inner {
+    grid-template-columns: 1fr;
+    max-width: 560px;
+  }
+
+  .info {
+    order: -1;
+  }
+
+  .circuitLeft,
+  .circuitRight {
+    opacity: 0.5;
+  }
+}
+
+@media (max-width: 600px) {
+  .section {
+    padding-inline: var(--space-3);
+  }
+}
