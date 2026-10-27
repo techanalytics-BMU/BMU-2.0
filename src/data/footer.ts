@@ -1,61 +1,48 @@
 import type { FooterContent } from '@/types/footer';
 
-// Content from bmumarketing.in (approved for the footer).
-// No links yet – add `href` to any item to make it clickable.
+// Site footer. Items without `href` show as plain text – add the link once the page exists.
+// The tabs block (Bangalore Areas / Cities / Industries / Services) is in src/data/serviceAreas.ts.
 export const footer: FooterContent = {
   tagline:
     'AI-first growth partner for businesses and real estate. Strategy, creative, media and software from one team.',
-  contact: [
-    {
-      type: 'address',
-      label:
-        '376, Phase 9, Royal Park Residency Layout, JP Nagar 9th Phase, J. P. Nagar, Bengaluru, Karnataka 560108',
-    },
-    { type: 'email', label: 'buildmyuniversee@gmail.com' },
-    { type: 'phone', label: '+91 81054 91414' },
-  ],
   social: [
     { platform: 'instagram', label: 'Instagram' },
     { platform: 'linkedin', label: 'LinkedIn' },
+    { platform: 'youtube', label: 'YouTube' },
+    { platform: 'whatsapp', label: 'WhatsApp', href: 'https://wa.me/918105491414' },
   ],
   columns: [
     {
-      title: 'Services',
+      title: 'Site map',
       links: [
-        { label: 'Marketing and Visibility' },
-        { label: 'Social and Personal Brand' },
-        { label: 'UGC & Creator Marketing' },
-        { label: 'Brand & design' },
-        { label: 'Content & Production' },
-        { label: 'Web & AI' },
-      ],
-    },
-    {
-      title: 'Products',
-      links: [
-        { label: 'BMU QR' },
-        { label: 'Smart Review' },
-        { label: 'BMU Connect' },
-        { label: 'BMU AI Studio' },
-        { label: 'Real Estate Suite' },
-      ],
-    },
-    {
-      title: 'Company',
-      links: [
+        { label: 'FAQs', href: '/contact#faq' },
+        { label: 'Contact us', href: '/contact' },
         { label: 'Case studies' },
-        { label: 'Industries' },
-        { label: 'Pricing' },
-        { label: 'Resources' },
-        { label: 'About' },
-        { label: 'Contact' },
-        { label: 'QR & NFC store' },
-        { label: 'Partners & white label' },
-        { label: 'Join as a creator' },
         { label: 'Client dashboard' },
       ],
     },
+    {
+      title: 'Resources',
+      links: [{ label: 'Terms of use' }, { label: 'Privacy policy' }, { label: 'Refund policy' }],
+    },
   ],
-  copyright: '© 2026 BMU.Marketing - Bengaluru, India',
-  legal: [{ label: 'Privacy' }, { label: 'Terms' }],
+  join: {
+    title: 'Join us',
+    heading: 'Growth ideas, straight to your inbox',
+    description: 'Campaigns that worked and lessons from the BMU team. No spam.',
+    newsletter: {
+      placeholder: 'Enter your email',
+      button: 'Subscribe',
+      sending: 'Subscribing…',
+      success: 'Thanks – you’re on the list.',
+      error: 'Please enter a valid email',
+    },
+  },
+  wordmark: 'BMU Marketing',
+  backToTop: 'Back to top',
+  bottom: {
+    copyright: '© 2026 BMU Marketing',
+    location: 'Bengaluru, India',
+    email: 'hello@bmumarketing.in',
+  },
 };

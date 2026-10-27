@@ -7,7 +7,7 @@ export const contactHero: ContactHeroContent = {
   headingHighlight: 'coffee!',
   description:
     'Tell us about your business. We reply within one working day, or drop by the studio in Bengaluru.',
-  // Phone and address are the same as in the footer (src/data/footer.ts)
+  // The phone number is also the footer's WhatsApp link (src/data/footer.ts)
   details: [
     {
       icon: 'mail',

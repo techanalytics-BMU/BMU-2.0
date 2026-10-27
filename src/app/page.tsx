@@ -5,7 +5,6 @@ import {
   LandingFreeTrial,
   LandingHero,
   LandingPricing,
-  LandingServiceAreas,
 } from '@/sections/landing';
 
 // Landing page – add new sections below in display order
@@ -18,7 +17,6 @@ export default function Home() {
       <LandingPricing />
       <LandingCore />
       <LandingFreeTrial />
-      <LandingServiceAreas />
     </main>
   );
 }

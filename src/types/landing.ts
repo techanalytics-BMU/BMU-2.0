@@ -110,23 +110,6 @@ export type LandingFreeTrialContent = {
   site: LandingFreeTrialSite;
 };
 
-export type LandingServiceAreasItem = {
-  label: string;
-  href?: string; // plain text until a link is added
-};
-
-export type LandingServiceAreasTab = {
-  id: string;
-  label: string; // tab button
-  heading: string;
-  items: LandingServiceAreasItem[];
-};
-
-export type LandingServiceAreasContent = {
-  defaultTab: string; // id of the tab shown first
-  tabs: LandingServiceAreasTab[];
-};
-
 export type LandingAllServicesContent = {
   heading: string;
   subheading: string;

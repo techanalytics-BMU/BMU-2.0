@@ -5,4 +5,3 @@ export { default as LandingConversionRate } from './LandingConversionRate/Landin
 export { default as LandingPricing } from './LandingPricing/LandingPricing';
 export { default as LandingCore } from './LandingCore/LandingCore';
 export { default as LandingFreeTrial } from './LandingFreeTrial/LandingFreeTrial';
-export { default as LandingServiceAreas } from './LandingServiceAreas/LandingServiceAreas';

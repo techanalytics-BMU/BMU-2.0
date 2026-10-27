@@ -1,7 +1,8 @@
-import type { LandingServiceAreasContent, LandingServiceAreasItem } from '@/types/landing';
+import type { ServiceAreasContent, ServiceAreasItem } from '@/types/footer';
 
-// Items are plain text for now – give an item an `href` later to make it a link.
-const items = (labels: string[], format: (label: string) => string): LandingServiceAreasItem[] =>
+// Tabs block in the footer. Items are plain text for now – give an item an `href` later
+// to make it a link.
+const items = (labels: string[], format: (label: string) => string): ServiceAreasItem[] =>
   labels.map((label) => ({ label: format(label) }));
 
 const bangaloreAreas = [
@@ -49,7 +50,7 @@ const services = [
   'AI Content Creation', 'ChatGPT Ads', 'Lead Generation', 'Real Estate Lead Generation',
 ];
 
-export const landingServiceAreas: LandingServiceAreasContent = {
+export const serviceAreas: ServiceAreasContent = {
   defaultTab: 'services',
   tabs: [
     {

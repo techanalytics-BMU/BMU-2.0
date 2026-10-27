@@ -1,59 +1,62 @@
+/* The footer continues the free-trial section above it: charcoal with a hint of the logo
+   green, gradient type, frosted pills, a newsletter card lit along its top edge, and a closing
+   green horizon that the wordmark dissolves into. */
 .footer {
-  padding: var(--space-7) var(--space-4) var(--space-4);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  background: var(--color-bg);
+  position: relative;
+  overflow: hidden;
+  padding: clamp(4.5rem, 8vw, 6.5rem) var(--space-4) 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(140, 198, 63, 0.05), transparent 70%),
+    var(--color-bg);
 }
 
-/* Brand column + 3 link columns */
+/* Hairline across the top, fading out at both ends */
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(1240px, 100% - 32px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14) 50%, transparent);
+  transform: translateX(-50%);
+}
+
 .inner {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1fr;
-  gap: var(--space-6);
   max-width: 1240px;
   margin: 0 auto;
 }
 
-/* ---------- Brand ---------- */
+/* ---------- Top: brand · Site map · Resources · newsletter card ---------- */
+.top {
+  display: grid;
+  grid-template-columns: 1.45fr 0.75fr 0.75fr 1.65fr;
+  gap: var(--space-5);
+  align-items: start;
+}
+
 .logo {
-  width: 116px;
+  display: inline-block;
+}
+
+.logo img {
+  width: 112px;
   height: auto;
 }
 
 .tagline {
-  max-width: 300px;
-  margin-top: var(--space-4);
+  max-width: 320px;
+  margin-top: 20px;
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
   line-height: 1.7;
 }
 
-.contact {
-  display: grid;
-  gap: var(--space-3);
-  max-width: 360px;
-  margin: var(--space-5) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.contactItem {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
-  color: #c9d1d9;
-  font-size: var(--font-size-sm);
-  line-height: 1.6;
-}
-
-.contactItem img {
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
+/* Frosted round social buttons; they light up green on hover */
 .social {
   display: flex;
-  gap: var(--space-2);
-  margin: var(--space-5) 0 0;
+  gap: 10px;
+  margin: 24px 0 0;
   padding: 0;
   list-style: none;
 }
@@ -61,98 +64,471 @@
 .socialButton {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 50%;
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease;
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+.socialButton img {
+  opacity: 0.85;
+  transition: opacity 0.25s ease;
 }
 
 a.socialButton:hover {
-  border-color: var(--color-accent);
-  background: rgba(140, 198, 63, 0.1);
+  border-color: rgba(140, 198, 63, 0.6);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 0 4px rgba(140, 198, 63, 0.08),
+    0 0 20px rgba(140, 198, 63, 0.3);
+  transform: translateY(-2px);
 }
 
-/* ---------- Link columns ---------- */
+a.socialButton:hover img {
+  opacity: 1;
+}
+
+a.socialButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Link columns */
+.column {
+  padding-top: 8px;
+}
+
 .columnTitle {
-  color: var(--color-accent);
-  font-size: var(--font-size-sm);
+  color: var(--color-text-dim);
+  font-size: 0.6875rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
   text-transform: uppercase;
 }
 
 .links {
   display: grid;
-  gap: var(--space-3);
-  margin: var(--space-5) 0 0;
+  gap: 14px;
+  margin: 22px 0 0;
   padding: 0;
   list-style: none;
+}
+
+.links li {
+  font-size: var(--font-size-sm);
+  line-height: 1.35;
 }
 
 .link {
-  color: #c9d1d9;
-  font-size: var(--font-size-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #d4d6da;
   transition: color 0.2s ease;
 }
 
-a.link:hover {
+/* Real links reveal a small green arrow on hover (plain items have no page yet) */
+a.link::after {
+  content: '↗';
   color: var(--color-accent);
+  font-size: 0.8em;
+  opacity: 0;
+  transform: translate(-4px, 2px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
-/* ---------- Bottom row ---------- */
-.bottom {
+a.link:hover {
+  color: var(--color-text);
+}
+
+a.link:hover::after {
+  opacity: 1;
+  transform: none;
+}
+
+a.link:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Newsletter card: fine grain, dark gradient, a 1px border lit along the top edge,
+   and a soft green glow in its top-right corner */
+.join {
+  position: relative;
+  padding: 26px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.07'/%3E%3C/svg%3E")
+      padding-box,
+    radial-gradient(circle at 100% 0%, rgba(140, 198, 63, 0.13), transparent 55%) padding-box,
+    linear-gradient(145deg, #1a1b1d 0%, #131415 60%, #0f1011 100%) padding-box,
+    linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.17),
+        rgba(255, 255, 255, 0.06) 40%,
+        rgba(255, 255, 255, 0.05)
+      )
+      border-box;
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.9);
+}
+
+/* White fading softly to silver */
+.joinHeading {
+  margin-top: 12px;
+  padding-bottom: 0.05em; /* keeps descenders inside the clipped gradient */
+  background: linear-gradient(180deg, #ffffff 30%, #b9b9bb);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 1.375rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.joinText {
+  margin-top: 8px;
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+/* Recessed pill field with the cream button inside it; a soft green ring while typing */
+.subscribe {
+  margin-top: 20px;
+}
+
+.subscribeField {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
+  height: 54px;
+  padding: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-pill);
+  background: rgba(0, 0, 0, 0.35);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.subscribeField:focus-within {
+  border-color: rgba(140, 198, 63, 0.55);
+  box-shadow:
+    inset 0 1px 3px rgba(0, 0, 0, 0.5),
+    0 0 0 4px rgba(140, 198, 63, 0.12);
+}
+
+.subscribeField[data-invalid='true'] {
+  border-color: #e5484d;
+}
+
+.subscribeInput {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0 var(--space-3);
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+}
+
+.subscribeInput::placeholder {
+  color: var(--color-text-dim);
+}
+
+.subscribeInput:focus {
+  outline: none;
+}
+
+.subscribeButton {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 10px;
+  height: 100%;
+  padding: 0 5px 0 18px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-light);
+  color: var(--color-dark);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.3s ease;
+}
+
+.subscribeButton img {
+  width: 32px;
+  height: 32px;
+  transition: transform 0.3s ease;
+}
+
+.subscribeButton:hover {
+  background: #ffffff;
+  box-shadow: 0 10px 30px -10px rgba(140, 198, 63, 0.55);
+}
+
+.subscribeButton:hover img {
+  transform: rotate(45deg);
+}
+
+.subscribeButton:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.subscribeButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.subscribeError {
+  margin-top: 8px;
+  padding-left: var(--space-3);
+  color: #ff7a7e;
+  font-size: var(--font-size-xs);
+}
+
+.subscribed {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  color: var(--color-accent);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.subscribed::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 8px var(--color-accent);
+}
+
+/* ---------- Closing signature: the wordmark dissolving into a green horizon ---------- */
+.signature {
+  position: relative;
+  container-type: inline-size; /* the wordmark is sized to always fit this width */
   max-width: 1240px;
-  margin: var(--space-7) auto 0;
-  padding-top: var(--space-4);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin: clamp(4.5rem, 9vw, 7rem) auto 0;
+  text-align: center;
+}
+
+.wordmark {
+  display: block;
+  padding-bottom: 0.04em;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.05) 75%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-family: var(--font-family-display);
+  font-size: 9.2cqw;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  user-select: none;
+  /* the letters fade away towards the line */
+  -webkit-mask-image: linear-gradient(to bottom, #000000 30%, transparent 95%);
+  mask-image: linear-gradient(to bottom, #000000 30%, transparent 95%);
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 1.2s ease,
+    transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.signature[data-in-view='true'] .wordmark {
+  opacity: 1;
+  transform: none;
+}
+
+/* Green horizon along the foot of the wordmark (as in the free-trial section) */
+.horizon {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: min(1100px, 96%);
+  aspect-ratio: 6 / 1;
+  transform: translate(-50%, 50%);
+  pointer-events: none;
+}
+
+/* Soft bloom of light rising into the letters */
+.horizon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    closest-side,
+    rgba(140, 198, 63, 0.3),
+    rgba(140, 198, 63, 0.1) 45%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 1.4s ease 0.2s;
+}
+
+/* Thin bright line that draws outwards from the centre */
+.horizon::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(206, 242, 150, 0.95) 50%, transparent);
+  box-shadow: 0 0 18px 1px rgba(140, 198, 63, 0.55);
+  transform: scaleX(0);
+  transition: transform 1.2s cubic-bezier(0.65, 0, 0.35, 1) 0.15s;
+}
+
+.signature[data-in-view='true'] .horizon::before {
+  opacity: 1;
+}
+
+.signature[data-in-view='true'] .horizon::after {
+  transform: scaleX(1);
+}
+
+/* Glass chip sitting on the line: back to the top of the page */
+.toTop {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 1rem 0.55rem 0.95rem;
+  border: 1px solid rgba(140, 198, 63, 0.35);
+  border-radius: var(--radius-pill);
+  background: rgba(10, 14, 9, 0.72);
+  /* -webkit- line first: if it comes after, the CSS build drops both and there's no blur */
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  color: var(--color-light);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow:
+    0 0 0 4px rgba(140, 198, 63, 0.06),
+    0 10px 30px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  opacity: 0;
+  transform: translate(-50%, 50%);
+  transition:
+    opacity 0.6s ease 0.7s,
+    border-color 0.2s ease,
+    box-shadow 0.3s ease;
+}
+
+.signature[data-in-view='true'] .toTop {
+  opacity: 1;
+}
+
+.toTop:hover {
+  border-color: rgba(140, 198, 63, 0.7);
+  box-shadow:
+    0 0 0 4px rgba(140, 198, 63, 0.1),
+    0 10px 30px rgba(0, 0, 0, 0.5),
+    0 0 28px rgba(140, 198, 63, 0.35);
+}
+
+.toTop:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.toTopDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 8px var(--color-accent);
+}
+
+.toTopArrow {
+  transition: transform 0.25s ease;
+}
+
+.toTop:hover .toTopArrow {
+  transform: translateY(-2px);
+}
+
+/* ---------- Bottom line ---------- */
+.bottom {
+  padding: clamp(3.5rem, 6vw, 4.5rem) 0 var(--space-5);
   color: var(--color-text-dim);
   font-size: var(--font-size-xs);
+  text-align: center;
 }
 
-.legal {
-  display: flex;
-  gap: var(--space-4);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.legal .link {
-  font-size: var(--font-size-xs);
-}
-
-/* ---------- Tablet ---------- */
+/* ---------- Tablet: brand on its own row, then the columns, then the card ---------- */
 @media (max-width: 1024px) {
-  .inner {
-    grid-template-columns: repeat(3, 1fr);
+  .top {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6) var(--space-5);
   }
 
-  .brand {
+  .brand,
+  .join {
     grid-column: 1 / -1;
   }
+
+  .join {
+    max-width: 560px;
+  }
 }
 
-/* ---------- Mobile: brand on top, link columns in 2 columns ---------- */
-@media (max-width: 600px) {
+/* ---------- Phone ---------- */
+@media (max-width: 720px) {
   .footer {
     padding-inline: var(--space-3);
   }
 
-  .inner {
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-6) var(--space-4);
+  .join {
+    padding: 22px 18px;
   }
 
-  .bottom {
-    flex-direction: column;
-    align-items: flex-start;
+  .joinHeading {
+    font-size: 1.2rem;
+  }
+
+  /* The wordmark stacks on two lines so it stays big */
+  .wordmark {
+    font-size: 12.8cqw;
+    line-height: 0.98;
+    white-space: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wordmark,
+  .horizon::before,
+  .horizon::after,
+  .toTop {
+    transition: none;
   }
 }

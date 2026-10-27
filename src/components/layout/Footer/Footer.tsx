@@ -3,12 +3,9 @@ import Link from 'next/link';
 import { footer } from '@/data/footer';
 import type { FooterLink } from '@/types/footer';
 import styles from './Footer.module.css';
-
-const CONTACT_ICONS = {
-  address: '/icons/common/location.svg',
-  email: '/icons/common/mail.svg',
-  phone: '/icons/common/phone.svg',
-};
+import FooterServiceAreas from './FooterServiceAreas';
+import FooterSignature from './FooterSignature';
+import FooterSubscribe from './FooterSubscribe';
 
 // Link when an href is set in src/data/footer.ts, plain text until then
 function FooterItem({ item, className }: { item: FooterLink; className?: string }) {
@@ -21,84 +18,84 @@ function FooterItem({ item, className }: { item: FooterLink; className?: string 
   );
 }
 
-// Site footer – shown on every page (added in src/app/layout.tsx)
+// Site footer – shown on every page (added in src/app/layout.tsx). It continues the look of the
+// free-trial section: brand + social · Site map · Resources · newsletter card → tabs block →
+// the wordmark dissolving into a green horizon → bottom line.
 export default function Footer() {
-  const { tagline, contact, social, columns, copyright, legal } = footer;
+  const { tagline, social, columns, join, wordmark, backToTop, bottom } = footer;
 
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
-        <div className={styles.brand}>
-          <Image
-            src="/images/common/bmu-logo-light.webp"
-            alt="BMU Marketing"
-            width={116}
-            height={56}
-            className={styles.logo}
-          />
-          <p className={styles.tagline}>{tagline}</p>
+        <div className={styles.top}>
+          <div className={styles.brand}>
+            <Link href="/" className={styles.logo} aria-label="BMU Marketing – home">
+              <Image
+                src="/images/common/bmu-logo-light.webp"
+                alt="BMU Marketing"
+                width={112}
+                height={54}
+              />
+            </Link>
+            <p className={styles.tagline}>{tagline}</p>
 
-          <ul className={styles.contact}>
-            {contact.map((item) => (
-              <li key={item.type} className={styles.contactItem}>
-                <Image src={CONTACT_ICONS[item.type]} alt="" width={18} height={18} />
-                <FooterItem item={item} />
-              </li>
-            ))}
-          </ul>
+            <ul className={styles.social}>
+              {social.map((item) => {
+                const icon = (
+                  <Image src={`/icons/social/${item.platform}.svg`} alt="" width={16} height={16} />
+                );
+                return (
+                  <li key={item.platform}>
+                    {item.href ? (
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={item.label}
+                        className={styles.socialButton}
+                      >
+                        {icon}
+                      </a>
+                    ) : (
+                      <span role="img" aria-label={item.label} className={styles.socialButton}>
+                        {icon}
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
 
-          <ul className={styles.social}>
-            {social.map((item) => {
-              const icon = (
-                <Image src={`/icons/social/${item.platform}.svg`} alt="" width={16} height={16} />
-              );
-              return (
-                <li key={item.platform}>
-                  {item.href ? (
-                    <a
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={item.label}
-                      className={styles.socialButton}
-                    >
-                      {icon}
-                    </a>
-                  ) : (
-                    <span role="img" aria-label={item.label} className={styles.socialButton}>
-                      {icon}
-                    </span>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
+          {columns.map((column) => (
+            <nav key={column.title} aria-label={column.title} className={styles.column}>
+              <h2 className={styles.columnTitle}>{column.title}</h2>
+              <ul className={styles.links}>
+                {column.links.map((link) => (
+                  <li key={link.label}>
+                    <FooterItem item={link} className={styles.link} />
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))}
+
+          <div className={styles.join}>
+            <h2 className={styles.columnTitle}>{join.title}</h2>
+            <p className={styles.joinHeading}>{join.heading}</p>
+            <p className={styles.joinText}>{join.description}</p>
+            <FooterSubscribe newsletter={join.newsletter} />
+          </div>
         </div>
 
-        {columns.map((column) => (
-          <nav key={column.title} aria-label={column.title} className={styles.column}>
-            <h2 className={styles.columnTitle}>{column.title}</h2>
-            <ul className={styles.links}>
-              {column.links.map((link) => (
-                <li key={link.label}>
-                  <FooterItem item={link} className={styles.link} />
-                </li>
-              ))}
-            </ul>
-          </nav>
-        ))}
+        <FooterServiceAreas />
       </div>
 
-      <div className={styles.bottom}>
-        <p>{copyright}</p>
-        <ul className={styles.legal}>
-          {legal.map((item) => (
-            <li key={item.label}>
-              <FooterItem item={item} className={styles.link} />
-            </li>
-          ))}
-        </ul>
-      </div>
+      <FooterSignature wordmark={wordmark} backToTop={backToTop} />
+
+      <p className={styles.bottom}>
+        {bottom.copyright} · {bottom.location}
+      </p>
     </footer>
   );
 }
