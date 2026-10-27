@@ -9,8 +9,8 @@ import styles from './LandingCore.module.css';
 // columns rise up one after another. Scrolling back up reverses it.
 export default function LandingCore() {
   const { eyebrow, heading, items } = landingCore;
-  // 1.6 screens of scrolling for the whole reveal – slow and steady
-  const ref = useScrollProgress<HTMLElement>({ distance: 1.6 });
+  // 1 screen of scrolling for the whole reveal – all four columns settle while the section is in view
+  const ref = useScrollProgress<HTMLElement>({ distance: 1 });
 
   return (
     <section ref={ref} id="core" className={styles.section}>
