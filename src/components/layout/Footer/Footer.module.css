@@ -17,7 +17,7 @@
   top: 0;
   left: 50%;
   width: min(1240px, 100% - 32px);
-  height: 1px;
+  height: 1.1px;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14) 50%, transparent);
   transform: translateX(-50%);
 }
