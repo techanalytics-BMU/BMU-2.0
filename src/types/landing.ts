@@ -39,9 +39,11 @@ export type LandingPricingPlan = {
   price: string;
   period: string;
   tagline: string; // who the plan is for
+  billing: string; // small line under the price
   cta: string; // button label
   features: string[];
-  featured?: boolean; // highlighted green card
+  featured?: boolean; // highlighted card: green glow and green button
+  badge?: string; // small gradient pill next to the name
 };
 
 export type LandingPricingTab = {

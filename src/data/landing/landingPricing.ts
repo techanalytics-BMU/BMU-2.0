@@ -15,6 +15,7 @@ export const landingPricing: LandingPricingContent = {
           price: '₹35,000',
           period: 'per month',
           tagline: 'For single-location businesses getting consistent online',
+          billing: 'Billed monthly, plus your ad spend',
           cta: 'Start with Launch',
           features: [
             '2 ad platforms managed',
@@ -28,8 +29,10 @@ export const landingPricing: LandingPricingContent = {
           price: '₹85,000',
           period: 'per month',
           tagline: 'For brands scaling spend across channels and cities',
+          billing: 'Billed monthly, plus your ad spend',
           cta: 'Start with Growth',
           featured: true,
+          badge: 'Best value',
           features: [
             '4 platforms + retargeting',
             '30 creatives incl. UGC',
@@ -42,6 +45,7 @@ export const landingPricing: LandingPricingContent = {
           price: '₹2L+',
           period: 'per month',
           tagline: 'For multi-location groups and property developers',
+          billing: 'Custom scope, billed monthly',
           cta: 'Request a proposal',
           features: [
             'Dedicated account team',

@@ -7,7 +7,9 @@ import { landingPricing } from '@/data/landing/landingPricing';
 import { useInView } from '@/hooks/useInView';
 import styles from './LandingPricing.module.css';
 
-// Pricing: header → tab toggle (Monthly retainers / Bundles) → plan cards.
+// Pricing: header → tab toggle (Monthly retainers / Bundles) → plan cards on a dot-matrix backdrop.
+// Each card is a thin frame with a glowing top rim, holding a raised panel (name, price, button)
+// above the feature list; the featured plan glows green.
 // Desktop shows the cards side by side; mobile turns them into a swipe carousel.
 export default function LandingPricing() {
   const { heading, description, descriptionDim, tabs, emptyMessage } = landingPricing;
@@ -65,18 +67,29 @@ export default function LandingPricing() {
                 className={`${styles.card} ${plan.featured ? styles.featured : ''}`}
                 style={{ '--i': i } as React.CSSProperties}
               >
-                <h3 className={styles.name}>{plan.name}</h3>
-                <p className={styles.price}>
-                  {plan.price} <span className={styles.period}>{plan.period}</span>
-                </p>
-                <p className={styles.tagline}>{plan.tagline}</p>
-                <Button variant={plan.featured ? 'accent' : 'primary'} className={styles.cta}>
-                  {plan.cta}
-                </Button>
+                <div className={styles.cardTop}>
+                  <div className={styles.nameRow}>
+                    <h3 className={styles.name}>{plan.name}</h3>
+                    {plan.badge && <span className={styles.badge}>{plan.badge}</span>}
+                  </div>
+                  <p className={styles.tagline}>{plan.tagline}</p>
+                  <p className={styles.price}>
+                    {plan.price} <span className={styles.period}>{plan.period}</span>
+                  </p>
+                  <p className={styles.billing}>{plan.billing}</p>
+                  <Button className={styles.cta}>{plan.cta}</Button>
+                </div>
                 <ul className={styles.features}>
                   {plan.features.map((feature) => (
                     <li key={feature} className={styles.feature}>
-                      <Image src="/icons/common/check-circle.svg" alt="" width={16} height={16} />
+                      <span className={styles.check} aria-hidden="true">
+                        <Image
+                          src="/icons/landing/pricing/check.svg"
+                          alt=""
+                          width={12}
+                          height={12}
+                        />
+                      </span>
                       {feature}
                     </li>
                   ))}
