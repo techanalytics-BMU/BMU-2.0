@@ -20,18 +20,24 @@
   text-align: center;
 }
 
+/* Shared heading style (see variables.css) */
 .heading {
-  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  padding-bottom: 0.08em; /* keeps descenders inside the clipped gradient */
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: var(--font-size-heading);
   font-weight: 400;
-  letter-spacing: -0.01em;
-  line-height: 1.15;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: var(--heading-line-height);
 }
 
 .description {
   max-width: 560px;
   color: var(--color-text-muted);
-  font-size: var(--font-size-md);
-  line-height: 1.6;
+  font-size: var(--font-size-subheading);
+  text-wrap: balance;
 }
 
 .dim {

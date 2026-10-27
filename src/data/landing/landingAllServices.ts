@@ -5,8 +5,8 @@ import type { LandingAllServicesContent } from '@/types/landing';
 // Add `image: '/images/landing/all-services/landing-all-services-<name>.webp'` to a tile
 // to show a screenshot instead of the title.
 export const landingAllServices: LandingAllServicesContent = {
-  heading: 'All Services',
-  subheading: 'Built by BMU',
+  heading: 'Our Services',
+  subheading: 'we are good at!',
   tiles: [
     { title: 'Marketing Strategy' },
     { title: 'Search Engine Optimisation' },

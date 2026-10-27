@@ -9,7 +9,6 @@
 
   overflow: hidden;
   background: var(--color-bg);
-  font-family: var(--font-family-roboto);
 }
 
 /* Starts as a smaller rounded card coming up from below, grows into the full-width section */
@@ -44,16 +43,23 @@
   transform: translateY(calc((1 - var(--head)) * 30px));
 }
 
+/* Shared heading and subheading style (see variables.css) */
 .eyebrow {
-  color: #8a8a8a;
-  font-size: var(--font-size-md);
-  font-weight: 500;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-subheading);
+  text-wrap: balance;
 }
 
 .heading {
-  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
-  font-weight: 500;
-  line-height: 1.25;
+  padding-bottom: 0.08em; /* keeps descenders inside the clipped gradient */
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: var(--font-size-heading);
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: var(--heading-line-height);
 }
 
 /* ---------- Columns ---------- */
@@ -132,30 +138,44 @@
   transform: translateY(-28%);
 }
 
+/* Same style as the section headings (see variables.css), sized to fit a column */
 .title {
   grid-area: 1 / 1;
   align-self: end;
-  font-size: clamp(1.25rem, 1.9vw, 1.6rem);
-  font-weight: 500;
+  padding-bottom: 0.08em; /* keeps descenders inside the clipped gradient */
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: var(--heading-line-height);
 }
 
+/* Same as the line under the section headings */
 .description {
-  max-width: 260px;
   margin-top: var(--space-4);
-  color: #7d7d7d;
-  font-size: var(--font-size-sm);
-  line-height: 1.65;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-subheading);
+  text-wrap: balance;
 }
 
-/* ---------- Mobile: 2 × 2 grid ---------- */
+/* ---------- Tablets and phones: 2 × 2 grid, so the descriptions aren't squeezed into 4 narrow columns ---------- */
+@media (max-width: 1023px) {
+  .items {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: var(--space-6);
+  }
+}
+
+/* ---------- Phones: tighter spacing ---------- */
 @media (max-width: 720px) {
   .card {
     padding: var(--space-6) var(--space-2) var(--space-7);
   }
 
   .items {
-    grid-template-columns: repeat(2, 1fr);
-    row-gap: var(--space-6);
     margin-top: var(--space-6);
   }
 
@@ -165,9 +185,5 @@
 
   .marker {
     margin-inline: calc(-1 * var(--space-2));
-  }
-
-  .description {
-    font-size: var(--font-size-xs);
   }
 }

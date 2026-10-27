@@ -61,14 +61,21 @@ const scale: LandingPricingPlan = {
   ],
 };
 
-// The same card shown per hour, with the sum under the price.
+// The same card shown per hour, with its own billing line under the price.
 // `from` adds a "+" for plans whose monthly price is a starting price.
-const perHour = (plan: LandingPricingPlan, monthly: number, from = false): LandingPricingPlan => ({
+const perHour = (
+  plan: LandingPricingPlan,
+  monthly: number,
+  billing: string,
+  from = false,
+): LandingPricingPlan => ({
   ...plan,
   price: `${rupees(Math.round(monthly / HOURS_A_MONTH))}${from ? '+' : ''}`,
   period: 'per hour',
-  billing: `${plan.price} ÷ ${HOURS_A_MONTH} hrs (${WORK_DAYS} days × ${HOURS_PER_DAY} hrs)`,
+  billing,
 });
+
+const HOURLY_BILLING = 'Billed by the hour, plus your ad spend';
 
 export const landingPricing: LandingPricingContent = {
   heading: 'Pricing that scales with you',
@@ -82,7 +89,11 @@ export const landingPricing: LandingPricingContent = {
       id: 'hourly',
       label: 'Hourly retainers',
       shortLabel: 'Hourly',
-      plans: [perHour(launch, LAUNCH), perHour(growth, GROWTH), perHour(scale, SCALE_FROM, true)],
+      plans: [
+        perHour(launch, LAUNCH, HOURLY_BILLING),
+        perHour(growth, GROWTH, HOURLY_BILLING),
+        perHour(scale, SCALE_FROM, 'Custom scope, billed by the hour', true),
+      ],
     },
     {
       id: 'monthly',

@@ -165,19 +165,25 @@
   justify-content: center;
   gap: calc(var(--u) * 0.8);
   text-align: center;
-  /* Soft dark spot behind the text so it reads over the tiles */
-  background: radial-gradient(ellipse 24% 50% at center, rgba(0, 0, 0, 0.75), transparent);
+  /* Soft dark spot behind the text so it reads over the tiles (at least 320px wide, for phones;
+     vw rather than %, which max() doesn't accept here – the same thing, as this box is full width) */
+  background: radial-gradient(ellipse max(24vw, 160px) 50% at center, rgba(0, 0, 0, 0.75), transparent);
   pointer-events: none; /* clicks pass through to the tiles behind */
 }
 
-/* Serif heading over a sans subheading (as in the reference) */
+/* Shared heading style (see variables.css) */
 .heading {
-  font-family: var(--font-family-serif);
-  font-size: calc(var(--u) * 5);
+  padding-bottom: 0.08em; /* keeps descenders inside the clipped gradient */
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: var(--font-size-heading);
   font-weight: 400;
-  letter-spacing: -0.01em;
-  line-height: 1.05;
-  text-shadow: 0 0 calc(var(--u) * 3) rgba(0, 0, 0, 0.9);
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: var(--heading-line-height);
+  /* drop-shadow, not text-shadow: a text-shadow would be drawn over the clipped fill */
+  filter: drop-shadow(0 0 calc(var(--u) * 3) rgba(0, 0, 0, 0.9));
 }
 
 /* Tall screens (phones, tablets in portrait): bigger cards so the titles stay readable */
@@ -189,10 +195,8 @@
 }
 
 .subheading {
-  color: var(--color-accent);
-  font-size: max(calc(var(--u) * 1.4), var(--font-size-xs));
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-subheading);
+  text-wrap: balance;
   text-shadow: 0 0 calc(var(--u) * 2) rgba(0, 0, 0, 0.9);
 }
