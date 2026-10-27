@@ -27,10 +27,10 @@ export type LandingConversionRateContent = {
   headingHighlight: string; // shown in green
   description: string;
   timeline: LandingConversionRateMarker[];
-  inputs: string[]; // left box of the flow diagram
+  inputs: string[]; // left box of the flow diagram (our services)
   strategy: string[]; // middle box
   testLabel: string; // between the two browser mock-ups
-  variants: [string, string];
+  variants: [string, string]; // short words shown in the two browser mock-ups
   cta: NavLink;
 };
 

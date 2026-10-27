@@ -16,9 +16,17 @@ export const landingConversionRate: LandingConversionRateContent = {
     { label: 'Test. Learn. Optimise.', tall: true },
     { label: 'Found & chosen. Every month.', highlight: true },
   ],
-  inputs: ['User Research', 'GA4 Analysis', 'Heatmap Analysis', 'CRO | UX Audit'],
-  strategy: ['Hypothesis', 'CRO Roadmap'],
-  testLabel: 'A/B Test',
-  variants: ['A', 'B'],
+  // Business flow diagram: our 6 services → one team & plan → the two outcomes (placeholders – will change)
+  inputs: [
+    'Marketing and Visibility',
+    'Social and Personal Brand',
+    'UGC & Creator Marketing',
+    'Brand & Design',
+    'Content & Production',
+    'Web & AI',
+  ],
+  strategy: ['One Team', 'Growth Plan'],
+  testLabel: 'Results',
+  variants: ['Found', 'Chosen'],
   cta: { label: 'Check Your Eligibility', href: '/contact' },
 };

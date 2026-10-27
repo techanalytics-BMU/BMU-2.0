@@ -12,7 +12,8 @@ type Props = {
 // the card grows to fill the screen and stays pinned → scrolling pans it left to right,
 // revealing each step → it shrinks back into its card and the page carries on.
 export default function LandingConversionRateTimeline({ markers }: Props) {
-  const ref = useScrollProgress<HTMLDivElement>({ mode: 'pinned' });
+  // Phones (not pinned): start sliding only once the whole card is on screen, so "Launch day!" is seen first
+  const ref = useScrollProgress<HTMLDivElement>({ mode: 'pinned', unpinned: 'onScreen' });
 
   return (
     <div ref={ref} className={styles.scroller} style={{ '--n': markers.length } as React.CSSProperties}>

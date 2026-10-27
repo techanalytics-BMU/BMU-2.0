@@ -1,16 +1,18 @@
-/* Scroll-driven timeline. --progress (0 → 1) is set by useScrollProgress({ mode: 'pinned' })
-   while the sticky panel is pinned on screen. Three phases:
-     0    – 0.12  grow:   card → full screen          (--grow 0 → 1)
-     0.12 – 0.88  pan:    move left → right           (--pan  0 → 1)
-     0.88 – 1     shrink: full screen → card again    (--grow 1 → 0)
+/* Scroll-driven timeline. --progress (0 → 1) is set by useScrollProgress({ mode: 'pinned' }):
+   it starts as soon as the card scrolls into view, so there is no idle wait. It pins at ~0.167
+   (one screen of its 6-screen height). Phases:
+     0    – 0.16  grow:   card → full screen while it scrolls in   (--grow 0 → 1)
+     0.16 – 0.19  hold:   pinned, "Launch day!" on screen, nothing moves yet
+     0.19 – 0.88  pan:    move left → right                        (--pan  0 → 1)
+     0.88 – 1     shrink: full screen → card again                 (--grow 1 → 0)
    Steps are spaced a quarter of the panel width apart, so 3 are visible in the card. */
 .scroller {
   --progress: 0;
   --grow: min(
-    clamp(0, calc(var(--progress) / 0.12), 1),
+    clamp(0, calc(var(--progress) / 0.16), 1),
     clamp(0, calc((1 - var(--progress)) / 0.12), 1)
   );
-  --pan: clamp(0, calc((var(--progress) - 0.12) / 0.76), 1);
+  --pan: clamp(0, calc((var(--progress) - 0.19) / 0.69), 1);
   --card-w: min(620px, 100vw - 32px);
   --card-h: calc(var(--card-w) / 1.9);
 
@@ -152,6 +154,30 @@
   70%,
   100% {
     box-shadow: 0 0 0 12px rgba(140, 198, 63, 0);
+  }
+}
+
+/* Phones / small tablets: no zoom and no pinning – the card scrolls up the page normally.
+   It enters showing the first steps; once the whole card is on screen (--progress 0, see the
+   `unpinned: 'onScreen'` option in the .tsx) it slides sideways as it carries on up,
+   finishing just before its top reaches the top of the screen.
+   Taller card so the labels have room. */
+@media (max-width: 900px) {
+  .scroller {
+    --grow: 0;
+    --pan: clamp(0, calc(var(--progress) / 0.9), 1);
+    --card-h: calc(var(--card-w) / 1.2);
+    height: auto;
+    margin-block: 0;
+  }
+
+  .sticky {
+    position: static;
+    height: auto;
+  }
+
+  .label {
+    font-size: max(min(4cqh, 4.2cqw), 0.68rem);
   }
 }
 
