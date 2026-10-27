@@ -13,16 +13,22 @@
     clamp(0, calc((1 - var(--progress)) / 0.12), 1)
   );
   --pan: clamp(0, calc((var(--progress) - 0.19) / 0.69), 1);
-  --card-w: min(620px, 100vw - 32px);
+  --card-w: min(900px, 100vw - 32px); /* settled card: as wide as the flow diagram below */
   --card-h: calc(var(--card-w) / 1.9);
+  --line-bottom: 0.18; /* the line's height above the card bottom, as a fraction of the card */
+  --space-after: clamp(24px, 3vw, 40px); /* from the line to the next part (the flow diagram) */
 
   position: relative;
   width: 100vw;
   /* 100vh on screen + 500vh of scrolling while pinned – slow, so each step can be read */
   height: 600vh;
   height: 600svh;
-  /* The pinned area is a full screen tall; pull it in so the card keeps its normal spacing */
+  /* The pinned area is a full screen tall; pull it in so the card keeps its normal spacing.
+     At the bottom, also skip the empty card under the line: the next part starts --space-after below it. */
   margin-block: calc((100svh - var(--card-h)) / -2);
+  margin-bottom: calc(
+    (100svh - var(--card-h)) / -2 - var(--card-h) * var(--line-bottom) + var(--space-after)
+  );
   pointer-events: none;
 }
 
@@ -63,7 +69,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 18%;
+  bottom: calc(var(--line-bottom) * 100%);
   height: 1px;
   background: linear-gradient(
     90deg,
@@ -93,7 +99,7 @@
   );
 
   position: absolute;
-  bottom: 18%;
+  bottom: calc(var(--line-bottom) * 100%);
   left: calc(100cqw * (var(--i) + 1) / 4);
   display: flex;
   flex-direction: column;
@@ -161,14 +167,16 @@
    It enters showing the first steps; once the whole card is on screen (--progress 0, see the
    `unpinned: 'onScreen'` option in the .tsx) it slides sideways as it carries on up,
    finishing just before its top reaches the top of the screen.
-   Taller card so the labels have room. */
+   Taller card so the labels have room; the next part starts --space-after below the line. */
 @media (max-width: 900px) {
   .scroller {
     --grow: 0;
     --pan: clamp(0, calc(var(--progress) / 0.9), 1);
+    --card-w: min(620px, 100vw - 32px);
     --card-h: calc(var(--card-w) / 1.2);
     height: auto;
     margin-block: 0;
+    margin-bottom: calc(var(--space-after) - var(--card-h) * var(--line-bottom));
   }
 
   .sticky {

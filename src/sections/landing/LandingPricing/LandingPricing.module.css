@@ -81,6 +81,10 @@
   color: var(--color-dark);
 }
 
+.labelShort {
+  display: none;
+}
+
 .tab:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
@@ -245,6 +249,7 @@
   color: #c9cbcf;
   font-size: var(--font-size-sm);
   font-weight: 500;
+  text-wrap: balance; /* if it wraps on phones, split it evenly instead of leaving one word alone */
 }
 
 /* Full-width button (overrides the shared Button's look): soft graphite by default */
@@ -333,6 +338,15 @@
 
 /* ---------- Mobile: swipe carousel – one card fully visible, a quarter of the next ---------- */
 @media (max-width: 720px) {
+  /* Short tab labels (Hourly / Monthly / Bundles) so the toggle fits */
+  .labelFull {
+    display: none;
+  }
+
+  .labelShort {
+    display: inline;
+  }
+
   .panel {
     /* let the carousel run to the screen edges */
     width: calc(100% + 2 * var(--space-3));

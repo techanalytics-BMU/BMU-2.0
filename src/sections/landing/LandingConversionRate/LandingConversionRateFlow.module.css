@@ -14,13 +14,17 @@
   --mid: clamp(0, calc((var(--p) - 0.45) / 0.08), 1);
   --test: clamp(0, calc((var(--p) - 0.58) / 0.08), 1);
   --flowing: clamp(0, calc((var(--p) - 0.74) / 0.06), 1);
+  --pad: 14px; /* how far the containers reach past their labels */
 
   position: relative;
   width: 100%;
   height: 220vh; /* 100vh on screen + 120vh of scrolling while pinned */
   height: 220svh;
-  /* The pinned area is a full screen tall; pull it in so the diagram keeps its normal spacing */
+  /* The pinned area is a full screen tall; pull it in so the diagram keeps its normal spacing,
+     and up by the empty 8% above the services, so their container starts right where the
+     timeline's space after its line ends (--space-after in LandingConversionRateTimeline.module.css) */
   margin-block: calc((100svh - var(--flow-h)) / -2);
+  margin-top: calc((100svh - var(--flow-h)) / -2 - var(--flow-h) * 0.08);
 }
 
 .sticky {
@@ -34,36 +38,102 @@
 
 /* ---------- Layout (desktop): services → curves → middle → curves → outcomes ---------- */
 .flow {
+  position: relative;
+  isolation: isolate; /* keeps the dot backdrop (z-index: -1) behind the diagram, not behind the page */
   display: grid;
   grid-template-columns: 1.4fr 0.7fr 1.1fr 0.65fr 1.05fr;
   align-items: center;
-  width: min(100%, 940px);
+  width: min(100% - 2 * var(--pad), 940px); /* room for the containers to reach past the edges */
   height: var(--flow-h);
 }
 
-/* Groups of labels – no card behind them, only the labels / windows are visible */
+/* Dot-matrix backdrop, same as behind the Pricing cards: a fine grid plus a sparser, brighter one,
+   fading out from the middle. Starts at the diagram's top so it stays clear of the timeline line above. */
+.flow::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0 -22% -10%;
+  opacity: 0.25; /* much softer than behind the Pricing cards, so the diagram stands out */
+  background:
+    radial-gradient(circle, rgba(205, 240, 150, 0.8) 0.9px, transparent 1.6px) 0 0 / 21px 21px,
+    radial-gradient(circle, rgba(190, 210, 165, 0.45) 0.8px, transparent 1.5px) 0 0 / 7px 7px;
+  -webkit-mask-image: radial-gradient(
+    ellipse 50% 50% at 50% 45%,
+    #000000 25%,
+    rgba(0, 0, 0, 0.45) 60%,
+    transparent 85%
+  );
+  mask-image: radial-gradient(
+    ellipse 50% 50% at 50% 45%,
+    #000000 25%,
+    rgba(0, 0, 0, 0.45) 60%,
+    transparent 85%
+  );
+  pointer-events: none;
+}
+
+/* Groups of labels sit in a container styled like the Pricing cards (LandingPricing.module.css):
+   a thin frame whose top rim glows silver and fades down the sides, around a dark raised panel.
+   It is drawn behind the labels and reaches --pad past them sideways, so the labels and curves
+   keep their positions; the dots sit on its edges. */
 .box {
   position: relative;
+  isolation: isolate; /* keeps the container (z-index: -1) behind the labels, not behind the page */
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+.box::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: calc(-1 * var(--pad));
+  border: 5px solid transparent;
+  border-radius: 20px;
+  /* panel inside the frame · frame with the glowing top rim */
+  background:
+    linear-gradient(to bottom, #24262a, #1c1d20 50%, #141515) padding-box,
+    linear-gradient(
+        to bottom,
+        #a3a6aa 0,
+        #5c5f63 22px,
+        #3a3c3f 20%,
+        #2a2b2d 34%,
+        #222325 46%,
+        #1b1c1e 66%,
+        #151616 100%
+      )
+      border-box;
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.45),
+    0 30px 60px -30px rgba(0, 0, 0, 0.9);
+}
+
+/* Tall groups: the rows / windows already leave room above and below, so only reach out sideways */
+.inputs::before,
+.test::before {
+  inset-block: 0;
+}
+
+/* Labels: graphite, like the Pricing buttons */
 .chip {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0.5em 0.9em;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 4px;
-  background: #26292f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  background: linear-gradient(to bottom, #303236, #242629);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
   color: var(--color-text);
   font-size: clamp(0.6rem, 0.9vw, 0.78rem);
   font-weight: 600;
   white-space: nowrap;
 }
 
-/* Glowing connection dots on the box edges (where the curves start / end) */
+/* Glowing connection dots on the container edges (where the curves start / end) */
 .dot {
   position: absolute;
   top: 50%;
@@ -76,11 +146,11 @@
 }
 
 .dotLeft {
-  left: 0;
+  left: calc(-1 * var(--pad));
 }
 
 .dotRight {
-  left: 100%;
+  left: calc(100% + var(--pad));
 }
 
 /* 1. Services – 84% of the height, centred; one equal row each (matches the curve starts) */
@@ -88,6 +158,11 @@
   display: grid;
   grid-template-rows: repeat(var(--rows), 1fr);
   height: 84%;
+}
+
+/* Its container fades in with the first service */
+.inputs::before {
+  opacity: clamp(0, calc((var(--p) - 0.06) / 0.05), 1);
 }
 
 .row {
@@ -102,7 +177,7 @@
   transform: translateX(calc((1 - var(--show)) * -16px));
 }
 
-/* Labels fill their row, so the dot sits right on the label's edge */
+/* Labels fill their row, so they line up with the dots on the container edge */
 .inputs .chip {
   width: 100%;
 }
@@ -269,10 +344,12 @@
 
 /* Curves between the boxes.
    The SVG is stretched to fit its column, so dash sizes are in screen pixels
-   (curves are always shorter than 400px). */
+   (curves are always shorter than 400px). The containers reach --pad into this column
+   from both sides, so it is inset by --pad: the curves start and end on the container edges. */
 .curves {
-  width: 100%;
+  width: calc(100% - 2 * var(--pad));
   height: 100%;
+  margin-inline: var(--pad);
   overflow: visible;
   filter: drop-shadow(0 0 4px rgba(140, 198, 63, 0.7));
 }
@@ -365,7 +442,17 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
+    width: 100%;
     height: auto;
+  }
+
+  /* No curves to line up with: the containers simply wrap their labels */
+  .box {
+    padding: 12px;
+  }
+
+  .box::before {
+    inset: 0;
   }
 
   .curves,

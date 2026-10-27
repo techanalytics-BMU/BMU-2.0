@@ -7,7 +7,7 @@ import { landingPricing } from '@/data/landing/landingPricing';
 import { useInView } from '@/hooks/useInView';
 import styles from './LandingPricing.module.css';
 
-// Pricing: header → tab toggle (Monthly retainers / Bundles) → plan cards on a dot-matrix backdrop.
+// Pricing: header → tab toggle (Hourly retainers / Monthly retainers / Bundles) → plan cards on a dot-matrix backdrop.
 // Each card is a thin frame with a glowing top rim, holding a raised panel (name, price, button)
 // above the feature list; the featured plan glows green.
 // Desktop shows the cards side by side; mobile turns them into a swipe carousel.
@@ -45,7 +45,9 @@ export default function LandingPricing() {
             className={`${styles.tab} ${tab.id === activeId ? styles.tabActive : ''}`}
             onClick={() => setActiveId(tab.id)}
           >
-            {tab.label}
+            {/* Full label on wider screens, short one on phones */}
+            <span className={styles.labelFull}>{tab.label}</span>
+            <span className={styles.labelShort}>{tab.shortLabel ?? tab.label}</span>
           </button>
         ))}
       </div>

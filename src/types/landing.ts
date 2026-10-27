@@ -49,6 +49,7 @@ export type LandingPricingPlan = {
 export type LandingPricingTab = {
   id: string;
   label: string;
+  shortLabel?: string; // shown on phones instead of `label`, so the toggle fits on one line
   plans: LandingPricingPlan[]; // empty → shows `emptyMessage`
 };
 
