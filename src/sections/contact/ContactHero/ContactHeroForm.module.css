@@ -1,22 +1,170 @@
-/* Form card: two-column grid, half-width fields sit side by side */
+/* The form card: a fine lit rim, dark panel, a soft light from the top */
 .card {
+  position: relative;
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid transparent;
+  border-radius: 24px;
+  background:
+    radial-gradient(ellipse 70% 40% at 50% 0%, rgba(255, 255, 255, 0.05), transparent 70%)
+      padding-box,
+    linear-gradient(to bottom, #1a1b1e, #111213) padding-box,
+    linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.22),
+        rgba(255, 255, 255, 0.06) 35%,
+        rgba(255, 255, 255, 0.03)
+      )
+      border-box;
+  box-shadow:
+    0 40px 80px -40px rgba(0, 0, 0, 0.95),
+    0 0 0 1px rgba(0, 0, 0, 0.4);
+}
+
+/* ---------- Progress ---------- */
+.progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.stepNames {
+  display: flex;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stepNames li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.stepNumber {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 50%;
+  font-size: 0.625rem;
+  font-variant-numeric: tabular-nums;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.stepNames li[data-state='current'] {
+  color: var(--color-text);
+}
+
+.stepNames li[data-state='current'] .stepNumber {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* Done: a lime disc with a tick in place of the number */
+.stepNames li[data-state='done'] {
+  color: var(--color-text-muted);
+}
+
+.stepNames li[data-state='done'] .stepNumber {
+  position: relative;
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: transparent;
+}
+
+.stepNames li[data-state='done'] .stepNumber::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 7px;
+  height: 4px;
+  margin: -3px 0 0 -3.5px;
+  border-bottom: 1.5px solid var(--color-dark);
+  border-left: 1.5px solid var(--color-dark);
+  transform: rotate(-45deg);
+}
+
+.duration {
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+}
+
+.track {
+  display: block;
+  height: 2px;
+  margin-top: 14px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(140, 198, 63, 0.6), #b9ef6a);
+  box-shadow: 0 0 8px rgba(140, 198, 63, 0.6);
+  transform: scaleX(var(--p));
+  transform-origin: left;
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* ---------- A step ---------- */
+.step {
+  animation: step-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+}
+
+.question {
+  margin-top: var(--space-5);
+  padding-bottom: 0.08em;
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: 1.15;
+}
+
+.question:focus {
+  outline: none;
+}
+
+.fields {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px var(--space-3);
-  padding: 26px var(--space-4);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  background: rgba(15, 20, 26, 0.85);
-  /* -webkit- line first: if it comes after, the CSS build drops both and there's no blur */
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+  gap: 18px 14px;
+  margin-top: var(--space-4);
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 8px;
   grid-column: 1 / -1;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 .half {
@@ -24,108 +172,363 @@
 }
 
 .label {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 0;
   color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.optional {
+  color: #6b7078;
   font-size: var(--font-size-xs);
 }
 
 .input {
   width: 100%;
-  height: 40px;
-  padding: 0 var(--space-3);
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  background: #1a2129;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: #0d0e10;
   color: var(--color-text);
   font-family: inherit;
-  font-size: var(--font-size-sm);
-  transition: border-color 0.2s ease;
+  font-size: var(--font-size-md);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+textarea.input {
+  height: auto;
+  min-height: 96px;
+  padding: 12px 16px;
+  line-height: 1.5;
+  resize: vertical;
 }
 
 .input::placeholder {
-  color: #5f6873;
+  color: #5c6168;
+}
+
+.input:hover {
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .input:focus {
-  border-color: rgba(140, 198, 63, 0.7);
+  border-color: rgba(140, 198, 63, 0.6);
   outline: none;
+  box-shadow: 0 0 0 4px rgba(140, 198, 63, 0.1);
 }
 
 .input[aria-invalid='true'] {
-  border-color: #e5484d;
-}
-
-select.input {
-  appearance: none;
-  cursor: pointer;
-  /* small chevron */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23b5bac2' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-position: right var(--space-3) center;
-  background-repeat: no-repeat;
+  border-color: rgba(229, 72, 77, 0.8);
 }
 
 .error {
-  color: #ff7a7e;
+  color: #f07e82;
   font-size: var(--font-size-xs);
 }
 
-.submit {
-  grid-column: 1 / -1;
-  height: 44px;
-  margin-top: 6px;
-  border: 0;
-  border-radius: var(--radius-sm);
-  background: linear-gradient(90deg, #8cc63f, #5e9a3b);
-  color: var(--color-dark);
-  font-family: inherit;
-  font-size: var(--font-size-sm);
-  font-weight: 700;
+/* ---------- Chips: tap to pick (checkboxes / radios underneath) ---------- */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  position: relative;
   cursor: pointer;
+}
+
+.chip input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.chip span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.03);
+  color: #d4d6da;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  white-space: nowrap;
   transition:
-    filter 0.2s ease,
+    border-color 0.25s ease,
+    background-color 0.25s ease,
+    color 0.25s ease,
     transform 0.2s ease;
 }
 
-.submit:hover {
-  filter: brightness(1.08);
-  transform: translateY(-1px);
+/* A small ring that fills with a tick when picked */
+.chip span::before {
+  content: '';
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  background: center / 9px no-repeat;
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease;
 }
 
-.submit:disabled {
-  opacity: 0.7;
-  cursor: wait;
+.chip:hover span {
+  border-color: rgba(255, 255, 255, 0.24);
+  color: var(--color-text);
 }
 
-.submit:focus-visible {
-  outline: 2px solid var(--color-text);
+.chip:active span {
+  transform: scale(0.97);
+}
+
+.chip input:checked + span {
+  border-color: rgba(140, 198, 63, 0.6);
+  background: rgba(140, 198, 63, 0.1);
+  color: var(--color-text);
+}
+
+.chip input:checked + span::before {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2 5 8.6l4.5-5' fill='none' stroke='%230b0f14' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.chip input:focus-visible + span {
+  outline: 2px solid var(--color-accent);
   outline-offset: 3px;
 }
 
-/* Thank-you message */
+/* ---------- Buttons ---------- */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 4px;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.back:hover {
+  color: var(--color-text);
+}
+
+/* Cream pill with the navbar's arrow icon, as the site's main buttons */
+.next {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-left: auto;
+  padding: 0.4rem 0.4rem 0.4rem 1.4rem;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-light);
+  color: var(--color-dark);
+  font-family: inherit;
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.next:hover {
+  background: #ffffff;
+  transform: translateY(-1px);
+}
+
+.next img {
+  transition: transform 0.3s ease;
+}
+
+.next:hover img {
+  transform: rotate(45deg);
+}
+
+.next:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.back:focus-visible,
+.next:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.privacy {
+  margin-top: 14px;
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
+  text-align: right;
+}
+
+/* ---------- Thank you ---------- */
 .success {
-  grid-template-columns: 1fr;
-  place-items: center;
-  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-block: clamp(40px, 6vw, 64px);
   text-align: center;
+  animation: step-in 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* A lime tick that draws itself */
+.tick {
+  width: 64px;
+  height: 64px;
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 10px rgba(140, 198, 63, 0.5));
+}
+
+.tick circle,
+.tick path {
+  stroke-dasharray: 1;
+  animation: draw 0.7s cubic-bezier(0.65, 0, 0.35, 1) backwards;
+}
+
+.tick circle {
+  stroke-width: 1.5;
+  opacity: 0.6;
+}
+
+.tick path {
+  stroke-width: 3;
+  animation-delay: 0.45s;
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
 }
 
 .successTitle {
-  color: var(--color-accent);
-  font-family: var(--font-family-display);
-  font-size: 1.75rem;
+  margin-top: var(--space-4);
+  padding-bottom: 0.08em;
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(1.75rem, 3vw, 2.4rem);
   font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
 }
 
 .successText {
-  max-width: 320px;
+  max-width: 360px;
+  margin-top: 8px;
   color: var(--color-text-muted);
+  font-size: var(--font-size-md);
 }
 
-@media (max-width: 480px) {
-  .card {
-    padding: var(--space-4) var(--space-3);
+/* What they picked, as quiet chips */
+.picked {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  max-width: 420px;
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.picked li {
+  padding: 5px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-pill);
+  color: #d4d6da;
+  font-size: var(--font-size-xs);
+}
+
+.successCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: var(--space-5);
+  padding: 10px 18px;
+  border: 1px solid rgba(140, 198, 63, 0.4);
+  border-radius: var(--radius-pill);
+  background: rgba(140, 198, 63, 0.08);
+  color: #e3f6bf;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.successCta:hover {
+  background: rgba(140, 198, 63, 0.16);
+  transform: translateY(-1px);
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 600px) {
+  .stepNames {
+    gap: 12px;
+  }
+
+  /* just the numbers and the current step's name */
+  .stepNames li:not([data-state='current']) {
+    font-size: 0;
+    gap: 0;
+  }
+
+  .fields {
+    grid-template-columns: 1fr;
   }
 
   .half {
     grid-column: 1 / -1;
+  }
+
+  .chip span {
+    padding: 9px 14px 9px 10px;
+  }
+
+  .privacy {
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step,
+  .success,
+  .tick circle,
+  .tick path {
+    animation: none;
+  }
+
+  .fill {
+    transition: none;
   }
 }

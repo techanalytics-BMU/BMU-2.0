@@ -147,7 +147,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  font-size: var(--font-size-title);
   font-weight: 400;
   letter-spacing: var(--heading-letter-spacing);
   line-height: var(--heading-line-height);

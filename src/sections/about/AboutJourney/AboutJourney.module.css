@@ -1,0 +1,302 @@
+/* --progress (0 → 1) from useScrollProgress as the section scrolls in.
+   --line: the baseline draws left to right (or top to bottom on phones).
+   Each milestone's --show goes 0 → 1 as the line reaches it. */
+.section {
+  --progress: 0;
+  --line: clamp(0, calc((var(--progress) - 0.2) / 0.6), 1);
+
+  padding: var(--space-8) var(--space-4);
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+/* ---------- Track: the milestones standing on the baseline ---------- */
+.track {
+  position: relative;
+  max-width: 1160px;
+  margin: var(--space-7) auto 0;
+}
+
+/* Soft lime light pooling under the line */
+.track::after {
+  content: '';
+  position: absolute;
+  right: 10%;
+  bottom: -60px;
+  left: 10%;
+  height: 120px;
+  background: radial-gradient(closest-side, rgba(140, 198, 63, 0.14), transparent);
+  opacity: var(--line);
+  pointer-events: none;
+}
+
+/* The baseline (the conversion timeline's), drawing itself from the left */
+.line {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(140, 198, 63, 0.5) 6%,
+    #b9ef6a 50%,
+    rgba(140, 198, 63, 0.5) 94%,
+    transparent
+  );
+  box-shadow: 0 0 12px rgba(140, 198, 63, 0.45);
+  transform: scaleX(var(--line));
+  transform-origin: left;
+}
+
+.milestones {
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  align-items: end;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Text on top, then the stem down to the dot on the line. Each shows as the line reaches the
+   middle of its column. */
+.milestone {
+  --show: clamp(0, calc((var(--line) - (var(--i) + 0.5) / var(--n) + 0.06) / 0.12), 1);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 var(--space-3);
+  text-align: center;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: var(--show);
+  transform: translateY(calc((1 - var(--show)) * 16px));
+}
+
+.markerRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Heading style (see variables.css), at the size of a big figure */
+.marker {
+  padding-bottom: 0.08em;
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(1.75rem, 3vw, 2.75rem);
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: 1.05;
+  white-space: nowrap;
+}
+
+.current .marker {
+  background: linear-gradient(180deg, #e3f6bf, #8cc63f 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border: 1px solid rgba(140, 198, 63, 0.45);
+  border-radius: var(--radius-pill);
+  background: rgba(140, 198, 63, 0.1);
+  color: var(--color-accent);
+  font-size: 0.6875rem;
+  font-weight: 600;
+}
+
+.live::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 8px var(--color-accent);
+  animation: blink 1.6s ease-in-out infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* Uppercase label, as on the conversion timeline */
+.title {
+  margin-top: var(--space-3);
+  color: var(--color-text);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.text {
+  max-width: 230px;
+  margin-top: 8px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+  text-wrap: balance;
+}
+
+/* The stems climb: each one taller than the last */
+.stem {
+  width: 1px;
+  height: calc(56px + var(--i) * 52px);
+  margin-top: var(--space-4);
+  background: linear-gradient(to top, rgba(140, 198, 63, 0.9), rgba(255, 255, 255, 0.3));
+  transform: scaleY(var(--show));
+  transform-origin: bottom;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  margin-bottom: -4px; /* half its size, so the dot centre sits on the line */
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 10px var(--color-accent);
+  transform: scale(var(--show));
+}
+
+/* Where BMU is now: the ring marker, pulsing */
+.current .dot {
+  width: 14px;
+  height: 14px;
+  margin-bottom: -7px;
+  border: 2px solid var(--color-accent);
+  background: var(--color-bg);
+  animation: ring-pulse 2.4s ease-out infinite;
+}
+
+@keyframes ring-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(140, 198, 63, 0.6);
+  }
+
+  70%,
+  100% {
+    box-shadow: 0 0 0 12px rgba(140, 198, 63, 0);
+  }
+}
+
+/* ---------- Tablets: a little tighter ---------- */
+@media (max-width: 1023px) {
+  .milestone {
+    padding: 0 var(--space-2);
+  }
+
+  .stem {
+    height: calc(40px + var(--i) * 40px);
+  }
+}
+
+/* ---------- Phones: the line runs down the left, each milestone on a short arm off it ---------- */
+@media (max-width: 720px) {
+  .track {
+    max-width: 480px;
+  }
+
+  .track::after {
+    display: none;
+  }
+
+  .line {
+    top: 0;
+    right: auto;
+    bottom: 0;
+    left: 4px;
+    width: 1px;
+    height: auto;
+    background: linear-gradient(
+      180deg,
+      rgba(140, 198, 63, 0.4),
+      #b9ef6a 50%,
+      rgba(140, 198, 63, 0.4) 94%,
+      transparent
+    );
+    transform: scaleY(var(--line));
+    transform-origin: top;
+  }
+
+  .milestones {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  /* Dot on the line, then the text */
+  .milestone {
+    --show: clamp(0, calc((var(--line) - (var(--i) + 0.3) / var(--n) + 0.06) / 0.12), 1);
+
+    position: relative;
+    align-items: flex-start;
+    padding: 0 0 0 36px;
+    text-align: left;
+  }
+
+  .body {
+    align-items: flex-start;
+    transform: translateX(calc((1 - var(--show)) * 12px));
+  }
+
+  .stem {
+    position: absolute;
+    top: 1.05rem;
+    left: 4px;
+    width: 22px;
+    height: 1px;
+    margin: 0;
+    background: linear-gradient(to right, rgba(140, 198, 63, 0.9), rgba(255, 255, 255, 0.25));
+    transform: scaleX(var(--show));
+    transform-origin: left;
+  }
+
+  .dot {
+    position: absolute;
+    top: 1.05rem;
+    left: 4px;
+    margin: -4px 0 0 -4px;
+  }
+
+  .current .dot {
+    margin: -7px 0 0 -7px;
+  }
+
+  .text {
+    max-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section {
+    --line: 1;
+  }
+
+  .live::before,
+  .current .dot {
+    animation: none;
+  }
+}
+
+/* Phones: a tighter rhythm between sections */
+@media (max-width: 600px) {
+  .section {
+    padding-top: var(--space-7);
+    padding-bottom: var(--space-7);
+  }
+}

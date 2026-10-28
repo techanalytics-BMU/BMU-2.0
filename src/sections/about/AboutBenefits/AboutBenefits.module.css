@@ -1,0 +1,494 @@
+.section {
+  padding: var(--space-8) var(--space-4);
+  overflow: hidden;
+  /* Soft green glow at the top, as on the pricing section */
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(140, 198, 63, 0.1), transparent 70%),
+    var(--color-bg);
+}
+
+/* ---------- One row of four compact cards ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  max-width: 1160px;
+  margin: var(--space-7) auto 0;
+}
+
+/* Card with a light catching its top edge; rises in, one after another */
+.card {
+  --mx: 50%;
+  --my: 0%;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 12px 22px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  background:
+    linear-gradient(to bottom, #1b1c1f, #111213) padding-box,
+    linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.2),
+        rgba(255, 255, 255, 0.06) 40%,
+        rgba(255, 255, 255, 0.03)
+      )
+      border-box;
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.9);
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--i) * 0.1s);
+}
+
+.grid[data-in-view='true'] .card {
+  opacity: 1;
+  transform: none;
+}
+
+/* Spotlight that follows the pointer: on the rim … */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  background: radial-gradient(
+    180px circle at var(--mx) var(--my),
+    rgba(190, 240, 120, 0.9),
+    transparent 70%
+  );
+  -webkit-mask:
+    linear-gradient(#000000 0 0) content-box,
+    linear-gradient(#000000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000000 0 0) content-box,
+    linear-gradient(#000000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+/* … and a soft wash inside */
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    260px circle at var(--mx) var(--my),
+    rgba(140, 198, 63, 0.08),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .card:hover::before,
+  .card:hover::after {
+    opacity: 1;
+  }
+
+  .grid[data-in-view='true'] .card:hover {
+    transform: translateY(-4px);
+    transition-delay: 0s;
+  }
+}
+
+/* Inset well holding the drawing, over a faint dot matrix */
+.visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 128px;
+  padding: 18px 18px 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 13px;
+  background:
+    radial-gradient(ellipse 70% 70% at 50% 100%, rgba(140, 198, 63, 0.08), transparent 70%),
+    rgba(0, 0, 0, 0.35);
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.visual::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(205, 240, 150, 0.6) 0.8px, transparent 1.5px) 0 0 / 12px
+    12px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 70% at 50% 50%, #000000, transparent 85%);
+  mask-image: radial-gradient(ellipse 60% 70% at 50% 50%, #000000, transparent 85%);
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.visual svg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.number {
+  position: absolute;
+  top: 9px;
+  left: 11px;
+  z-index: 1;
+  color: var(--color-accent);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+}
+
+/* Card-title style (see variables.css) */
+.title {
+  margin-top: 18px;
+  padding: 0 8px 0.08em;
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 1.25rem;
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: 1.2;
+}
+
+.text {
+  margin-top: 6px;
+  padding: 0 8px;
+  color: #9a9ea4;
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+}
+
+/* ---------- The drawings (end states; the loops below play once the row is in view) ---------- */
+.grey {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.18);
+  stroke-width: 1.2;
+}
+
+.greyDot {
+  fill: rgba(255, 255, 255, 0.28);
+}
+
+.draw {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  filter: drop-shadow(0 0 4px rgba(140, 198, 63, 0.6));
+}
+
+.end,
+.node,
+.twinkle {
+  fill: var(--color-accent);
+  filter: drop-shadow(0 0 5px rgba(140, 198, 63, 0.85));
+}
+
+.end,
+.node,
+.twinkle,
+.ring,
+.halo,
+.ping,
+.bar {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.ring,
+.ping {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 1.2;
+  opacity: 0;
+}
+
+.ping {
+  transform-origin: 50% 100%; /* the bottom of the arc, where the rings start */
+}
+
+.wire {
+  fill: none;
+  stroke: rgba(140, 198, 63, 0.25);
+  stroke-width: 1.5;
+}
+
+.flow {
+  fill: none;
+  stroke: #d6f5a1;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-dasharray: 0.14 0.86;
+  stroke-dashoffset: 0.14;
+  filter: drop-shadow(0 0 3px rgba(140, 198, 63, 0.9));
+  opacity: 0;
+}
+
+.halo {
+  fill: rgba(140, 198, 63, 0.12);
+  stroke: rgba(140, 198, 63, 0.6);
+  stroke-width: 1;
+  opacity: 0;
+}
+
+.bar {
+  fill: rgba(140, 198, 63, 0.22);
+  transform-origin: bottom;
+}
+
+/* ---------- Loops ---------- */
+.grid[data-in-view='true'] .draw {
+  animation: redraw 5s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  animation-delay: calc(0.3s + var(--i) * 0.2s);
+}
+
+.grid[data-in-view='true'] .end {
+  animation: end-dot 5s ease infinite;
+  animation-delay: calc(0.3s + var(--i) * 0.2s);
+}
+
+.grid[data-in-view='true'] .ring {
+  animation: end-ring 5s ease-out infinite;
+  animation-delay: calc(0.3s + var(--i) * 0.2s);
+}
+
+.grid[data-in-view='true'] .ping {
+  animation: ping 3.2s ease-out infinite;
+  animation-delay: calc(var(--d) * 1.6s);
+}
+
+.grid[data-in-view='true'] .twinkle {
+  animation: twinkle 4.8s ease infinite;
+  animation-delay: calc(var(--d) * 0.35s);
+}
+
+.grid[data-in-view='true'] .flow {
+  animation: flow 2.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  animation-delay: calc(var(--d) * 0.3s);
+}
+
+.grid[data-in-view='true'] .halo {
+  animation: halo 2.2s ease-out infinite;
+}
+
+.grid[data-in-view='true'] .bar {
+  animation: wave 2.8s ease-in-out infinite alternate;
+  animation-delay: calc(var(--d) * 0.12s);
+}
+
+/* draw on, hold, fade, start again */
+@keyframes redraw {
+  0% {
+    opacity: 1;
+    stroke-dashoffset: 1;
+  }
+
+  40% {
+    stroke-dashoffset: 0;
+  }
+
+  82% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+
+  94%,
+  100% {
+    opacity: 0;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* lands as the line arrives, leaves with it */
+@keyframes end-dot {
+  0%,
+  36% {
+    opacity: 1;
+    transform: scale(0);
+  }
+
+  44% {
+    transform: scale(1.3);
+  }
+
+  50%,
+  82% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  94%,
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+@keyframes end-ring {
+  0%,
+  42% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+
+  48% {
+    opacity: 0.9;
+  }
+
+  72%,
+  100% {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+
+@keyframes ping {
+  0% {
+    opacity: 0;
+    transform: scale(0.15);
+  }
+
+  15% {
+    opacity: 0.7;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+@keyframes twinkle {
+  0% {
+    transform: scale(0);
+  }
+
+  10% {
+    transform: scale(1.35);
+  }
+
+  16%,
+  70% {
+    transform: scale(1);
+  }
+
+  84%,
+  100% {
+    transform: scale(0);
+  }
+}
+
+@keyframes flow {
+  0% {
+    opacity: 1;
+    stroke-dashoffset: 0.14;
+  }
+
+  88% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    stroke-dashoffset: -0.86;
+  }
+}
+
+@keyframes halo {
+  from {
+    opacity: 0.9;
+    transform: scale(0.7);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+
+@keyframes wave {
+  from {
+    transform: scaleY(0.45);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* ---------- Tablets: 2 × 2 ---------- */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 720px;
+  }
+}
+
+/* ---------- Phones: a row you swipe through, one card and a peek of the next ---------- */
+@media (max-width: 600px) {
+  .grid {
+    display: flex;
+    gap: 12px;
+    margin: var(--space-6) calc(-1 * var(--space-4)) 0;
+    padding: 4px var(--space-4) 12px;
+    overflow-x: auto;
+    scroll-padding-inline: var(--space-4);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .card {
+    flex: 0 0 80%;
+    scroll-snap-align: start;
+  }
+
+  .visual {
+    height: 118px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .grid .draw,
+  .grid .end,
+  .grid .ring,
+  .grid .ping,
+  .grid .twinkle,
+  .grid .flow,
+  .grid .halo,
+  .grid .bar {
+    animation: none;
+  }
+}
+
+/* Phones: a tighter rhythm between sections */
+@media (max-width: 600px) {
+  .section {
+    padding-top: var(--space-7);
+    padding-bottom: var(--space-7);
+  }
+}

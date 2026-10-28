@@ -27,29 +27,15 @@
   overflow: hidden;
 }
 
-.intro {
-  position: absolute;
-  top: calc(var(--navbar-height) + var(--navbar-offset) + clamp(24px, 6svh, 64px));
-  left: 50%;
-  opacity: calc(1 - var(--grow) * 3);
-  transform: translate(-50%, calc(var(--grow) * -24px));
-  animation: fade-in 0.8s ease 0.9s backwards;
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-}
-
 /* ---------- The word with the pill window ---------- */
 .word {
   position: relative;
   display: grid;
   place-items: center;
+  /* The site's heading style (see variables.css), at display size for this one word */
   font-size: clamp(3.5rem, 10.5vw, 9.5rem);
-  font-weight: 700;
-  letter-spacing: -0.05em;
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
   line-height: 1;
   white-space: nowrap;
 }
@@ -58,8 +44,8 @@
 .letters {
   position: absolute;
   top: 50%;
-  padding-bottom: 0.06em;
-  background: linear-gradient(180deg, #ffffff 40%, rgba(255, 255, 255, 0.78));
+  padding-bottom: 0.08em;
+  background: var(--heading-fill);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -176,57 +162,23 @@
 
 .captionHeading {
   max-width: 760px;
-  padding-bottom: 0.06em;
+  padding-bottom: 0.08em;
   background: var(--heading-fill);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   font-size: clamp(1.75rem, 3.4vw, 3rem);
-  font-weight: 500;
-  letter-spacing: -0.035em;
-  line-height: 1.1;
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: var(--heading-line-height);
   text-wrap: balance;
 }
 
 .captionText {
-  max-width: 520px;
-  color: #c9ccd0;
-  font-size: var(--font-size-sm);
-  line-height: 1.65;
+  max-width: 560px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-subheading);
   text-wrap: balance;
-}
-
-/* ---------- Scroll hint: a short line that fills as you scroll ---------- */
-.hint {
-  position: absolute;
-  bottom: clamp(20px, 5svh, 40px);
-  left: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  color: var(--color-text-dim);
-  font-size: 0.625rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  opacity: calc(1 - var(--grow) * 1.6);
-  transform: translateX(-50%);
-}
-
-.track {
-  width: 90px;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.bar {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: var(--color-accent);
-  box-shadow: 0 0 8px var(--color-accent);
-  transform: scaleX(min(1, var(--pin) * 1.6));
-  transform-origin: left;
 }
 
 /* Reduce motion: no pinning – the word with its pill, then the caption below */
@@ -249,12 +201,10 @@
     position: static;
   }
 
-  .pill::after,
-  .hint {
+  .pill::after {
     display: none;
   }
 
-  .intro,
   .letters,
   .pill {
     animation: none;

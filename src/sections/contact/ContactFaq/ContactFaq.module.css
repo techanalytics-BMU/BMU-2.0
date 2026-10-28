@@ -1,9 +1,10 @@
 .section {
   padding: var(--space-8) var(--space-4);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   background: var(--color-bg);
 }
 
-/* ---------- Header ---------- */
+/* ---------- Header (the site's: pill badge, heading with its last word in lime) ---------- */
 .header {
   display: flex;
   flex-direction: column;
@@ -12,38 +13,29 @@
   text-align: center;
 }
 
-.badge {
-  padding: 0.3rem 0.75rem;
-  border: 1px solid rgba(140, 198, 63, 0.6);
-  border-radius: var(--radius-sm);
-  color: var(--color-accent);
-  font-size: var(--font-size-xs);
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-/* Shared heading style (see variables.css) */
 .heading {
-  padding-bottom: 0.08em; /* keeps descenders inside the clipped gradient */
-  background: var(--heading-fill);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
   font-size: var(--font-size-heading);
   font-weight: 400;
   letter-spacing: var(--heading-letter-spacing);
   line-height: var(--heading-line-height);
 }
 
+.line {
+  padding-bottom: 0.08em;
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 .accent {
   color: var(--color-accent);
 }
 
-/* ---------- Accordion ---------- */
+/* ---------- Accordion: one quiet card per question ---------- */
 .list {
   display: grid;
-  gap: var(--space-2);
+  gap: 10px;
   max-width: 820px;
   margin: var(--space-6) auto 0;
   padding: 0;
@@ -51,17 +43,23 @@
 }
 
 .item {
-  border: 1px solid transparent;
-  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
   transition:
     background-color 0.3s ease,
     border-color 0.3s ease;
 }
 
-/* Open question: card */
-.open {
-  border-color: rgba(140, 198, 63, 0.25);
-  background: #0e141a;
+.item:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+/* Open: a fine lit rim and a slightly lifted panel */
+.open,
+.open:hover {
+  border-color: rgba(140, 198, 63, 0.3);
+  background: linear-gradient(to bottom, #17181b, #111213);
 }
 
 .questionWrap {
@@ -75,61 +73,88 @@
   align-items: center;
   gap: var(--space-3);
   width: 100%;
-  padding: var(--space-4);
+  padding: 20px 22px;
   border: 0;
   background: none;
   color: var(--color-text);
   font-family: inherit;
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-lg);
   text-align: left;
   cursor: pointer;
 }
 
-.question img {
+.question:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+  border-radius: 16px;
+}
+
+.number {
   flex-shrink: 0;
+  width: 26px;
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  transition: color 0.3s ease;
+}
+
+.open .number {
+  color: var(--color-accent);
 }
 
 .questionText {
   flex: 1;
 }
 
-.question:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: -2px;
-  border-radius: 12px;
-}
-
-/* Chevron: small grey "v" when closed, lime round button with "^" when open */
-.chevron {
-  display: grid;
+/* "+" in a round tile, turning into a "−" when open */
+.toggle {
+  position: relative;
   flex-shrink: 0;
-  place-items: center;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 50%;
   transition:
+    border-color 0.3s ease,
     background-color 0.3s ease,
-    transform 0.3s ease;
+    transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-.chevron::before {
+.toggle::before,
+.toggle::after {
   content: '';
-  width: 6px;
-  height: 6px;
-  margin-top: -3px;
-  border-right: 1.5px solid #9aa1a9;
-  border-bottom: 1.5px solid #9aa1a9;
-  transform: rotate(45deg);
-  transition: border-color 0.3s ease;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 11px;
+  height: 1.5px;
+  margin: -0.75px 0 0 -5.5px;
+  border-radius: 1px;
+  background: #c9ccd0;
+  transition:
+    transform 0.4s cubic-bezier(0.65, 0, 0.35, 1),
+    background-color 0.3s ease;
 }
 
-.open .chevron {
-  background: var(--color-accent);
+.toggle::after {
+  transform: rotate(90deg);
+}
+
+.open .toggle {
+  border-color: rgba(140, 198, 63, 0.5);
+  background: rgba(140, 198, 63, 0.1);
   transform: rotate(180deg);
 }
 
-.open .chevron::before {
-  border-color: var(--color-dark);
+.open .toggle::before,
+.open .toggle::after {
+  background: var(--color-accent);
+}
+
+.open .toggle::after {
+  transform: rotate(0deg);
 }
 
 /* Answer: height animates by switching the grid row from 0fr to 1fr */
@@ -148,30 +173,66 @@
 }
 
 .answerInner p {
-  padding: 0 var(--space-4) var(--space-4) calc(var(--space-4) + 16px + var(--space-3));
+  max-width: 640px;
+  padding: 0 22px 22px calc(22px + 26px + var(--space-3));
   color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-md);
   line-height: 1.7;
+}
+
+/* ---------- Still have a question? ---------- */
+.more {
+  margin-top: var(--space-6);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-md);
+  text-align: center;
+}
+
+.moreLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: rgba(140, 198, 63, 0.6);
+  text-underline-offset: 4px;
+}
+
+.moreLink span {
+  color: var(--color-accent);
+  transition: transform 0.25s ease;
+}
+
+.moreLink:hover span {
+  transform: translateX(4px);
 }
 
 @media (max-width: 600px) {
   .section {
-    padding-inline: var(--space-3);
+    padding: var(--space-7) var(--space-3);
   }
 
   .question {
-    padding: var(--space-3);
-    font-size: var(--font-size-sm);
+    padding: 16px;
+    font-size: var(--font-size-md);
+  }
+
+  .number {
+    width: 20px;
   }
 
   .answerInner p {
-    padding: 0 var(--space-3) var(--space-3) calc(var(--space-3) + 16px + var(--space-3));
+    padding: 0 16px 16px calc(16px + 20px + var(--space-3));
+    font-size: var(--font-size-sm);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .answer,
-  .chevron,
+  .toggle,
+  .toggle::before,
+  .toggle::after,
   .item {
     transition: none;
   }

@@ -1,0 +1,66 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Shared heading style (see variables.css) */
+.heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1000px;
+  margin-top: var(--space-4);
+  font-size: var(--font-size-heading);
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: var(--heading-line-height);
+  text-wrap: balance;
+}
+
+/* White fading softly to silver – set on the line, not the heading, so it survives the line moving */
+.line {
+  margin-bottom: -0.08em;
+  padding-bottom: 0.08em;
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Second line in lime, like the home hero's "We Make It Grow." */
+.accent {
+  color: var(--color-accent);
+}
+
+.description {
+  max-width: 560px;
+  margin-top: var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-subheading);
+  text-wrap: balance;
+}
+
+/* ---------- Entrance: badge, heading lines and description rise in one after another ---------- */
+.rise {
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.8s ease,
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--i) * 0.12s);
+}
+
+.header[data-in-view='true'] .rise {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

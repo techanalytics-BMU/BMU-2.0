@@ -23,7 +23,7 @@
   transform: none;
 }
 
-/* Shared heading style (see variables.css), a size down so it sits under "Meet the Leadership" */
+/* Shared heading style (see variables.css) */
 .heading {
   margin-top: var(--space-2);
   padding-bottom: 0.08em;
@@ -31,7 +31,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  font-size: clamp(2.25rem, 4.6vw, 4rem);
+  font-size: var(--font-size-heading);
   font-weight: 400;
   letter-spacing: var(--heading-letter-spacing);
   line-height: var(--heading-line-height);

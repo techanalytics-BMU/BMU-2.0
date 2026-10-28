@@ -1,0 +1,225 @@
+.section {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(6rem, 13vw, 11rem) var(--space-4) clamp(7rem, 14vw, 12rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--color-bg);
+  text-align: center;
+}
+
+/* ---------- Orbit rings rising from the horizon ---------- */
+.rings {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: max(100%, 900px);
+  height: 88%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to top, #000 30%, transparent 95%);
+  mask-image: linear-gradient(to top, #000 30%, transparent 95%);
+}
+
+.ring {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.07);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  opacity: 0;
+  transform: scale(0.85);
+  transform-box: view-box;
+  transform-origin: 600px 560px;
+  transition:
+    opacity 1.2s ease,
+    transform 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(0.3s + var(--i) * 0.12s);
+}
+
+/* The third ring carries the planet – a touch brighter */
+.ring:nth-child(3) {
+  stroke: rgba(140, 198, 63, 0.16);
+}
+
+.section[data-in-view='true'] .ring {
+  opacity: 1;
+  transform: none;
+}
+
+/* A lime planet orbiting slowly; below the horizon it's outside the viewBox, so it sets and rises */
+.orbit {
+  transform-box: view-box;
+  transform-origin: 600px 560px;
+  animation: orbit 26s linear infinite;
+}
+
+.planet {
+  fill: var(--color-accent);
+  filter: drop-shadow(0 0 8px rgba(140, 198, 63, 0.9));
+  opacity: 0;
+  transition: opacity 1s ease 1.2s;
+}
+
+.section[data-in-view='true'] .planet {
+  opacity: 1;
+}
+
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Copy ---------- */
+.inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+/* Each word rises out of its own mask when the section comes into view */
+.heading {
+  font-size: clamp(2.6rem, 6.4vw, 6rem);
+  font-weight: 400;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.mask {
+  display: inline-block;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+  overflow: hidden;
+  vertical-align: top;
+}
+
+/* Heading fill on each word (a clipped gradient on the h2 wouldn't reach the moving words) */
+.word {
+  display: inline-block;
+  padding-bottom: 0.08em;
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transform: translateY(105%);
+  transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--i) * 0.06s);
+}
+
+.section[data-in-view='true'] .word {
+  transform: none;
+}
+
+.text,
+.actions {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.8s ease,
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: 0.5s;
+}
+
+.text {
+  max-width: 440px;
+  margin-top: var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-subheading);
+  text-wrap: balance;
+}
+
+.actions {
+  margin-top: var(--space-5);
+  transition-delay: 0.65s;
+}
+
+.section[data-in-view='true'] .text,
+.section[data-in-view='true'] .actions {
+  opacity: 1;
+  transform: none;
+}
+
+/* Cream pill with the navbar's arrow icon */
+.inner .cta {
+  min-width: 0;
+  padding: 0.4rem 0.4rem 0.4rem 1.4rem;
+  gap: 0.8rem;
+}
+
+.inner .cta img {
+  transition: transform 0.3s ease;
+}
+
+.inner .cta:hover img {
+  transform: rotate(45deg);
+}
+
+/* ---------- Lime horizon along the bottom (same as the free-trial section's) ---------- */
+.horizon {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: min(1200px, 100%);
+  height: 160px;
+  transform: translate(-50%, calc(50% - 2px)); /* the line sits just inside the bottom edge */
+  pointer-events: none;
+}
+
+/* Soft bloom of light rising off the line */
+.horizon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    closest-side,
+    rgba(140, 198, 63, 0.3),
+    rgba(140, 198, 63, 0.1) 45%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 1.4s ease 0.4s;
+}
+
+/* Thin bright line, fading out at both ends – draws out from the centre */
+.horizon::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(206, 242, 150, 0.95) 50%, transparent);
+  box-shadow: 0 0 18px 1px rgba(140, 198, 63, 0.55);
+  transform: scaleX(0);
+  transition: transform 1.6s cubic-bezier(0.65, 0, 0.35, 1) 0.2s;
+}
+
+.section[data-in-view='true'] .horizon::before {
+  opacity: 1;
+}
+
+.section[data-in-view='true'] .horizon::after {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring,
+  .planet,
+  .word,
+  .text,
+  .actions,
+  .horizon::before,
+  .horizon::after {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .orbit {
+    animation: none;
+  }
+}

@@ -1,11 +1,9 @@
 export type TeamHeroContent = {
-  badge: string;
   wordStart: string; // big word, before the pill window ("TE")
   wordEnd: string; // after the pill window ("AM")
   image?: string; // .webp team photo inside the pill – an atmospheric placeholder is shown until set
   captionHeading: string; // fades in once the pill has filled the screen
   captionText: string;
-  scrollHint: string;
 };
 
 export type TeamFounder = {

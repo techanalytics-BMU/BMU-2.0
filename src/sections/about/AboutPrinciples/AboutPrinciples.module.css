@@ -1,0 +1,902 @@
+.section {
+  padding: var(--space-8) var(--space-4);
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+/* ---------- Showcase: the list on the left, the framed scene on the right ---------- */
+.showcase {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  align-items: center;
+  gap: clamp(var(--space-5), 5vw, 4.5rem);
+  max-width: 1160px;
+  margin: var(--space-7) auto 0;
+}
+
+/* ---------- The list: titles hung off a thin rail ---------- */
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  --pad: 26px; /* space above each title */
+  --dot-y: calc(var(--pad) + 0.625em); /* middle of the title's first line, where its dot sits */
+
+  position: relative;
+  padding-left: 32px;
+  font-size: clamp(1.15rem, 1.7vw, 1.45rem); /* the title size – the em above follows it */
+}
+
+/* The rail: each item draws its own piece, from dot to dot; lit lime down to the open one */
+.item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 4px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.item:first-child::before {
+  top: var(--dot-y);
+}
+
+.item:last-child::before {
+  bottom: auto;
+  height: var(--dot-y);
+}
+
+.item[data-past='true']::before {
+  background: rgba(140, 198, 63, 0.45);
+}
+
+.item[data-active='true']::before {
+  background: linear-gradient(
+    to bottom,
+    rgba(140, 198, 63, 0.45) var(--dot-y),
+    rgba(255, 255, 255, 0.1) 0
+  );
+}
+
+.item:first-child[data-active='true']::before {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.tab {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: var(--pad) 0 0;
+  border: 0;
+  background: none;
+  color: rgba(255, 255, 255, 0.42);
+  font: inherit;
+  font-size: 1em;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: 1.25;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.4s ease;
+}
+
+.tab:hover {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.item[data-active='true'] .tab {
+  color: var(--color-text);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+/* Small dot on the rail: lime on the open principle, softer lime on the ones before it */
+.dot {
+  position: absolute;
+  top: var(--dot-y);
+  left: -32px;
+  width: 9px;
+  height: 9px;
+  margin-top: -4.5px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  background: #0b0c0d;
+  transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.item[data-past='true'] .dot {
+  border-color: rgba(140, 198, 63, 0.6);
+  background: rgba(140, 198, 63, 0.35);
+}
+
+.item[data-active='true'] .dot {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  box-shadow: 0 0 10px rgba(140, 198, 63, 0.8);
+}
+
+/* The open principle's text – the row grows to fit it */
+.more {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.more > div {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.item[data-active='true'] .more {
+  grid-template-rows: 1fr;
+}
+
+.text {
+  max-width: 460px;
+  padding-top: 10px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-md);
+  line-height: 1.65;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.item[data-active='true'] .text {
+  opacity: 1;
+  transition-delay: 0.15s;
+}
+
+/* Progress: a lime line filling down the rail beside the open text */
+.progress {
+  position: absolute;
+  top: var(--dot-y);
+  bottom: 0;
+  left: 4px;
+  width: 1px;
+  overflow: hidden;
+}
+
+.bar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--color-accent), #d6f5a1);
+  box-shadow: 0 0 6px var(--color-accent);
+  transform: scaleY(0);
+  transform-origin: top;
+}
+
+.item[data-active='true'] .bar {
+  animation: fill 7s linear forwards;
+}
+
+.showcase[data-running='false'] .bar {
+  animation-play-state: paused;
+}
+
+@keyframes fill {
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* ---------- The framed panel (the pricing cards' rim) ---------- */
+.stage {
+  padding: 5px;
+  border-radius: 24px;
+  background: linear-gradient(
+    to bottom,
+    #a3a6aa 0,
+    #5c5f63 22px,
+    #3a3c3f 16%,
+    #2a2b2d 30%,
+    #1b1c1e 66%,
+    #151616 100%
+  );
+  box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.9);
+}
+
+.panel {
+  position: relative;
+  height: clamp(380px, 34vw, 440px);
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.45);
+  border-radius: 19px;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 0%, rgba(140, 198, 63, 0.1), transparent 70%),
+    linear-gradient(to bottom, #1e2023, #121314);
+}
+
+/* Faint dot matrix fading out from the middle */
+.panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(205, 240, 150, 0.6) 0.8px, transparent 1.5px) 0 0 / 16px
+    16px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, #000000, transparent 85%);
+  mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, #000000, transparent 85%);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* One scene at a time: the old one blurs away, the new one rises in */
+.scene {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: clamp(20px, 3vw, 36px);
+  opacity: 0;
+  filter: blur(8px);
+  transform: translateY(18px) scale(0.98);
+  transition:
+    opacity 0.45s ease,
+    filter 0.45s ease,
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scene[data-active='true'] {
+  opacity: 1;
+  filter: none;
+  transform: none;
+  transition-delay: 0.12s;
+}
+
+/* ---------- Shared scene pieces ---------- */
+.card {
+  width: min(400px, 100%);
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: linear-gradient(to bottom, #1c1d20, #111213);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 30px 60px -30px rgba(0, 0, 0, 0.95);
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.caption {
+  color: var(--color-text-dim);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid rgba(140, 198, 63, 0.45);
+  border-radius: var(--radius-pill);
+  background: rgba(140, 198, 63, 0.1);
+  color: #d6f5a1;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tag svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.rows {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  color: #d4d6da;
+  font-size: var(--font-size-sm);
+}
+
+/* ---------- Scene: one team ---------- */
+.owner {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px 3px 4px;
+  border: 1px solid rgba(140, 198, 63, 0.4);
+  border-radius: var(--radius-pill);
+  background: rgba(140, 198, 63, 0.12);
+  color: #e3f6bf;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.ownerDot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #e3f6bf, #8cc63f 60%, #4f7d22);
+  box-shadow: 0 0 8px rgba(140, 198, 63, 0.7);
+}
+
+/* Lit line with a glass chip on it (the free-trial section's horizon) */
+.horizon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 34px;
+  margin-top: 16px;
+}
+
+.horizon::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(206, 242, 150, 0.95) 50%, transparent);
+  box-shadow: 0 0 14px 1px rgba(140, 198, 63, 0.5);
+}
+
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px 6px 11px;
+  border: 1px solid rgba(140, 198, 63, 0.4);
+  border-radius: var(--radius-pill);
+  background: rgba(10, 14, 9, 0.85);
+  color: var(--color-light);
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 0 0 4px rgba(140, 198, 63, 0.06);
+}
+
+.chip::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 8px var(--color-accent);
+}
+
+/* ---------- Scene: the receipt ---------- */
+.receiptWrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(320px, 100%);
+  /* on the wrapper – the receipt's own mask would cut its shadow off */
+  filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5));
+}
+
+/* The slot it prints out of */
+.slot {
+  position: relative;
+  z-index: 1;
+  width: calc(100% + 28px);
+  height: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  background: linear-gradient(to bottom, #0a0b0c, #1a1c1e);
+  box-shadow: inset 0 -1px 0 rgba(140, 198, 63, 0.6);
+}
+
+/* Cream paper with a scalloped bottom edge */
+.receipt {
+  width: 100%;
+  margin-top: -5px;
+  padding: 22px 20px 28px;
+  background: var(--color-light);
+  color: var(--color-dark);
+  -webkit-mask: radial-gradient(circle 6px at 50% 100%, transparent 98%, #000000) 0 0 / 16px 100%;
+  mask: radial-gradient(circle 6px at 50% 100%, transparent 98%, #000000) 0 0 / 16px 100%;
+}
+
+.receiptCaption {
+  padding-bottom: 12px;
+  border-bottom: 1px dashed rgba(11, 15, 20, 0.25);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.lines {
+  display: grid;
+  gap: 12px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lines li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: var(--font-size-sm);
+}
+
+.lines strong {
+  font-weight: 700;
+}
+
+.leader {
+  flex: 1;
+  border-bottom: 1px dotted rgba(11, 15, 20, 0.35);
+}
+
+/* Round lime stamp, slammed on at the end */
+.stamp {
+  position: absolute;
+  right: -52px;
+  bottom: -72px; /* hangs off the torn edge, clear of the values */
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  padding: 10px;
+  border: 2px solid var(--color-accent);
+  border-radius: 50%;
+  background: rgba(10, 14, 9, 0.88);
+  box-shadow:
+    inset 0 0 0 4px rgba(10, 14, 9, 0.88),
+    inset 0 0 0 5px rgba(140, 198, 63, 0.6),
+    0 0 30px rgba(140, 198, 63, 0.35);
+  color: #d6f5a1;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1.25;
+  text-align: center;
+  text-transform: uppercase;
+  transform: rotate(-14deg);
+}
+
+/* ---------- Scene: the report ---------- */
+.chart {
+  position: relative;
+  aspect-ratio: 400 / 160;
+  margin-top: 16px;
+}
+
+.chart svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.grid {
+  stroke: rgba(255, 255, 255, 0.06);
+  stroke-dasharray: 3 5;
+  vector-effect: non-scaling-stroke;
+}
+
+.lineMiss,
+.lineFix {
+  fill: none;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.lineMiss {
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-width: 2;
+}
+
+.lineFix {
+  stroke: var(--color-accent);
+  stroke-width: 2.4;
+  filter: drop-shadow(0 0 4px rgba(140, 198, 63, 0.7));
+}
+
+/* The miss (at the dip) and where the fix lands (the end) – placed in % of the chart */
+.missDot,
+.endDot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+}
+
+.missDot {
+  top: 60%;
+  left: 63%;
+  background: #e0a84a;
+  box-shadow: 0 0 10px rgba(224, 168, 74, 0.8);
+}
+
+.missDot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid #e0a84a;
+  border-radius: 50%;
+}
+
+.endDot {
+  top: 6.25%;
+  left: 100%;
+  background: var(--color-accent);
+  box-shadow: 0 0 12px var(--color-accent);
+}
+
+.legend {
+  display: grid;
+  gap: 8px;
+  margin: 18px 0 0;
+  padding: 14px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  list-style: none;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+}
+
+.legend strong {
+  color: #eceef0;
+  font-weight: 600;
+}
+
+.amber,
+.lime {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.amber {
+  background: #e0a84a;
+  box-shadow: 0 0 8px rgba(224, 168, 74, 0.7);
+}
+
+.lime {
+  background: var(--color-accent);
+  box-shadow: 0 0 8px var(--color-accent);
+}
+
+/* ---------- Scene: account owners ---------- */
+.account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.initial {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: #0d0e0f;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.ownerSwitch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.you {
+  color: #d6f5a1;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.switch {
+  position: relative;
+  width: 34px;
+  height: 20px;
+  border: 1px solid rgba(140, 198, 63, 0.7);
+  border-radius: var(--radius-pill);
+  background: rgba(140, 198, 63, 0.3);
+}
+
+.knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 10px var(--color-accent);
+  transform: translateX(14px);
+}
+
+/* ---------- Scene animations: everything above is its end state; these play from the start
+   each time a scene becomes the active one (data-play) ---------- */
+.scene[data-play='true'] .card {
+  animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.1s backwards;
+}
+
+/* One team: rows slide in, BMU takes each one, then the line lights and the chip lands */
+.scene[data-play='true'] .row {
+  animation: slide-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(0.25s + var(--r) * 0.1s);
+}
+
+.scene[data-play='true'] .owner {
+  animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  animation-delay: calc(0.7s + var(--r) * 0.16s);
+}
+
+.scene[data-play='true'] .horizon::before {
+  animation: line-in 0.9s cubic-bezier(0.65, 0, 0.35, 1) 1.4s backwards;
+}
+
+.scene[data-play='true'] .chip {
+  animation: pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 1.9s backwards;
+}
+
+/* Receipt: prints out of the slot line by line, then the stamp slams down */
+.scene[data-play='true'] .receipt {
+  animation: print 1.3s cubic-bezier(0.45, 0, 0.25, 1) 0.2s backwards;
+}
+
+.scene[data-play='true'] .lines li {
+  animation: rise 0.4s ease backwards;
+  animation-delay: calc(0.75s + var(--r) * 0.18s);
+}
+
+.scene[data-play='true'] .stamp {
+  animation: stamp 0.45s cubic-bezier(0.5, 0, 0.75, 0) 1.8s backwards;
+}
+
+/* Report: the line runs to the dip, the miss is flagged, the lime fix draws on */
+.scene[data-play='true'] .lineMiss {
+  animation: draw 1s cubic-bezier(0.45, 0, 0.55, 1) 0.3s backwards;
+}
+
+.scene[data-play='true'] .missDot {
+  animation: pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 1.25s backwards;
+}
+
+.scene[data-play='true'] .missDot::after {
+  animation: ping 1.8s ease-out 1.5s infinite;
+}
+
+.scene[data-play='true'] .lineFix {
+  animation: draw 0.9s cubic-bezier(0.45, 0, 0.55, 1) 1.9s backwards;
+}
+
+.scene[data-play='true'] .endDot {
+  animation: pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 2.75s backwards;
+}
+
+.scene[data-play='true'] .legend li {
+  animation: rise 0.45s ease backwards;
+  animation-delay: calc(1.45s + var(--r) * 1.35s);
+}
+
+.scene[data-play='true'] .cardTop .tag {
+  animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  animation-delay: 3s;
+}
+
+/* Accounts: rows come in, then each owner switch flips to "You" */
+.scene[data-play='true'] .switch {
+  animation: switch-on 0.4s ease backwards;
+  animation-delay: calc(0.75s + var(--r) * 0.28s);
+}
+
+.scene[data-play='true'] .knob {
+  animation: knob-on 0.4s cubic-bezier(0.65, 0, 0.35, 1) backwards;
+  animation-delay: calc(0.75s + var(--r) * 0.28s);
+}
+
+.scene[data-play='true'] .you {
+  animation: fade 0.3s ease backwards;
+  animation-delay: calc(0.95s + var(--r) * 0.28s);
+}
+
+/* the owners scene's tag waits for all four switches */
+.scene[data-play='true'] .card:has(.switch) .cardTop .tag {
+  animation-delay: 2.05s;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes line-in {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+@keyframes print {
+  from {
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(-40px);
+  }
+}
+
+@keyframes stamp {
+  from {
+    opacity: 0;
+    transform: rotate(-14deg) scale(2);
+  }
+}
+
+@keyframes ping {
+  from {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(3.2);
+  }
+}
+
+@keyframes switch-on {
+  from {
+    border-color: rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+}
+
+@keyframes knob-on {
+  from {
+    background-color: #6b7078;
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+/* ---------- Tablets and phones: the scene on top, the list under it ---------- */
+@media (max-width: 900px) {
+  .showcase {
+    grid-template-columns: 1fr;
+    max-width: 560px;
+  }
+
+  .stage {
+    order: -1;
+  }
+
+  .panel {
+    height: 360px;
+  }
+}
+
+@media (max-width: 600px) {
+  .item {
+    --pad: 14px;
+
+    padding-left: 26px;
+  }
+
+  .dot {
+    left: -26px;
+  }
+
+  .text {
+    font-size: var(--font-size-sm);
+  }
+
+  .panel {
+    height: 384px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .rows {
+    gap: 6px;
+  }
+
+  .row {
+    padding: 8px 10px;
+  }
+
+  .stamp {
+    right: -14px;
+    bottom: -66px;
+    width: 84px;
+    height: 84px;
+    font-size: 0.625rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar,
+  .scene *,
+  .scene *::before,
+  .scene *::after {
+    animation: none !important;
+  }
+
+  .progress {
+    display: none;
+  }
+
+  .scene {
+    filter: none;
+    transform: none;
+  }
+}
+
+/* Phones: a tighter rhythm between sections */
+@media (max-width: 600px) {
+  .section {
+    padding-top: var(--space-7);
+    padding-bottom: var(--space-7);
+  }
+}

@@ -1,21 +1,24 @@
 'use client';
 
-import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
+import Badge from '@/components/ui/Badge/Badge';
 import { contactFaq } from '@/data/contact/contactFaq';
 import styles from './ContactFaq.module.css';
 
-// FAQ accordion – one answer open at a time (the first starts open)
+// FAQ accordion – one answer open at a time (the first starts open). Each question is a quiet card;
+// the open one lights its rim and its "+" turns into a "−". A WhatsApp line for anything else.
 export default function ContactFaq() {
-  const { badge, headingStart, headingHighlight, items } = contactFaq;
+  const { badge, headingStart, headingHighlight, items, more } = contactFaq;
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
     <section id="faq" className={styles.section}>
       <div className={styles.header}>
-        <span className={styles.badge}>{badge}</span>
+        <Badge>{badge}</Badge>
         <h2 className={styles.heading}>
-          {headingStart} <span className={styles.accent}>{headingHighlight}</span>
+          <span className={styles.line}>{headingStart}</span>{' '}
+          <span className={styles.accent}>{headingHighlight}</span>
         </h2>
       </div>
 
@@ -33,9 +36,9 @@ export default function ContactFaq() {
                   aria-controls={`faq-answer-${i}`}
                   onClick={() => setOpenIndex(isOpen ? null : i)}
                 >
-                  <Image src="/icons/contact/faq/search.svg" alt="" width={16} height={16} />
+                  <span className={styles.number}>{String(i + 1).padStart(2, '0')}</span>
                   <span className={styles.questionText}>{item.question}</span>
-                  <span className={styles.chevron} aria-hidden="true" />
+                  <span className={styles.toggle} aria-hidden="true" />
                 </button>
               </h3>
               <div
@@ -52,6 +55,14 @@ export default function ContactFaq() {
           );
         })}
       </ul>
+
+      <p className={styles.more}>
+        {more.text}{' '}
+        <Link href={more.cta.href} className={styles.moreLink}>
+          {more.cta.label}
+          <span aria-hidden="true">→</span>
+        </Link>
+      </p>
     </section>
   );
 }

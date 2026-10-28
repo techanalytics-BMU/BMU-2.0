@@ -1,0 +1,25 @@
+/* Each word works out how lit it is (0 → 1) from --reveal (inherited from the section):
+   word i lights up once --reveal × (number of words + 1) passes i, so they light one after another. */
+.word {
+  --lit: clamp(0, calc(var(--reveal) * (var(--n) + 1) - var(--i)), 1);
+
+  color: rgb(255 255 255 / calc(0.16 + 0.84 * var(--lit)));
+  transition: color 0.2s linear;
+}
+
+/* Highlighted words light up lime instead, with a soft glow and a fine underline drawing in
+   beneath them (word by word, so it runs along the phrase) */
+.highlight {
+  padding-bottom: 0.06em;
+  background: linear-gradient(90deg, rgba(140, 198, 63, 0.9), rgba(214, 245, 161, 0.9)) 0 100% /
+    calc(var(--lit) * 100%) 1px no-repeat;
+  color: color-mix(in srgb, #b9ef6a calc(var(--lit) * 100%), rgb(255 255 255 / 0.16));
+  /* the glow fades in with the word – at zero blur it would otherwise tint the unlit word */
+  text-shadow: 0 0 calc(var(--lit) * 22px) rgb(140 198 63 / calc(var(--lit) * 0.35));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word {
+    --lit: 1;
+  }
+}

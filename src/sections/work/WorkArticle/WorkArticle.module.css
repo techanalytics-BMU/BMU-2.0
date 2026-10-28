@@ -74,19 +74,19 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  font-size: clamp(2rem, 4.4vw, 3.5rem);
-  font-weight: 500;
-  letter-spacing: -0.04em;
-  line-height: 1.08;
+  /* Shared heading style (see variables.css) – a little smaller, as article titles run long */
+  font-size: clamp(2.1rem, 4.4vw, 3.75rem);
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: var(--heading-line-height);
   text-wrap: balance;
 }
 
 .excerpt {
   margin-top: var(--space-3);
   color: var(--color-text-muted);
-  font-size: var(--font-size-lg);
-  line-height: 1.6;
-  text-wrap: pretty;
+  font-size: var(--font-size-subheading);
+  text-wrap: balance;
 }
 
 .meta {
@@ -153,13 +153,18 @@
   margin-top: 0;
 }
 
+/* Same treatment as the site's card titles */
 .h2 {
   margin-top: 2em;
-  color: #f2f3f4;
-  font-size: clamp(1.35rem, 2vw, 1.625rem);
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.25;
+  padding-bottom: 0.08em;
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(1.5rem, 2.2vw, 1.875rem);
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: 1.2;
 }
 
 .list {
@@ -196,10 +201,10 @@
   padding: 0.2em 0 0.2em 1.2em;
   border-left: 2px solid var(--color-accent);
   color: #f2f3f4;
-  font-size: clamp(1.25rem, 2vw, 1.5rem);
-  font-weight: 500;
+  font-size: clamp(1.3rem, 2vw, 1.625rem);
+  font-weight: 400;
   letter-spacing: -0.02em;
-  line-height: 1.45;
+  line-height: 1.4;
 }
 
 .figure {
@@ -228,10 +233,15 @@
 }
 
 .relatedHeading {
-  color: #f2f3f4;
-  font-size: clamp(1.4rem, 2.2vw, 1.875rem);
-  font-weight: 500;
-  letter-spacing: -0.03em;
+  padding-bottom: 0.08em;
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: var(--font-size-title);
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: var(--heading-line-height);
 }
 
 .relatedGrid {
@@ -261,16 +271,21 @@
 }
 
 .ctaHeading {
-  color: #f2f3f4;
-  font-size: clamp(1.25rem, 2vw, 1.625rem);
-  font-weight: 500;
-  letter-spacing: -0.025em;
+  padding-bottom: 0.08em;
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: var(--font-size-title);
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: var(--heading-line-height);
 }
 
 .ctaText {
   margin-top: 6px;
   color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-md);
 }
 
 /* ---------- Tablet and phone ---------- */

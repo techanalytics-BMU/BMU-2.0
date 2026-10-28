@@ -27,4 +27,8 @@ export const contactFaq: ContactFaqContent = {
         'Send us the form above or call us. We reply within one working day, run a free audit of your current marketing, and share a plan and quote before anything begins.',
     },
   ],
+  more: {
+    text: 'Still have a question?',
+    cta: { label: 'Ask us on WhatsApp', href: 'https://wa.me/918105491414' },
+  },
 };

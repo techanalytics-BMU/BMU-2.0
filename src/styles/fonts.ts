@@ -1,35 +1,19 @@
-import { Albert_Sans, Audiowide, Instrument_Serif, Roboto } from 'next/font/google';
+import { Albert_Sans, Audiowide } from 'next/font/google';
 
 // Fonts are downloaded at build time and self-hosted – no request to Google at runtime.
 // The CSS variables below are used in src/styles/variables.css.
 
-// Body text: navbar, paragraphs, buttons, cards
+// The site's typeface: headings, body text, navbar, buttons, cards – on every page
 export const albertSans = Albert_Sans({
   subsets: ['latin'],
   variable: '--font-albert-sans',
   display: 'swap',
 });
 
-// Display headings (Hero)
+// Only for the big faded brand words (the footer's "BMU MARKETING", the contact page's "CONTACT")
 export const audiowide = Audiowide({
   subsets: ['latin'],
   weight: '400',
   variable: '--font-audiowide',
-  display: 'swap',
-});
-
-// Serif accent heading (All Services)
-export const instrumentSerif = Instrument_Serif({
-  subsets: ['latin'],
-  weight: '400',
-  variable: '--font-instrument-serif',
-  display: 'swap',
-});
-
-// C.O.R.E section (as in the Figma design)
-export const roboto = Roboto({
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  variable: '--font-roboto',
   display: 'swap',
 });

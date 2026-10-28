@@ -1,0 +1,645 @@
+/* Colour is kept quiet here: chips, beams and rings are silver; lime is saved for the ticks,
+   the light running along the beams and the small moon. */
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* little padding below: the stage already leaves room under its lowest chip */
+  padding: var(--space-8) var(--space-4) var(--space-3);
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+/* ---------- Toggle (the pricing section's) ---------- */
+.toggle {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin-top: var(--space-5);
+  padding: 4px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: #0a0d10;
+}
+
+/* Lime highlight that slides to the chosen option */
+.toggleIndicator {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc((100% - 8px) / 2);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
+  transform: translateX(calc(var(--active) * 100%));
+  transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.tab {
+  position: relative;
+  z-index: 1;
+  padding: 0.5rem 1.1rem;
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.35s ease;
+}
+
+.tabActive {
+  color: var(--color-dark);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-pill);
+}
+
+/* ---------- Stage: everything is placed in % of its width and height ---------- */
+.stage {
+  --core: 136px;
+  --core-top: 50%; /* the core's centre – it moves up on phones */
+
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 1060px;
+  aspect-ratio: 2.1 / 1;
+  margin-top: var(--space-5);
+}
+
+/* Fine dot matrix, fading out from the middle */
+.stage::before {
+  content: '';
+  position: absolute;
+  z-index: -2;
+  inset: -8% -12%;
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.55) 0.8px, transparent 1.5px) 0 0 / 21px 21px,
+    radial-gradient(circle, rgba(255, 255, 255, 0.25) 0.7px, transparent 1.4px) 0 0 / 7px 7px;
+  -webkit-mask-image: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    #000000 15%,
+    rgba(0, 0, 0, 0.35) 55%,
+    transparent 85%
+  );
+  mask-image: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    #000000 15%,
+    rgba(0, 0, 0, 0.35) 55%,
+    transparent 85%
+  );
+  opacity: 0.22;
+  pointer-events: none;
+}
+
+/* A faint light behind the core once it's one team */
+.stage::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: var(--core-top);
+  left: 50%;
+  width: 60%;
+  height: 80%;
+  background: radial-gradient(closest-side, rgba(140, 198, 63, 0.07), transparent);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+  transition:
+    opacity 1s ease 0.6s,
+    transform 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.6s;
+}
+
+.stage[data-on='true']::after {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+/* ---------- Beams (see WIDE / TALL in the .tsx) ---------- */
+.beams {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* The wide drawing, or the tall one on phones */
+.tall {
+  display: none;
+}
+
+.beam,
+.pulse {
+  fill: none;
+  stroke-linecap: round;
+}
+
+/* A fine silver line that draws itself from the chip into the core once the chips have arrived */
+.beam {
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 0.22; /* ≈ 1.1px on the full-width stage */
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.4s ease;
+}
+
+.stage[data-on='true'] .beam {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+  transition-delay: calc(0.95s + var(--i) * 0.08s);
+}
+
+/* A short dash of soft lime light running along it, over and over */
+.pulse {
+  stroke: rgba(214, 245, 161, 0.85);
+  stroke-width: 0.4;
+  stroke-dasharray: 0.07 0.93;
+  stroke-dashoffset: 0.07;
+  filter: drop-shadow(0 0 2px rgba(140, 198, 63, 0.5));
+  opacity: 0;
+}
+
+.stage[data-on='true'] .pulse {
+  animation: pulse 2.8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  animation-delay: calc(1.9s + var(--i) * 0.5s);
+}
+
+@keyframes pulse {
+  0% {
+    stroke-dashoffset: 0.07;
+    opacity: 1;
+  }
+
+  85% {
+    opacity: 1;
+  }
+
+  100% {
+    stroke-dashoffset: -0.93;
+    opacity: 0;
+  }
+}
+
+/* ---------- The empty middle, while scattered ---------- */
+.void {
+  position: absolute;
+  top: var(--core-top);
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: calc(var(--core) + 20px);
+  aspect-ratio: 1;
+  padding: 18px;
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  transition:
+    opacity 0.5s ease,
+    transform 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Its dashed outline creeps round; the text stays put */
+.void::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  animation: turn 30s linear infinite;
+}
+
+@keyframes turn {
+  to {
+    rotate: 360deg;
+  }
+}
+
+.stage[data-on='true'] .void {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+}
+
+/* ---------- The BMU core ---------- */
+.core {
+  position: absolute;
+  z-index: 1;
+  top: var(--core-top);
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: var(--core);
+  height: var(--core);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.4);
+  transition:
+    opacity 0.5s ease,
+    transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.stage[data-on='true'] .core {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+  transition:
+    opacity 0.6s ease 0.7s,
+    transform 1s cubic-bezier(0.34, 1.4, 0.64, 1) 0.7s;
+}
+
+/* A ring of light leaving the core as it forms */
+.core::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.stage[data-on='true'] .core::after {
+  animation: burst 1.3s cubic-bezier(0.22, 1, 0.36, 1) 1s both;
+}
+
+@keyframes burst {
+  from {
+    opacity: 1;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(2.4);
+  }
+}
+
+/* A dark planet with a fine lit rim along its top – the About hero's planet, quieter */
+.planet {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 0%, rgba(176, 220, 118, 0.2), transparent 70%),
+    linear-gradient(to bottom, #1c1e1c, #0a0b0a);
+  box-shadow:
+    inset 0 1px 0 rgba(214, 245, 161, 0.55),
+    inset 0 10px 26px rgba(140, 198, 63, 0.12),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 -4px 30px -10px rgba(140, 198, 63, 0.3),
+    0 30px 60px -20px rgba(0, 0, 0, 0.9);
+}
+
+.logo {
+  width: 52%;
+  height: auto;
+}
+
+/* Two rings round the core: a dashed one turning slowly, a fine one carrying a small lime moon */
+.ringInner,
+.ringOuter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.ringInner {
+  width: calc(var(--core) + 44px);
+  height: calc(var(--core) + 44px);
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  animation: spin 40s linear infinite reverse;
+}
+
+.ringOuter {
+  width: calc(var(--core) + 110px);
+  height: calc(var(--core) + 110px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  animation: spin 16s linear infinite;
+}
+
+.moon {
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: #d6f5a1;
+  box-shadow: 0 0 8px rgba(140, 198, 63, 0.7);
+}
+
+@keyframes spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* ---------- The chips: scattered → in place ---------- */
+.node {
+  position: absolute;
+  z-index: 2;
+  top: calc(50% + var(--sy) * 1%);
+  left: calc(50% + var(--sx) * 1%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 214px;
+  padding: 9px 14px 9px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: linear-gradient(to bottom, #1f2124, #131416);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 18px 36px -16px rgba(0, 0, 0, 0.9);
+  /* Centred on its spot; the tilt turns it round its own centre */
+  translate: -50% -50%;
+  rotate: var(--sr);
+  transition:
+    top 1s cubic-bezier(0.65, 0, 0.35, 1),
+    left 1s cubic-bezier(0.65, 0, 0.35, 1),
+    rotate 1s cubic-bezier(0.65, 0, 0.35, 1),
+    border-color 0.5s ease,
+    box-shadow 0.5s ease;
+  transition-delay: calc(var(--i) * 0.07s);
+  /* While scattered, each chip bobs on its own */
+  animation: bob 4.5s ease-in-out infinite;
+  animation-delay: calc(var(--i) * -0.9s);
+}
+
+@keyframes bob {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.stage[data-on='true'] .node {
+  top: calc(50% + var(--oy) * 1%);
+  left: calc(50% + var(--ox) * 1%);
+  rotate: 0deg;
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 18px 36px -16px rgba(0, 0, 0, 0.9);
+  animation: none;
+}
+
+/* Round icon: an amber warning dot, which becomes a lime tick */
+.icon {
+  position: relative;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(224, 168, 74, 0.2);
+  border-radius: 50%;
+  background: rgba(224, 168, 74, 0.08);
+  transition:
+    background-color 0.5s ease 0.6s,
+    border-color 0.5s ease 0.6s;
+}
+
+.icon::before,
+.icon::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transition:
+    opacity 0.4s ease,
+    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.icon::before {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: #e0a84a;
+  box-shadow: 0 0 6px rgba(224, 168, 74, 0.5);
+  transition-delay: 0.5s;
+}
+
+.icon::after {
+  width: 8px;
+  height: 4px;
+  margin: -3.5px 0 0 -4px;
+  border-bottom: 1.5px solid var(--color-accent);
+  border-left: 1.5px solid var(--color-accent);
+  opacity: 0;
+  transform: rotate(-45deg) scale(0.4);
+}
+
+.stage[data-on='true'] .icon {
+  border-color: rgba(140, 198, 63, 0.3);
+  background: rgba(140, 198, 63, 0.07);
+}
+
+.stage[data-on='true'] .icon::before {
+  opacity: 0;
+  transform: scale(0);
+}
+
+.stage[data-on='true'] .icon::after {
+  opacity: 1;
+  transform: rotate(-45deg);
+  transition-delay: calc(0.75s + var(--i) * 0.07s);
+}
+
+/* The two labels share one spot and swap as the chip arrives */
+.labels {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.offLabel,
+.onLabel {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  transition:
+    opacity 0.4s ease,
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.onLabel {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.stage[data-on='true'] .offLabel {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition-delay: calc(0.5s + var(--i) * 0.07s);
+}
+
+.stage[data-on='true'] .onLabel {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(0.65s + var(--i) * 0.07s);
+}
+
+.name {
+  overflow: hidden;
+  color: #eceef0;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status {
+  overflow: hidden;
+  color: #8b919a;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- Phones: a messy pile → a neat column under the core, hung off one rail ---------- */
+@media (max-width: 640px) {
+  .stage {
+    --core: 84px;
+    --core-top: calc(50% + var(--core-y) * 1%);
+
+    aspect-ratio: 1 / 1.3;
+  }
+
+  /* keep the light behind the core from reaching up behind the toggle */
+  .stage::after {
+    height: 34%;
+  }
+
+  .wide {
+    display: none;
+  }
+
+  .tall {
+    display: block;
+  }
+
+  .beam {
+    stroke-width: 0.3;
+  }
+
+  .pulse {
+    stroke-width: 0.55;
+  }
+
+  /* the short arms into each chip draw once the rail has reached them */
+  .stage[data-on='true'] .arm {
+    transition-delay: calc(1.5s + var(--i) * 0.1s);
+  }
+
+  /* A wide chip, one line: name on the left, status on the right */
+  .node {
+    top: calc(50% + var(--py) * 1%);
+    left: calc(50% + var(--px) * 1%);
+    gap: 10px;
+    width: 88%;
+    padding: 8px 14px 8px 8px;
+    border-radius: 14px;
+    rotate: var(--pr);
+  }
+
+  .stage[data-on='true'] .node {
+    top: calc(50% + var(--cy) * 1%);
+    left: 50%;
+  }
+
+  .icon {
+    width: 26px;
+    height: 26px;
+  }
+
+  .offLabel,
+  .onLabel {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .name {
+    font-size: 0.8125rem;
+  }
+
+  .status {
+    flex-shrink: 0;
+    font-size: 0.6875rem;
+  }
+
+  .void {
+    padding: 12px;
+    font-size: 0.6875rem;
+  }
+
+  .ringInner {
+    width: calc(var(--core) + 26px);
+    height: calc(var(--core) + 26px);
+  }
+
+  .ringOuter {
+    width: calc(var(--core) + 60px);
+    height: calc(var(--core) + 60px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .node,
+  .core,
+  .void,
+  .beam,
+  .icon,
+  .icon::before,
+  .icon::after,
+  .offLabel,
+  .onLabel,
+  .toggleIndicator,
+  .stage::after {
+    transition: none !important;
+  }
+
+  .node,
+  .pulse,
+  .ringInner,
+  .ringOuter,
+  .core::after,
+  .void::before {
+    animation: none !important;
+  }
+}
+
+/* Phones: a tighter rhythm between sections – no padding below, and the stage's spare room under
+   its last chip pulled in, so the next section follows at the same distance as the others */
+@media (max-width: 600px) {
+  .section {
+    padding-top: var(--space-7);
+    padding-bottom: 0;
+  }
+
+  .stage {
+    margin-bottom: -12px;
+  }
+}
