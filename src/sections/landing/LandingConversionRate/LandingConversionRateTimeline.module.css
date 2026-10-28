@@ -6,6 +6,14 @@
      0.19 – 0.88  pan:    move left → right                        (--pan  0 → 1)
      0.88 – 1     shrink: full screen → card again                 (--grow 1 → 0)
    Steps are spaced a quarter of the panel width apart, so 3 are visible in the card. */
+
+/* Registered as a number so the .tsx can read its current value (the businessman follows it) */
+@property --pan {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
 .scroller {
   --progress: 0;
   --grow: min(
@@ -163,6 +171,209 @@
   }
 }
 
+/* ---------- Businessman running along the line ----------
+   --run (0 → 1, set in the .tsx) is how far along he is: it follows --pan, taking him from the
+   left edge of the panel to the right. He fades out while the page scrolls up ([data-hidden='true']).
+   Arms, legs, briefcase and tie move only while [data-running='true']; otherwise he stands still. */
+.runner {
+  --runner-h: 22cqh;
+  --runner-w: calc(var(--runner-h) * 0.64); /* the drawing is 64 × 100 */
+  --cycle: 0.56s; /* one full stride */
+
+  position: absolute;
+  bottom: calc(var(--line-bottom) * 100%);
+  left: calc(var(--run, 0) * (100cqw - var(--runner-w)));
+  width: var(--runner-w);
+  height: var(--runner-h);
+  /* Soft light edge, so the grey suit stands out on black */
+  filter: drop-shadow(0 0 calc(var(--runner-h) * 0.03) rgba(255, 255, 255, 0.22));
+  transition: opacity 0.2s ease;
+}
+
+.runner[data-hidden='true'] {
+  opacity: 0;
+}
+
+.runner svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Pivots, in the drawing's units, and the standing pose */
+.runner g {
+  transform-box: view-box;
+}
+
+.upper {
+  transform-origin: 31px 57px; /* hip */
+  transition: transform 0.25s ease;
+}
+
+.armFar,
+.armNear {
+  transform-origin: 31px 28px; /* shoulder */
+}
+
+.armFar {
+  transform: rotate(5deg);
+}
+
+.forearm {
+  transform-origin: 31px 38.5px; /* elbow */
+  transition: transform 0.25s ease;
+}
+
+.case {
+  transform-origin: 31px 52px; /* hand */
+}
+
+.legFar,
+.legNear {
+  transform-origin: 31px 57px; /* hip */
+}
+
+.legFar {
+  transform: rotate(5deg);
+}
+
+.legNear {
+  transform: rotate(-4deg);
+}
+
+.shin {
+  transform-origin: 31px 77px; /* knee */
+}
+
+.tie {
+  transform-origin: 37.2px 25.2px; /* knot */
+}
+
+/* Running: leans in, bobs twice a stride, the tie flies out behind him.
+   Each arm swings against the leg on its side, so the far leg and the near arm
+   are half a stride behind. */
+.runner[data-running='true'] .figure {
+  animation: run-bob calc(var(--cycle) / 2) ease-in-out infinite;
+}
+
+.runner[data-running='true'] .upper {
+  transform: rotate(10deg);
+}
+
+.runner[data-running='true'] .legFar,
+.runner[data-running='true'] .legNear {
+  animation: run-thigh var(--cycle) ease-in-out infinite;
+}
+
+.runner[data-running='true'] .shin {
+  animation: run-shin var(--cycle) ease-in-out infinite;
+}
+
+.runner[data-running='true'] .armFar {
+  animation: run-arm var(--cycle) ease-in-out infinite;
+}
+
+.runner[data-running='true'] .forearm {
+  transform: rotate(-85deg);
+}
+
+.runner[data-running='true'] .armNear {
+  animation: run-arm-case var(--cycle) ease-in-out infinite;
+}
+
+.runner[data-running='true'] .case {
+  animation: run-case var(--cycle) ease-in-out infinite;
+}
+
+.runner[data-running='true'] .legFar,
+.runner[data-running='true'] .legFar .shin,
+.runner[data-running='true'] .armNear,
+.runner[data-running='true'] .case {
+  animation-delay: calc(var(--cycle) / -2);
+}
+
+.runner[data-running='true'] .tie {
+  animation: tie-flap 0.18s ease-in-out infinite alternate;
+}
+
+@keyframes run-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2.5px);
+  }
+}
+
+@keyframes run-thigh {
+  0%,
+  100% {
+    transform: rotate(-38deg);
+  }
+  50% {
+    transform: rotate(32deg);
+  }
+}
+
+/* The knee bends most as the foot kicks up behind */
+@keyframes run-shin {
+  0%,
+  100% {
+    transform: rotate(10deg);
+  }
+  30% {
+    transform: rotate(28deg);
+  }
+  50% {
+    transform: rotate(78deg);
+  }
+  75% {
+    transform: rotate(60deg);
+  }
+}
+
+@keyframes run-arm {
+  0%,
+  100% {
+    transform: rotate(-40deg);
+  }
+  50% {
+    transform: rotate(35deg);
+  }
+}
+
+/* The arm with the briefcase swings less; the case swings back the other way, so it hangs down */
+@keyframes run-arm-case {
+  0%,
+  100% {
+    transform: rotate(-24deg);
+  }
+  50% {
+    transform: rotate(22deg);
+  }
+}
+
+@keyframes run-case {
+  0%,
+  100% {
+    transform: rotate(20deg);
+  }
+  50% {
+    transform: rotate(-16deg);
+  }
+}
+
+@keyframes tie-flap {
+  from {
+    transform: rotate(96deg) scaleX(1);
+  }
+  to {
+    transform: rotate(114deg) scaleX(0.75);
+  }
+}
+
 /* Phones / small tablets: no zoom and no pinning – the card scrolls up the page normally.
    It enters showing the first steps; once the whole card is on screen (--progress 0, see the
    `unpinned: 'onScreen'` option in the .tsx) it slides sideways as it carries on up,
@@ -222,5 +433,9 @@
 
   .highlight .dot {
     animation: none;
+  }
+
+  .runner {
+    display: none;
   }
 }

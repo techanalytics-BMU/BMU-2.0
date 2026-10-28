@@ -11,7 +11,7 @@ export const landingConversionRate: LandingConversionRateContent = {
     { label: 'Launch day!' },
     { label: '“Looks great… but where are the leads?”', highlight: true, tall: true },
     { label: 'Traffic flatlines.' },
-    { label: 'Forgotten online.', tall: true },
+    { label: 'Forgotten online.', tall: true},
     { label: 'BMU audits every click.' },
     { label: 'Test. Learn. Optimise.', tall: true },
     { label: 'Found & chosen. Every month.', highlight: true },
