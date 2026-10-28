@@ -44,20 +44,19 @@ export type FooterContent = {
   };
 };
 
-// Service areas: the tabs block in the footer (Bangalore Areas / Cities / Industries / Services)
+// Service areas: the link groups in the footer (Services / Industries / Bangalore Areas / Cities)
 export type ServiceAreasItem = {
   label: string;
   href?: string; // plain text until a link is added
 };
 
-export type ServiceAreasTab = {
+export type ServiceAreasGroup = {
   id: string;
-  label: string; // tab button
+  label: string; // small label above the heading
   heading: string;
   items: ServiceAreasItem[];
 };
 
 export type ServiceAreasContent = {
-  defaultTab: string; // id of the tab shown first
-  tabs: ServiceAreasTab[];
+  groups: ServiceAreasGroup[]; // shown one after another, in this order
 };

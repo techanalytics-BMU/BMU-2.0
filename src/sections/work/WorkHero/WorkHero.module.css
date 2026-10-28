@@ -1,0 +1,157 @@
+.section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: calc(var(--navbar-height) + var(--navbar-offset) + clamp(48px, 9svh, 96px))
+    var(--space-4) var(--space-7);
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+/* The dot wave fills the upper part of the hero, fading out at the edges and bottom */
+.wave {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: min(78svh, 680px);
+  -webkit-mask-image:
+    linear-gradient(to bottom, transparent 2%, #000000 25%, #000000 60%, transparent 98%),
+    linear-gradient(to right, transparent, #000000 18%, #000000 82%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to bottom, transparent 2%, #000000 25%, #000000 60%, transparent 98%),
+    linear-gradient(to right, transparent, #000000 18%, #000000 82%, transparent);
+  mask-composite: intersect;
+  pointer-events: none;
+}
+
+/* ---------- Badge + heading ---------- */
+.content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  max-width: 820px;
+  text-align: center;
+}
+
+/* White fading softly to silver; a soft dark halo keeps it readable over the dots */
+.heading {
+  padding-bottom: 0.08em;
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(2.1rem, 4.2vw, 3.75rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+  text-wrap: balance;
+  filter: drop-shadow(0 4px 30px rgba(0, 0, 0, 0.9));
+}
+
+/* ---------- Client logos ---------- */
+.clients {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1100px;
+  margin-top: clamp(var(--space-7), 14svh, 8.5rem);
+  text-align: center;
+}
+
+.clientsLabel {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+/* Fades out at both ends */
+.marquee {
+  margin-top: var(--space-4);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000000 15%, #000000 85%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000000 15%, #000000 85%, transparent);
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  animation: marquee 32s linear infinite;
+}
+
+.marquee:hover .track {
+  animation-play-state: paused;
+}
+
+.track li {
+  display: flex;
+  align-items: center;
+  padding: 0 clamp(24px, 4vw, 48px);
+}
+
+/* Every logo in one quiet grey; full white on hover */
+.wordmark,
+.logo {
+  opacity: 0.55;
+  transition: opacity 0.3s ease;
+}
+
+.wordmark:hover,
+.logo:hover {
+  opacity: 1;
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #e6e7e9;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.logo {
+  width: auto;
+  height: 28px;
+  filter: grayscale(1) brightness(1.6);
+}
+
+/* The two copies are equal, so sliding by half the track width loops seamlessly */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------- Entrance ---------- */
+.rise {
+  animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: var(--delay);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .track {
+    animation: none;
+  }
+
+  .marquee {
+    overflow-x: auto;
+  }
+}

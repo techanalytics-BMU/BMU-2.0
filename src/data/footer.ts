@@ -1,7 +1,7 @@
 import type { FooterContent } from '@/types/footer';
 
 // Site footer. Items without `href` show as plain text – add the link once the page exists.
-// The tabs block (Bangalore Areas / Cities / Industries / Services) is in src/data/serviceAreas.ts.
+// The link groups (Services / Industries / Bangalore Areas / Cities) are in src/data/serviceAreas.ts.
 export const footer: FooterContent = {
   tagline:
     'AI-first growth partner for businesses and real estate. Strategy, creative, media and software from one team.',
@@ -17,6 +17,7 @@ export const footer: FooterContent = {
       links: [
         { label: 'FAQs', href: '/contact#faq' },
         { label: 'Contact us', href: '/contact' },
+        { label: 'Our team', href: '/team' },
         { label: 'Case studies' },
         { label: 'Client dashboard' },
       ],

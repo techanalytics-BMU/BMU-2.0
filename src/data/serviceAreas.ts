@@ -1,6 +1,6 @@
 import type { ServiceAreasContent, ServiceAreasItem } from '@/types/footer';
 
-// Tabs block in the footer. Items are plain text for now – give an item an `href` later
+// Link groups in the footer. Items are plain text for now – give an item an `href` later
 // to make it a link.
 const items = (labels: string[], format: (label: string) => string): ServiceAreasItem[] =>
   labels.map((label) => ({ label: format(label) }));
@@ -51,8 +51,19 @@ const services = [
 ];
 
 export const serviceAreas: ServiceAreasContent = {
-  defaultTab: 'services',
-  tabs: [
+  groups: [
+    {
+      id: 'services',
+      label: 'Services',
+      heading: 'Marketing Services in Bangalore',
+      items: items(services, (service) => `${service} in Bangalore`),
+    },
+    {
+      id: 'industries',
+      label: 'Industries',
+      heading: 'Industry Marketing in Bangalore',
+      items: items(industries, (industry) => `${industry} Marketing in Bangalore`),
+    },
     {
       id: 'areas',
       label: 'Bangalore Areas',
@@ -64,18 +75,6 @@ export const serviceAreas: ServiceAreasContent = {
       label: 'Cities',
       heading: 'Digital Marketing Across India',
       items: items(cities, (city) => `Digital Marketing Agency in ${city}`),
-    },
-    {
-      id: 'industries',
-      label: 'Industries',
-      heading: 'Industry Marketing in Bangalore',
-      items: items(industries, (industry) => `${industry} Marketing in Bangalore`),
-    },
-    {
-      id: 'services',
-      label: 'Services',
-      heading: 'Marketing Services in Bangalore',
-      items: items(services, (service) => `${service} in Bangalore`),
     },
   ],
 };

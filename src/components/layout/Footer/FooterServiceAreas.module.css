@@ -2,86 +2,30 @@
   margin-top: clamp(var(--space-7), 8vw, 6.5rem);
 }
 
-/* ---------- Tabs: frosted segmented control, a green highlight slides to the active tab ---------- */
-.tabs {
-  position: relative;
-  display: inline-flex;
-  gap: 2px;
-  max-width: 100%;
-  padding: 4px;
-  overflow-x: auto;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.03);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  scrollbar-width: none;
+/* ---------- One group: label → heading + count → list, separated by a hairline ---------- */
+.group {
+  padding-top: var(--space-5);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.tabs::-webkit-scrollbar {
-  display: none;
+.group + .group {
+  margin-top: var(--space-6);
 }
 
-/* Placed and sized by the component (style.width / style.transform) */
-.indicator {
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 0;
-  border-radius: var(--radius-pill);
-  background: linear-gradient(to bottom, #a8dd5c, #7db433);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.45),
-    0 6px 18px -6px rgba(140, 198, 63, 0.6);
-}
-
-.indicator[data-ready='true'] {
-  transition:
-    transform 0.4s cubic-bezier(0.65, 0, 0.35, 1),
-    width 0.4s cubic-bezier(0.65, 0, 0.35, 1);
-}
-
-.tab {
-  position: relative;
-  z-index: 1;
-  flex-shrink: 0;
-  height: 36px;
-  padding: 0 1.05rem;
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: none;
-  color: var(--color-text-muted);
-  font-family: inherit;
-  font-size: var(--font-size-xs);
+/* Small green label above the heading */
+.label {
+  color: var(--color-accent);
+  font-size: 0.6875rem;
   font-weight: 600;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.tab:hover {
-  color: var(--color-text);
-}
-
-.tabActive,
-.tabActive:hover {
-  color: var(--color-dark);
-}
-
-.tab:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: -2px;
-}
-
-/* ---------- Heading + count + list ---------- */
-.panel {
-  margin-top: var(--space-5);
-  animation: fade-in 0.45s ease;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .headingRow {
   display: flex;
   align-items: center;
   gap: 12px;
+  margin-top: 8px;
 }
 
 /* White fading softly to silver */
@@ -91,7 +35,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+  font-size: clamp(1.2rem, 1.6vw, 1.375rem);
   font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 1.25;
@@ -133,13 +77,6 @@ a.item:hover {
   color: var(--color-accent);
 }
 
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-}
-
 /* "Show all" – phones only */
 .more {
   display: none;
@@ -152,7 +89,7 @@ a.item:hover {
   }
 }
 
-/* ---------- Phone: 2 columns and the first 8 items until "Show all" is tapped ---------- */
+/* ---------- Phone: 2 columns and the first 8 items of each group until "Show all" is tapped ---------- */
 @media (max-width: 720px) {
   .list {
     grid-template-columns: repeat(2, 1fr);
@@ -190,15 +127,5 @@ a.item:hover {
 @media (max-width: 420px) {
   .list {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .panel {
-    animation: none;
-  }
-
-  .indicator[data-ready='true'] {
-    transition: none;
   }
 }
