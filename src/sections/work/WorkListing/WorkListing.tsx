@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
+import Button from '@/components/ui/Button/Button';
 import { workArticle } from '@/data/work/workArticle';
 import { workListing } from '@/data/work/workListing';
 import { useInView } from '@/hooks/useInView';
@@ -196,25 +197,21 @@ export default function WorkListing() {
             <div className={styles.empty}>
               <p className={styles.emptyHeading}>{t.emptyHeading}</p>
               <p className={styles.emptyText}>{t.emptyText}</p>
-              <button type="button" className={styles.clear} onClick={clear}>
+              <Button size="sm" className={styles.clear} onClick={clear}>
                 {t.clearFilters}
-              </button>
+              </Button>
             </div>
           )
         )}
 
         {results.length > visible && (
           <div className={styles.more}>
-            <button
-              type="button"
-              className={styles.loadMore}
-              onClick={() => setVisible(visible + PAGE_SIZE)}
-            >
+            <Button className={styles.loadMore} onClick={() => setVisible(visible + PAGE_SIZE)}>
               {t.loadMore}
               <span className={styles.loadMoreCount}>
                 {visible} / {results.length}
               </span>
-            </button>
+            </Button>
           </div>
         )}
       </div>

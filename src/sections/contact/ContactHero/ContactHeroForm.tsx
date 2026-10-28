@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
+import Button from '@/components/ui/Button/Button';
 import type { ContactFormField, ContactHeroContent } from '@/types/contact';
 import styles from './ContactHeroForm.module.css';
 
@@ -234,10 +235,11 @@ export default function ContactHeroForm({ form }: Props) {
             <span aria-hidden="true">←</span> {form.back}
           </button>
         )}
-        <button type="submit" className={styles.next} disabled={status === 'sending'}>
+        {/* The shared glowing Button, with the arrow icon */}
+        <Button type="submit" size="sm" className={styles.next} disabled={status === 'sending'}>
           {last ? (status === 'sending' ? form.sending : form.submit) : form.next}
           <Image src="/icons/common/navbar-cta-icon.svg" alt="" width={26} height={26} />
-        </button>
+        </Button>
       </div>
       {last && <p className={styles.privacy}>{form.privacy}</p>}
     </form>

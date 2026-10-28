@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Badge from '@/components/ui/Badge/Badge';
 import Button from '@/components/ui/Button/Button';
@@ -160,10 +159,10 @@ export default function LandingFreeTrial() {
 
         {/* Soft green horizon the window fades into */}
         <div className={styles.horizon}>
-          <Link href={chip.href} className={styles.chip}>
+          <Button href={chip.href} size="sm" className={styles.chip}>
             <span className={styles.chipDot} aria-hidden="true" />
             {chip.label}
-          </Link>
+          </Button>
         </div>
       </div>
     </section>

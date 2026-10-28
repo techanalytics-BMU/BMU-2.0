@@ -63,6 +63,39 @@
   color: var(--color-text);
 }
 
+/* Call Us + Login, the same height side by side */
+.actions {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-2);
+}
+
+/* Call Us: just the phone icon in a round button; Login the same height */
+.cta {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+}
+
+/* Login: no icon – even padding instead of the icon button's */
+.login {
+  height: 42px;
+  padding-inline: 1.1rem;
+}
+
+/* Their glow stays put until hovered, then travels around the edge */
+.cta,
+.login {
+  animation-play-state: paused;
+}
+
+.cta:hover,
+.cta:focus-visible,
+.login:hover,
+.login:focus-visible {
+  animation-play-state: running;
+}
+
 /* "Services" – opens the services panel (hover or click). While open it turns bold lime. */
 .menuButton {
   display: inline-flex;
@@ -285,7 +318,7 @@
   }
 
   .navOpen .links > li,
-  .navOpen .cta {
+  .navOpen .actions {
     animation: item-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
     animation-delay: calc(60ms + var(--i, 5) * 45ms);
   }
@@ -408,11 +441,18 @@
     white-space: nowrap;
   }
 
-  .cta {
-    align-self: stretch;
-    justify-content: center;
-    height: 50px;
+  /* Equal halves */
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     margin-top: var(--space-2);
+  }
+
+  .cta,
+  .login {
+    justify-content: center;
+    width: auto;
+    height: 50px;
   }
 }
 
@@ -425,7 +465,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .navOpen .links > li,
-  .navOpen .cta,
+  .navOpen .actions,
   .subMenu[data-open='true'] .subList > li {
     animation: none;
   }

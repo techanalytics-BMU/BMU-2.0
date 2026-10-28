@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import Button from '@/components/ui/Button/Button';
-import { navCta, navLinks, servicesMenu } from '@/data/navigation';
+import { navCta, navLinks, navLogin, servicesMenu } from '@/data/navigation';
 import type { ServicesMenuItem } from '@/types/navigation';
 import styles from './Navbar.module.css';
 import NavbarServicesMenu from './NavbarServicesMenu';
@@ -233,10 +233,27 @@ export default function Navbar() {
               ))}
             </ul>
 
-            <Button href={navCta.href} size="sm" className={styles.cta} onClick={closeMenu}>
-              {navCta.label}
-              <Image src="/icons/common/navbar-cta-icon.svg" alt="" width={24} height={24} />
-            </Button>
+            {/* Call Us (phone icon only, to the contact page) and Login – their glow moves only on hover */}
+            <div className={styles.actions}>
+              <Button
+                href={navCta.href}
+                size="sm"
+                ariaLabel={navCta.label}
+                className={styles.cta}
+                onClick={closeMenu}
+              >
+                <Image src="/icons/common/navbar-call-icon.svg" alt="" width={24} height={24} />
+              </Button>
+              <Button
+                href={navLogin.href}
+                variant="secondary"
+                size="sm"
+                className={styles.login}
+                onClick={closeMenu}
+              >
+                {navLogin.label}
+              </Button>
+            </div>
           </nav>
 
           {/* Burger: two lines that turn into a cross */}

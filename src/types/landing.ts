@@ -5,8 +5,32 @@ export type LandingHeroContent = {
   headingLine1: string;
   headingLine2: string;
   description: string;
-  primaryCta: NavLink;
-  secondaryCta: NavLink;
+  cta: NavLink; // the one button
+};
+
+// The turning earth at the bottom of LandingHero (drawn by src/hooks/useEarthGlobe.ts)
+export type LandingHeroEarthCity = {
+  name: string;
+  lat: number; // degrees, north +
+  lon: number; // degrees, east +
+};
+
+export type LandingHeroEarth = {
+  /**
+   * Land map, 0.5° cells: rows north → south, comma-separated; each row west → east as run
+   * lengths in 2-character base 36, starting with sea (made from Natural Earth via world-atlas)
+   */
+  land: string;
+  cities: LandingHeroEarthCity[]; // glowing city lights
+  routes: [string, string][]; // arcs (by city name) for the still globe – while turning, arcs pick random cities
+  /**
+   * India's official outline (Natural Earth, India's point of view) – not drawn; it keeps India's town
+   * lights inside the country. Rings joined by '|', points by ';', each point "lon,lat". The first
+   * ring is the mainland.
+   */
+  india: string;
+  // India's cities at night: each becomes a cluster of warm lights, bigger for a bigger `weight` (1–3)
+  indiaCities: (LandingHeroEarthCity & { weight: number })[];
 };
 
 export type LandingAllServicesTile = {

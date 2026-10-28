@@ -618,45 +618,15 @@
   opacity: calc(0.3 + 0.7 * var(--lift));
 }
 
-/* Glass pill sitting on the line */
+/* The shared glowing Button, sitting on the line */
 .chip {
-  position: relative;
   z-index: 1;
-  display: inline-flex;
-  align-items: center;
   gap: 0.55rem;
   padding: 0.55rem 1.15rem 0.55rem 0.95rem;
-  border: 1px solid rgba(140, 198, 63, 0.35);
-  border-radius: var(--radius-pill);
-  background: rgba(10, 14, 9, 0.72);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
   color: var(--color-light);
   font-size: 0.875rem;
   font-weight: 500;
-  white-space: nowrap;
-  box-shadow:
-    0 0 0 4px rgba(140, 198, 63, 0.06),
-    0 10px 30px rgba(0, 0, 0, 0.5);
   pointer-events: auto;
-  transition:
-    transform 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.3s ease;
-}
-
-.chip:hover {
-  border-color: rgba(140, 198, 63, 0.7);
-  box-shadow:
-    0 0 0 4px rgba(140, 198, 63, 0.1),
-    0 10px 30px rgba(0, 0, 0, 0.5),
-    0 0 28px rgba(140, 198, 63, 0.35);
-  transform: translateY(-1px);
-}
-
-.chip:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 3px;
 }
 
 .chipDot {

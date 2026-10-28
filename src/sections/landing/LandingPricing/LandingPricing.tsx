@@ -79,7 +79,9 @@ export default function LandingPricing() {
                     {plan.price} <span className={styles.period}>{plan.period}</span>
                   </p>
                   <p className={styles.billing}>{plan.billing}</p>
-                  <Button className={styles.cta}>{plan.cta}</Button>
+                  <Button variant={plan.featured ? 'accent' : 'primary'} className={styles.cta}>
+                    {plan.cta}
+                  </Button>
                 </div>
                 <ul className={styles.features}>
                   {plan.features.map((feature) => (

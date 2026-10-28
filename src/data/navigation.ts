@@ -1,14 +1,16 @@
 import type { NavLink, ServicesMenuContent } from '@/types/navigation';
 
+// Home is the logo
 export const navLinks: NavLink[] = [
-  { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
   { label: 'Services', href: '/services', menu: 'services' },
   { label: 'Work', href: '/work' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'Team', href: '/team' },
 ];
 
-export const navCta: NavLink = { label: "Let's Talk Growth", href: '/contact' };
+// Buttons on the right: the main one (with the phone icon), then Login
+export const navCta: NavLink = { label: 'Call Us', href: '/contact' };
+export const navLogin: NavLink = { label: 'Login', href: '/login' }; // no login page yet
 
 // "Services" in the navbar: a hover panel on desktop, a list inside the menu sheet on phones.
 // The six service groups match the footer. No links yet – add `href` to make a card clickable.

@@ -1,55 +1,119 @@
+/* Every button: a near-black pill with a glowing border – a white highlight along the top and a
+   logo-green glow that keeps travelling around the edge (--glow-angle turns 0 → 360deg). */
+@property --glow-angle {
+  syntax: '<angle>';
+  inherits: true;
+  initial-value: 0deg;
+}
+
 .button {
+  --glow: 140, 198, 63;
+
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  border: 1px solid transparent;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: linear-gradient(to bottom, #16181b, #08090a);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 0 22px -6px rgba(var(--glow), 0.28),
+    0 12px 28px -14px rgba(0, 0, 0, 0.9);
+  color: var(--color-text);
   font-family: inherit;
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
+  animation: glow-travel 4.5s linear infinite;
   transition:
     transform 0.2s ease,
-    background-color 0.2s ease,
-    border-color 0.2s ease;
+    box-shadow 0.3s ease;
+}
+
+/* The glowing edge: two rings cut out of gradients with a mask – a crisp 1.5px line (::before)
+   and a softer, wider halo just outside it (::after) */
+.button::before,
+.button::after {
+  content: '';
+  position: absolute;
+  border-radius: inherit;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.button::before {
+  inset: -1px;
+  padding: 1.5px;
+  background:
+    radial-gradient(34% 70% at 50% 0%, rgba(255, 255, 255, 0.95), transparent 72%),
+    conic-gradient(
+      from var(--glow-angle),
+      transparent 0deg,
+      rgba(var(--glow), 0) 210deg,
+      rgba(var(--glow), 0.95) 300deg,
+      #eaffcf 326deg,
+      rgba(var(--glow), 0) 360deg
+    );
+  transition: filter 0.3s ease;
+}
+
+.button::after {
+  inset: -4px;
+  padding: 4px;
+  background: conic-gradient(
+    from var(--glow-angle),
+    transparent 0deg 220deg,
+    rgba(var(--glow), 0.45) 305deg,
+    transparent 360deg
+  );
+  filter: blur(2px);
+}
+
+@keyframes glow-travel {
+  to {
+    --glow-angle: 360deg;
+  }
 }
 
 .button:hover {
   transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 0 30px -4px rgba(var(--glow), 0.45),
+    0 12px 28px -14px rgba(0, 0, 0, 0.9);
+}
+
+.button:hover::before {
+  filter: brightness(1.35);
 }
 
 .button:focus-visible {
   outline: 2px solid var(--color-accent);
-  outline-offset: 3px;
+  outline-offset: 4px;
 }
 
-.primary {
-  background: var(--color-light);
-  color: var(--color-dark);
+.button:disabled {
+  opacity: 0.7;
+  cursor: wait;
 }
 
-.primary:hover {
-  background: #ffffff;
+/* Round icons inside (dark circle + green arrow / phone): a faint ring so they show on the dark fill */
+.button img {
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16);
 }
 
-.secondary {
-  background: var(--color-surface);
-  color: var(--color-text);
-  border-color: var(--color-border);
-}
-
-.secondary:hover {
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
+/* Variants share the look above; accent glows a little more */
 .accent {
-  background: var(--color-accent);
-  color: var(--color-dark);
-  box-shadow: 0 0 24px rgba(140, 198, 63, 0.45);
-}
-
-.accent:hover {
-  background: #9ad64a;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 0 30px -4px rgba(var(--glow), 0.45),
+    0 12px 28px -14px rgba(0, 0, 0, 0.9);
 }
 
 /* Shapes */
@@ -71,4 +135,11 @@
 .sm {
   padding: 0.5rem 0.4rem 0.5rem 0.9rem;
   font-size: var(--font-size-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    animation: none;
+    --glow-angle: 40deg; /* a fixed glow on the top right */
+  }
 }

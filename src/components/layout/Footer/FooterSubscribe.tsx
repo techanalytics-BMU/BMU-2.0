@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import Button from '@/components/ui/Button/Button';
 import type { FooterNewsletter } from '@/types/footer';
 import styles from './Footer.module.css';
 
@@ -46,10 +47,10 @@ export default function FooterSubscribe({ newsletter }: { newsletter: FooterNews
           className={styles.subscribeInput}
           onChange={() => status === 'invalid' && setStatus('idle')}
         />
-        <button type="submit" className={styles.subscribeButton} disabled={status === 'sending'}>
+        <Button type="submit" className={styles.subscribeButton} disabled={status === 'sending'}>
           {status === 'sending' ? newsletter.sending : newsletter.button}
           <Image src="/icons/common/navbar-cta-icon.svg" alt="" width={32} height={32} />
-        </button>
+        </Button>
       </div>
       {status === 'invalid' && (
         <p id="footer-subscribe-error" className={styles.subscribeError}>
