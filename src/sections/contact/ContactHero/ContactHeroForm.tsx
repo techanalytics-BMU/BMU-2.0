@@ -2,12 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-<<<<<<< HEAD
-import { useEffect, useRef, useState } from 'react';
-import Button from '@/components/ui/Button/Button';
-=======
 import { useRef, useState } from 'react';
->>>>>>> 3010b6b (contact page)
 import type { ContactFormField, ContactHeroContent } from '@/types/contact';
 import styles from './ContactHeroForm.module.css';
 
@@ -167,21 +162,9 @@ export default function ContactHeroForm({ form, nextSteps, children }: Props) {
           <button type="submit" className={styles.submit} disabled={status === 'sending'}>
             {status === 'sending' ? form.sending : form.submit}
           </button>
-<<<<<<< HEAD
-        )}
-        {/* The shared glowing Button, with the arrow icon */}
-        <Button type="submit" size="sm" className={styles.next} disabled={status === 'sending'}>
-          {last ? (status === 'sending' ? form.sending : form.submit) : form.next}
-          <Image src="/icons/common/navbar-cta-icon.svg" alt="" width={26} height={26} />
-        </Button>
-      </div>
-      {last && <p className={styles.privacy}>{form.privacy}</p>}
-    </form>
-=======
           <p className={styles.privacy}>{form.privacy}</p>
         </form>
       )}
     </div>
->>>>>>> 3010b6b (contact page)
   );
 }

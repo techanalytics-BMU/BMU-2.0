@@ -161,6 +161,7 @@ export function useEarthGlobe<T extends HTMLCanvasElement>({
     let width = 0;
     let height = 0;
     let radius = 0;
+    let sized = false; // false while the canvas has no size yet (hidden, or mid-resize) – nothing to draw
     let cx = 0;
     let cy = 0;
     let dotSize = 1.5;
@@ -185,6 +186,10 @@ export function useEarthGlobe<T extends HTMLCanvasElement>({
 
       const globe = getComputedStyle(host, '::after');
       radius = parseFloat(globe.width) / 2 || width;
+      // A canvas with no size gives a 0 radius, and the rim (radius − 2) would be negative –
+      // which canvas refuses to draw. Wait for the next resize instead.
+      sized = width > 0 && height > 0 && radius > 2;
+      if (!sized) return;
       cx = width / 2;
       cy = (parseFloat(globe.top) || height * 0.7) + radius;
       // A --earth-horizon on the canvas (e.g. in a media query) overrides horizonLatitude
@@ -234,6 +239,7 @@ export function useEarthGlobe<T extends HTMLCanvasElement>({
 
     const draw = (still = false) => {
       ctx.clearRect(0, 0, width, height);
+      if (!sized) return;
       // Turns slowly so the land drifts from right to left
       const turn = (startLongitude + speed * elapsed) * DEG;
       const lowest = (cy - height) / radius; // y below this is under the bottom of the screen

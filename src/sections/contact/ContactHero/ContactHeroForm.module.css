@@ -159,47 +159,6 @@ textarea.input {
   width: 100%;
   height: 54px;
   margin-top: var(--space-5);
-<<<<<<< HEAD
-}
-
-.back {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 4px;
-  border: 0;
-  background: none;
-  color: var(--color-text-muted);
-  font-family: inherit;
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.back:hover {
-  color: var(--color-text);
-}
-
-/* Next / Send: the shared glowing Button with the navbar's arrow icon, on the right */
-.next {
-  gap: 0.8rem;
-  margin-left: auto;
-  padding: 0.4rem 0.4rem 0.4rem 1.4rem;
-  font-size: var(--font-size-md);
-}
-
-.next img {
-  transition: transform 0.3s ease;
-}
-
-.next:hover img {
-  transform: rotate(45deg);
-}
-
-.back:focus-visible {
-  outline: 2px solid var(--color-accent);
-=======
   overflow: hidden;
   border: 1px solid rgba(226, 248, 186, 0.7);
   border-radius: 12px;
@@ -228,7 +187,6 @@ textarea.input {
 
 .submit:focus-visible {
   outline: 2px solid var(--color-light);
->>>>>>> 3010b6b (contact page)
   outline-offset: 3px;
 }
 
