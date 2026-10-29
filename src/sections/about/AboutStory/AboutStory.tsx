@@ -70,7 +70,15 @@ export default function AboutStory() {
                 </div>
 
                 <div className={styles.figureBox}>
-                  <span className={styles.figure}>{chapter.figure}</span>
+                  <span className={styles.figure}>
+                    {/* the last chapter's number in the site's lime accent (inner span – it
+                        paints over the figure's own white fill) */}
+                    {i === chapters.length - 1 ? (
+                      <span className="text-accent">{chapter.figure}</span>
+                    ) : (
+                      chapter.figure
+                    )}
+                  </span>
                   <span className={styles.caption}>{chapter.caption}</span>
                 </div>
               </div>

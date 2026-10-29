@@ -1,170 +1,66 @@
-/* The form card: a fine lit rim, dark panel, a soft light from the top */
+/* The glass card: the beam of light behind it shows through, softened */
 .card {
   position: relative;
-  padding: clamp(22px, 3vw, 34px);
-  border: 1px solid transparent;
-  border-radius: 24px;
-  background:
-    radial-gradient(ellipse 70% 40% at 50% 0%, rgba(255, 255, 255, 0.05), transparent 70%)
-      padding-box,
-    linear-gradient(to bottom, #1a1b1e, #111213) padding-box,
-    linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0.22),
-        rgba(255, 255, 255, 0.06) 35%,
-        rgba(255, 255, 255, 0.03)
-      )
-      border-box;
+  z-index: 2;
+  width: 100%;
+  max-width: 620px;
+  scroll-margin-top: calc(var(--navbar-height) + var(--navbar-offset) + 40px);
+  padding: clamp(28px, 3.6vw, 40px) clamp(20px, 3.4vw, 36px) clamp(24px, 3vw, 32px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 28px;
+  background: linear-gradient(to bottom, rgba(16, 17, 18, 0.42), rgba(9, 10, 11, 0.62));
+  /* -webkit- line first: if it comes after, the CSS build drops both and there's no blur */
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
   box-shadow:
-    0 40px 80px -40px rgba(0, 0, 0, 0.95),
-    0 0 0 1px rgba(0, 0, 0, 0.4);
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 40px 90px -30px rgba(0, 0, 0, 0.95);
 }
 
-/* ---------- Progress ---------- */
-.progress {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
+/* ---------- Heading (passed in from ContactHero) ---------- */
+.header {
+  text-align: center;
 }
 
-.stepNames {
-  display: flex;
-  gap: 18px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+/* ---------- Fields ---------- */
+.form {
+  margin-top: var(--space-5);
 }
 
-.stepNames li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--color-text-dim);
-  font-size: var(--font-size-xs);
-  font-weight: 600;
-  transition: color 0.3s ease;
+/* On load the heading, then the form, rise in – the card itself stays put, so its glass is
+   frosted from the first frame */
+.header,
+.form {
+  animation: content-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
-.stepNumber {
-  display: grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 50%;
-  font-size: 0.625rem;
-  font-variant-numeric: tabular-nums;
-  transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease,
-    color 0.3s ease;
+.header {
+  animation-delay: 0.3s;
 }
 
-.stepNames li[data-state='current'] {
-  color: var(--color-text);
+.form {
+  animation-delay: 0.45s;
 }
 
-.stepNames li[data-state='current'] .stepNumber {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
-}
-
-/* Done: a lime disc with a tick in place of the number */
-.stepNames li[data-state='done'] {
-  color: var(--color-text-muted);
-}
-
-.stepNames li[data-state='done'] .stepNumber {
-  position: relative;
-  border-color: var(--color-accent);
-  background: var(--color-accent);
-  color: transparent;
-}
-
-.stepNames li[data-state='done'] .stepNumber::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 7px;
-  height: 4px;
-  margin: -3px 0 0 -3.5px;
-  border-bottom: 1.5px solid var(--color-dark);
-  border-left: 1.5px solid var(--color-dark);
-  transform: rotate(-45deg);
-}
-
-.duration {
-  color: var(--color-text-dim);
-  font-size: var(--font-size-xs);
-  white-space: nowrap;
-}
-
-.track {
-  display: block;
-  height: 2px;
-  margin-top: 14px;
-  overflow: hidden;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.fill {
-  display: block;
-  height: 100%;
-  background: linear-gradient(90deg, rgba(140, 198, 63, 0.6), #b9ef6a);
-  box-shadow: 0 0 8px rgba(140, 198, 63, 0.6);
-  transform: scaleX(var(--p));
-  transform-origin: left;
-  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
-}
-
-/* ---------- A step ---------- */
-.step {
-  animation: step-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-@keyframes step-in {
+@keyframes content-in {
   from {
     opacity: 0;
-    transform: translateX(18px);
+    transform: translateY(18px);
   }
-}
-
-.question {
-  margin-top: var(--space-5);
-  padding-bottom: 0.08em;
-  background: var(--heading-fill);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  font-size: clamp(1.5rem, 2.4vw, 1.9rem);
-  font-weight: 400;
-  letter-spacing: var(--heading-letter-spacing);
-  line-height: 1.15;
-}
-
-.question:focus {
-  outline: none;
 }
 
 .fields {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 18px 14px;
-  margin-top: var(--space-4);
+  gap: 16px 14px;
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
   grid-column: 1 / -1;
   min-width: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
 }
 
 .half {
@@ -175,8 +71,7 @@
   display: flex;
   align-items: baseline;
   gap: 8px;
-  padding: 0;
-  color: var(--color-text-muted);
+  color: #e6e7e9;
   font-size: var(--font-size-sm);
 }
 
@@ -185,45 +80,68 @@
   font-size: var(--font-size-xs);
 }
 
+/* The box around an input, so a prefix like +91 can sit inside it */
+.box {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.025);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.box:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.box:focus-within {
+  border-color: rgba(140, 198, 63, 0.6);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 0 0 4px rgba(140, 198, 63, 0.1);
+}
+
+.box[data-invalid='true'] {
+  border-color: rgba(229, 72, 77, 0.8);
+}
+
+.prefix {
+  display: grid;
+  place-items: center;
+  padding: 0 2px 0 14px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
 .input {
+  flex: 1;
   width: 100%;
-  height: 48px;
-  padding: 0 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  background: #0d0e10;
+  min-width: 0;
+  height: 46px;
+  padding: 0 14px;
+  border: 0;
+  background: none;
   color: var(--color-text);
   font-family: inherit;
   font-size: var(--font-size-md);
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
 }
 
 textarea.input {
   height: auto;
-  min-height: 96px;
-  padding: 12px 16px;
+  min-height: 100px;
+  padding: 12px 14px;
   line-height: 1.5;
   resize: vertical;
 }
 
+.input:focus {
+  outline: none;
+}
+
 .input::placeholder {
   color: #5c6168;
-}
-
-.input:hover {
-  border-color: rgba(255, 255, 255, 0.18);
-}
-
-.input:focus {
-  border-color: rgba(140, 198, 63, 0.6);
-  outline: none;
-  box-shadow: 0 0 0 4px rgba(140, 198, 63, 0.1);
-}
-
-.input[aria-invalid='true'] {
-  border-color: rgba(229, 72, 77, 0.8);
 }
 
 .error {
@@ -231,90 +149,17 @@ textarea.input {
   font-size: var(--font-size-xs);
 }
 
-/* ---------- Chips: tap to pick (checkboxes / radios underneath) ---------- */
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.chip {
+/* ---------- Send: lime, glowing, with the beam shining through its middle ---------- */
+.submit {
   position: relative;
-  cursor: pointer;
-}
-
-.chip input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-}
-
-.chip span {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px 10px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.03);
-  color: #d4d6da;
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  white-space: nowrap;
-  transition:
-    border-color 0.25s ease,
-    background-color 0.25s ease,
-    color 0.25s ease,
-    transform 0.2s ease;
-}
-
-/* A small ring that fills with a tick when picked */
-.chip span::before {
-  content: '';
-  flex-shrink: 0;
-  width: 16px;
-  height: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 50%;
-  background: center / 9px no-repeat;
-  transition:
-    background-color 0.25s ease,
-    border-color 0.25s ease;
-}
-
-.chip:hover span {
-  border-color: rgba(255, 255, 255, 0.24);
-  color: var(--color-text);
-}
-
-.chip:active span {
-  transform: scale(0.97);
-}
-
-.chip input:checked + span {
-  border-color: rgba(140, 198, 63, 0.6);
-  background: rgba(140, 198, 63, 0.1);
-  color: var(--color-text);
-}
-
-.chip input:checked + span::before {
-  border-color: var(--color-accent);
-  background-color: var(--color-accent);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2 5 8.6l4.5-5' fill='none' stroke='%230b0f14' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-}
-
-.chip input:focus-visible + span {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 3px;
-}
-
-/* ---------- Buttons ---------- */
-.actions {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 54px;
   margin-top: var(--space-5);
+<<<<<<< HEAD
 }
 
 .back {
@@ -354,96 +199,115 @@ textarea.input {
 
 .back:focus-visible {
   outline: 2px solid var(--color-accent);
+=======
+  overflow: hidden;
+  border: 1px solid rgba(226, 248, 186, 0.7);
+  border-radius: 12px;
+  background:
+    radial-gradient(ellipse 22% 140% at 50% 100%, rgba(255, 255, 255, 0.55), transparent 70%),
+    linear-gradient(180deg, #a9dc5c, #82bb37);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 0 24px rgba(140, 198, 63, 0.4),
+    0 16px 40px -12px rgba(140, 198, 63, 0.6);
+  color: var(--color-dark);
+  font-family: inherit;
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.25s ease,
+    filter 0.2s ease;
+}
+
+.submit:disabled {
+  opacity: 0.75;
+  cursor: progress;
+}
+
+.submit:focus-visible {
+  outline: 2px solid var(--color-light);
+>>>>>>> 3010b6b (contact page)
   outline-offset: 3px;
 }
 
 .privacy {
-  margin-top: 14px;
+  margin-top: 12px;
   color: var(--color-text-dim);
   font-size: var(--font-size-xs);
-  text-align: right;
-}
-
-/* ---------- Thank you ---------- */
-.success {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-block: clamp(40px, 6vw, 64px);
   text-align: center;
-  animation: step-in 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* A lime tick that draws itself */
-.tick {
-  width: 64px;
-  height: 64px;
-  fill: none;
-  stroke: var(--color-accent);
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  filter: drop-shadow(0 0 10px rgba(140, 198, 63, 0.5));
+/* ---------- Thank you (takes the form's place, under the heading) ---------- */
+.success {
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.tick circle,
-.tick path {
-  stroke-dasharray: 1;
-  animation: draw 0.7s cubic-bezier(0.65, 0, 0.35, 1) backwards;
-}
-
-.tick circle {
-  stroke-width: 1.5;
-  opacity: 0.6;
-}
-
-.tick path {
-  stroke-width: 3;
-  animation-delay: 0.45s;
-}
-
-@keyframes draw {
+@keyframes rise {
   from {
-    stroke-dashoffset: 1;
+    opacity: 0;
+    transform: translateY(12px);
   }
 }
 
 .successTitle {
-  margin-top: var(--space-4);
   padding-bottom: 0.08em;
   background: var(--heading-fill);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  font-size: clamp(1.75rem, 3vw, 2.4rem);
+  font-size: clamp(1.35rem, 2.2vw, 1.65rem);
   font-weight: 400;
   letter-spacing: var(--heading-letter-spacing);
+  line-height: 1.2;
 }
 
 .successText {
-  max-width: 360px;
-  margin-top: 8px;
+  margin-top: var(--space-3);
   color: var(--color-text-muted);
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-sm);
 }
 
-/* What they picked, as quiet chips */
-.picked {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 6px;
-  max-width: 420px;
-  margin: var(--space-4) 0 0;
+.successSteps {
+  display: grid;
+  gap: 12px;
+  margin: 12px 0 0;
   padding: 0;
   list-style: none;
 }
 
-.picked li {
-  padding: 5px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius-pill);
-  color: #d4d6da;
-  font-size: var(--font-size-xs);
+.successSteps li {
+  display: flex;
+  gap: 12px;
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
+.successSteps strong {
+  display: block;
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.successSteps li > span:last-child {
+  color: var(--color-text-muted);
+}
+
+.stepNumber {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(140, 198, 63, 0.5);
+  border-radius: 50%;
+  color: var(--color-accent);
+  font-size: 0.6875rem;
+  font-weight: 700;
 }
 
 .successCta {
@@ -470,14 +334,9 @@ textarea.input {
 
 /* ---------- Phones ---------- */
 @media (max-width: 600px) {
-  .stepNames {
-    gap: 12px;
-  }
-
-  /* just the numbers and the current step's name */
-  .stepNames li:not([data-state='current']) {
-    font-size: 0;
-    gap: 0;
+  .card {
+    padding: 28px 18px 22px;
+    border-radius: 22px;
   }
 
   .fields {
@@ -487,25 +346,12 @@ textarea.input {
   .half {
     grid-column: 1 / -1;
   }
-
-  .chip span {
-    padding: 9px 14px 9px 10px;
-  }
-
-  .privacy {
-    text-align: center;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .step,
-  .success,
-  .tick circle,
-  .tick path {
+  .header,
+  .form,
+  .success {
     animation: none;
-  }
-
-  .fill {
-    transition: none;
   }
 }

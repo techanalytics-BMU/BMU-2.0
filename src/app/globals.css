@@ -37,3 +37,75 @@ img {
 button {
   font: inherit;
 }
+
+/* Fields the browser fills in from saved details: keep the site's dark field and white text
+   instead of the browser's light-blue box. The background change is delayed so long it never
+   shows; the text colour and caret are set directly. */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill {
+  -webkit-text-fill-color: var(--color-text);
+  caret-color: var(--color-text);
+  transition:
+    background-color 0s 600000s,
+    color 0s 600000s;
+}
+
+input:autofill,
+textarea:autofill,
+select:autofill {
+  -webkit-text-fill-color: var(--color-text);
+  caret-color: var(--color-text);
+}
+
+/* Lime words in headings ("We Make It Grow.", "coffee.", "questions."…): a touch bolder, filled
+   with a glassy lime gradient (lighter at the top, deeper at the bottom) and a soft sheen of light
+   sweeping across it every few seconds. Add className="text-accent" to the word's <span>.
+   (Global, so every heading on the site shares one look – don't set a color on the same span.) */
+.text-accent {
+  /* keeps descenders inside the clipped fill, without changing the layout */
+  margin-bottom: -0.1em;
+  padding-bottom: 0.1em;
+  background:
+    linear-gradient(
+        110deg,
+        transparent 38%,
+        rgba(255, 255, 255, 0.35) 46%,
+        rgba(255, 255, 255, 0.85) 50%,
+        rgba(255, 255, 255, 0.35) 54%,
+        transparent 62%
+      )
+      100% 0 / 250% 100% no-repeat,
+    linear-gradient(180deg, #d2f39c 0%, #a3d855 48%, #78b130 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 500;
+  filter: drop-shadow(0 0 18px rgba(140, 198, 63, 0.22));
+  animation: text-accent-sheen 6s ease-in-out 1.2s infinite;
+}
+
+@keyframes text-accent-sheen {
+  0% {
+    background-position:
+      100% 0,
+      0 0;
+  }
+
+  35%,
+  100% {
+    background-position:
+      0% 0,
+      0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-accent {
+    animation: none;
+  }
+}

@@ -49,7 +49,7 @@ export const teamMembers: TeamMembersContent = {
   ],
   hiring: {
     title: 'This could be you',
-    text: 'We’re hiring →',
+    text: 'We’re hiring',
     href: '/contact',
   },
 };

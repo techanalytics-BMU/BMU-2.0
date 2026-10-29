@@ -33,13 +33,14 @@ export default function LandingHero() {
             style={{ '--delay': '0.25s' } as React.CSSProperties}
           >
             {headingLine1}
-            <span className={styles.accent}>.</span>
+            <span className="text-accent">.</span>
           </span>
           <span
             className={`${styles.headingLine2} ${styles.rise}`}
             style={{ '--delay': '0.4s' } as React.CSSProperties}
           >
-            {headingLine2}.
+            {/* inner span: the line's rise-in animation would otherwise replace the sheen */}
+            <span className="text-accent">{headingLine2}.</span>
           </span>
         </h1>
 

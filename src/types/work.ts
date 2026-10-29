@@ -54,7 +54,6 @@ export type WorkListingContent = {
 
 // Labels for an article page (src/data/work/workArticle.ts)
 export type WorkArticleContent = {
-  back: string;
   minRead: string; // '{count} min read'
   relatedHeading: string;
   ctaHeading: string;

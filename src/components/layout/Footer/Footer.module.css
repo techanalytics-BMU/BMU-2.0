@@ -83,10 +83,6 @@
 
 a.socialButton:hover {
   border-color: rgba(140, 198, 63, 0.6);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 0 0 4px rgba(140, 198, 63, 0.08),
-    0 0 20px rgba(140, 198, 63, 0.3);
   transform: translateY(-2px);
 }
 
@@ -134,25 +130,9 @@ a.socialButton:focus-visible {
   transition: color 0.2s ease;
 }
 
-/* Real links reveal a small green arrow on hover (plain items have no page yet) */
-a.link::after {
-  content: '↗';
-  color: var(--color-accent);
-  font-size: 0.8em;
-  opacity: 0;
-  transform: translate(-4px, 2px);
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
-}
-
+/* Real links brighten on hover (plain items have no page yet) */
 a.link:hover {
   color: var(--color-text);
-}
-
-a.link:hover::after {
-  opacity: 1;
-  transform: none;
 }
 
 a.link:focus-visible {
@@ -425,10 +405,6 @@ a.link:focus-visible {
 
 .toTop:hover {
   border-color: rgba(140, 198, 63, 0.7);
-  box-shadow:
-    0 0 0 4px rgba(140, 198, 63, 0.1),
-    0 10px 30px rgba(0, 0, 0, 0.5),
-    0 0 28px rgba(140, 198, 63, 0.35);
 }
 
 .toTop:focus-visible {

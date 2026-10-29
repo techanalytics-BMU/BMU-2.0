@@ -1,78 +1,188 @@
-/* Starry black, with one soft light behind the form – calm, so the form is what you see */
 .section {
   position: relative;
-  overflow: hidden;
-  padding: calc(var(--navbar-height) + var(--navbar-offset) + clamp(40px, 8svh, 88px))
-    var(--space-4) var(--space-8);
+  overflow: clip;
+  background: var(--color-bg);
+}
+
+/* ---------- The first screen: the card, a beam of light, a planet horizon ---------- */
+.stage {
+  --arch: clamp(80px, 13svh, 140px); /* how much of the planet shows at the bottom */
+
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  padding: calc(var(--navbar-height) + var(--navbar-offset) + 64px) var(--space-4)
+    calc(var(--arch) + 56px);
+  overflow: clip; /* the planet ends with the first screen */
+  isolation: isolate;
   background:
-    radial-gradient(ellipse 45% 50% at 72% 30%, rgba(140, 198, 63, 0.07), transparent 70%),
-    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(255, 255, 255, 0.04), transparent 70%),
+    radial-gradient(ellipse 40% 60% at 50% 100%, rgba(140, 198, 63, 0.08), transparent 70%),
     var(--color-bg);
 }
 
-/* Stars, as in the home hero */
-.section::before {
+/* Faint stars, fading out towards the horizon */
+.stage::before {
   content: '';
   position: absolute;
+  z-index: -2;
   inset: 0;
   background-image:
     radial-gradient(1px 1px at 40px 60px, rgba(255, 255, 255, 0.8), transparent),
     radial-gradient(1px 1px at 190px 220px, rgba(255, 255, 255, 0.5), transparent),
     radial-gradient(1.5px 1.5px at 310px 120px, rgba(255, 255, 255, 0.9), transparent),
     radial-gradient(1px 1px at 120px 340px, rgba(255, 255, 255, 0.6), transparent),
-    radial-gradient(1px 1px at 380px 300px, rgba(255, 255, 255, 0.4), transparent),
-    radial-gradient(1.5px 1.5px at 260px 30px, rgba(255, 255, 255, 0.7), transparent);
+    radial-gradient(1px 1px at 380px 300px, rgba(255, 255, 255, 0.4), transparent);
   background-size: 420px 420px;
-  -webkit-mask-image: linear-gradient(to bottom, #000000, transparent 85%);
-  mask-image: linear-gradient(to bottom, #000000, transparent 85%);
-  opacity: 0.45;
+  -webkit-mask-image: linear-gradient(to bottom, #000000, transparent 75%);
+  mask-image: linear-gradient(to bottom, #000000, transparent 75%);
+  opacity: 0.35;
   pointer-events: none;
 }
 
-/* Heading and the rest on the left, the form on the right */
-.inner {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  grid-template-areas:
-    'head form'
-    'rest form';
-  grid-template-rows: auto 1fr;
-  gap: 0 clamp(var(--space-6), 6vw, 6rem);
-  max-width: 1180px;
-  margin: 0 auto;
+/* The beam: a fine bright core falling from the top onto the horizon, inside a soft glow */
+.beam {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: calc(100% - var(--arch));
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(214, 245, 161, 0.5) 18%,
+    rgba(230, 250, 200, 0.85) 70%,
+    #ffffff
+  );
+  transform: translateX(-50%);
+  pointer-events: none;
+  animation: beam-in 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.2s backwards;
 }
 
-.head {
-  grid-area: head;
+.beam::before {
+  content: '';
+  position: absolute;
+  inset: 0 -80px;
+  background: radial-gradient(
+    ellipse 50% 100% at 50% 100%,
+    rgba(140, 198, 63, 0.4),
+    rgba(140, 198, 63, 0.12) 55%,
+    transparent 85%
+  );
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000000 30%);
+  mask-image: linear-gradient(to bottom, transparent, #000000 30%);
+  filter: blur(8px);
+}
+
+/* a soft pulse of light travelling down it now and then */
+.beam::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 6px;
+  height: 120px;
+  margin-left: -3px;
+  border-radius: 3px;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.9), transparent);
+  filter: blur(1px);
+  opacity: 0;
+  animation: drop 5s cubic-bezier(0.55, 0, 0.45, 1) 1.6s infinite;
+}
+
+@keyframes beam-in {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+@keyframes drop {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  60%,
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+/* The planet: a huge dark sphere whose lit rim curves across the bottom of the screen */
+.horizon {
+  position: absolute;
+  z-index: -1;
+  top: calc(100% - var(--arch));
+  left: 50%;
+  width: max(1600px, 170vw);
+  aspect-ratio: 2.4 / 1;
+  border-radius: 50%;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.6' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse 30% 14% at 50% 0%, rgba(140, 198, 63, 0.22), transparent 70%),
+    linear-gradient(to bottom, #0d100b, #030303 30%);
+  box-shadow:
+    0 -1px 0 rgba(214, 245, 161, 0.55),
+    0 -4px 22px rgba(140, 198, 63, 0.18),
+    inset 0 2px 6px rgba(214, 245, 161, 0.25);
+  /* its surface fades into black before the bottom of the screen */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000000 calc(var(--arch) * 0.35),
+    transparent var(--arch)
+  );
+  mask-image: linear-gradient(to bottom, #000000 calc(var(--arch) * 0.35), transparent var(--arch));
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* Where the beam meets the horizon: a bright flash spreading along the rim */
+.flare {
+  position: absolute;
+  z-index: -1;
+  top: calc(100% - var(--arch));
+  left: 50%;
+  width: min(560px, 90vw);
+  height: 70px;
+  background:
+    radial-gradient(ellipse 8% 40% at 50% 50%, #ffffff, transparent 100%),
+    radial-gradient(ellipse 50% 22% at 50% 50%, rgba(214, 245, 161, 0.9), transparent 100%),
+    radial-gradient(ellipse 50% 50% at 50% 50%, rgba(140, 198, 63, 0.35), transparent 100%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: flare 4s ease-in-out infinite;
+}
+
+@keyframes flare {
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scaleX(0.92);
+  }
+}
+
+/* No entrance animation here: while a parent of the glass card fades or moves, the browser can't
+   blur what's behind the card, and the beam would show through it as a sharp line. The card's
+   contents rise in instead (see .header and .form in ContactHeroForm.module.css). */
+.cardArea {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
 }
 
-.form {
-  grid-area: form;
-  align-self: start;
-}
-
-.rest {
-  grid-area: rest;
-  margin-top: var(--space-6);
-}
-
-/* ---------- Heading (the site's, with its second line in lime) ---------- */
+/* ---------- Heading (inside the card) ---------- */
 .heading {
-  display: flex;
-  flex-direction: column;
-  margin-top: var(--space-4);
-  font-size: var(--font-size-heading);
+  font-size: clamp(2rem, 3.6vw, 2.75rem);
   font-weight: 400;
   letter-spacing: var(--heading-letter-spacing);
-  line-height: var(--heading-line-height);
+  line-height: 1.1;
 }
 
 .line {
-  margin-bottom: -0.08em;
   padding-bottom: 0.08em;
   background: var(--heading-fill);
   -webkit-background-clip: text;
@@ -80,195 +190,267 @@
   color: transparent;
 }
 
-.accent {
-  color: var(--color-accent);
-}
-
 .description {
-  max-width: 440px;
-  margin-top: var(--space-4);
+  max-width: 420px;
+  margin: 12px auto 0;
   color: var(--color-text-muted);
-  font-size: var(--font-size-subheading);
-  text-wrap: pretty;
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+  text-wrap: balance;
 }
 
-/* ---------- What happens next: three numbered steps on a thin rail ---------- */
-.restLabel {
-  color: var(--color-text-dim);
-  font-size: var(--font-size-xs);
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+/* ---------- Below the fold: what happens next ---------- */
+.next {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-4);
 }
 
-.nextSteps {
+/* The site's section head: pill badge, heading with its second line in lime */
+.nextHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.nextHeading {
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--space-4);
+  font-size: clamp(2.2rem, 4.2vw, 3.75rem);
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: var(--heading-line-height);
+}
+
+/* Three step cards in a row. A dashed line runs behind them at the height of their icons, and a
+   soft glow travels along it – it shows in the gaps, as if passing from one step to the next. */
+.steps {
+  --icon-y: 52px; /* middle of a card's icon tile */
+
   position: relative;
   display: grid;
-  gap: 18px;
-  margin: var(--space-4) 0 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  margin: var(--space-7) 0 0;
   padding: 0;
   list-style: none;
 }
 
-/* the rail, from the first number to the last */
-.nextSteps::before {
+.steps::before {
   content: '';
   position: absolute;
-  top: 12px;
-  bottom: 30px;
-  left: 11.5px;
-  width: 1px;
-  background: linear-gradient(to bottom, rgba(140, 198, 63, 0.5), rgba(255, 255, 255, 0.08));
+  top: var(--icon-y);
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(140, 198, 63, 0.45) 0 6px,
+    transparent 6px 12px
+  );
 }
 
-.nextSteps li {
+.steps::after {
+  content: '';
+  position: absolute;
+  top: calc(var(--icon-y) - 3px);
+  left: 0;
+  width: 60px;
+  height: 7px;
+  border-radius: 7px;
+  background: radial-gradient(closest-side, #e3f6bf, rgba(140, 198, 63, 0.6) 50%, transparent);
+  animation: travel 5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@keyframes travel {
+  from {
+    left: -60px;
+  }
+
+  to {
+    left: 100%;
+  }
+}
+
+/* A card: the footer card's rim and panel, lifting on hover */
+.step {
   position: relative;
-  display: grid;
-  grid-template-columns: 24px 1fr;
-  column-gap: 14px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 26px 28px;
+  border: 1px solid transparent;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(140, 198, 63, 0.09), transparent 55%) padding-box,
+    linear-gradient(145deg, #1a1b1d 0%, #131415 60%, #0f1011 100%) padding-box,
+    linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.17),
+        rgba(255, 255, 255, 0.06) 40%,
+        rgba(255, 255, 255, 0.04)
+      )
+      border-box;
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.9);
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease;
 }
 
-.stepDot {
-  grid-row: span 2;
+.step:hover {
+  transform: translateY(-4px);
+}
+
+.stepTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Lime line icon in a round tile */
+.stepIcon {
   display: grid;
   place-items: center;
-  width: 24px;
-  height: 24px;
-  border: 1px solid rgba(140, 198, 63, 0.5);
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(140, 198, 63, 0.4);
   border-radius: 50%;
-  background: #0b0c0d;
-  color: var(--color-accent);
-  font-size: 0.6875rem;
+  background: linear-gradient(145deg, #1d211a, #111310);
+  box-shadow: 0 0 22px -4px rgba(140, 198, 63, 0.35);
+}
+
+.stepIcon svg {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.stepNumber {
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.stepNumber strong {
+  color: var(--color-text);
   font-weight: 700;
 }
 
 .stepTitle {
+  margin-top: var(--space-5);
   color: var(--color-text);
-  font-size: var(--font-size-md);
-  font-weight: 600;
-  line-height: 1.5;
+  font-size: 1.3rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
 }
 
 .stepText {
+  margin-top: 10px;
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
+  line-height: 1.65;
 }
 
-/* ---------- Ways to reach us: small tiles ---------- */
-.tiles {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  margin-top: var(--space-5);
+/* Cards rise into place as they scroll into view (browsers with scroll-driven animations) */
+@supports (animation-timeline: view()) {
+  .step {
+    animation: step-in linear both;
+    animation-timeline: view();
+    animation-range: entry 10% entry 80%;
+  }
 }
 
-.tile {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-  padding: 12px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.02);
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
 }
 
-.tileLink {
-  transition:
-    border-color 0.25s ease,
-    background-color 0.25s ease,
-    transform 0.25s ease;
-}
-
-.tileLink:hover {
-  border-color: rgba(140, 198, 63, 0.35);
-  background: rgba(140, 198, 63, 0.05);
-  transform: translateY(-2px);
-}
-
-.tileLink:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 3px;
-}
-
-.tileIcon {
-  display: grid;
-  flex-shrink: 0;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  background: linear-gradient(145deg, #1d1f21, #121314);
-}
-
-.tileText {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.tileLabel {
-  color: var(--color-text-dim);
-  font-size: var(--font-size-xs);
-}
-
-.tileValue {
-  color: var(--color-text);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  line-height: 1.35;
-  overflow-wrap: anywhere;
-}
-
-.careers {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin-top: var(--space-4);
-  color: var(--color-text-dim);
-  font-size: var(--font-size-sm);
-}
-
-.careers img {
-  opacity: 0.7;
-}
-
-.careers a,
-.careers span {
-  color: var(--color-text-muted);
-}
-
-.careers a {
-  text-decoration: underline;
-  text-decoration-color: rgba(255, 255, 255, 0.25);
-  text-underline-offset: 3px;
-}
-
-/* ---------- Tablets and phones: heading → form → the rest ---------- */
+/* ---------- Tablets and phones ---------- */
 @media (max-width: 900px) {
-  .inner {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      'head'
-      'form'
-      'rest';
-    grid-template-rows: auto;
+  .next {
     max-width: 620px;
+    padding-block: var(--space-7);
   }
 
-  .form {
-    margin-top: var(--space-5);
+  /* the cards stack; the dashed line and its glow run down the middle, between them */
+  .steps {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    margin-top: var(--space-6);
+  }
+
+  .steps::before {
+    top: 0;
+    right: auto;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    height: auto;
+    background: repeating-linear-gradient(
+      180deg,
+      rgba(140, 198, 63, 0.45) 0 6px,
+      transparent 6px 12px
+    );
+  }
+
+  .steps::after {
+    top: 0;
+    left: calc(50% - 3px);
+    width: 7px;
+    height: 60px;
+    animation-name: travel-down;
+  }
+
+  .step {
+    padding: 24px 22px;
+  }
+
+  .stepTitle {
+    margin-top: var(--space-4);
+  }
+}
+
+@keyframes travel-down {
+  from {
+    top: -60px;
+  }
+
+  to {
+    top: 100%;
   }
 }
 
 @media (max-width: 600px) {
-  .section {
-    padding-bottom: var(--space-7);
+  .stage {
+    --arch: 64px;
+
+    padding: calc(var(--navbar-height) + var(--navbar-offset) + 52px) 14px calc(var(--arch) + 40px);
   }
 
-  .tiles {
-    grid-template-columns: 1fr;
+  .horizon {
+    width: 320vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .beam,
+  .beam::after,
+  .flare,
+  .steps::after,
+  .step {
+    animation: none;
+  }
+
+  .steps::after {
+    display: none;
   }
 }

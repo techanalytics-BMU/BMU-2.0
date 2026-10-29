@@ -163,18 +163,6 @@
   transition: box-shadow 0.3s ease;
 }
 
-.featuredCta span {
-  transition: transform 0.3s ease;
-}
-
-.featured:hover .featuredCta {
-  box-shadow: 0 10px 30px -10px rgba(140, 198, 63, 0.55);
-}
-
-.featured:hover .featuredCta span {
-  transform: rotate(45deg);
-}
-
 .featured:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 4px;
@@ -491,8 +479,7 @@
     animation: none;
   }
 
-  .featuredObject,
-  .featuredCta span {
+  .featuredObject {
     transition: none;
   }
 }

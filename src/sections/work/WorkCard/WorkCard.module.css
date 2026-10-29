@@ -104,36 +104,6 @@
   white-space: nowrap;
 }
 
-/* Small round arrow, bottom-right – fills on hover */
-.arrow {
-  position: absolute;
-  right: 14px;
-  bottom: 14px;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.18);
-  /* -webkit- line first: if it comes after, the CSS build drops both and there's no blur */
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  color: #ffffff;
-  font-size: 0.8125rem;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease,
-    transform 0.3s ease;
-}
-
-.card:hover .arrow {
-  background: var(--color-light);
-  color: var(--color-dark);
-  transform: rotate(45deg);
-}
-
 /* ---------- The object: tilted, tucked into the bottom-right corner (clear of the text) ---------- */
 .object,
 .cover {
@@ -175,11 +145,6 @@
     display: none; /* read time only – there is no room for the date */
   }
 
-  /* the object fills the bottom-right corner – no room for the arrow */
-  .arrow {
-    display: none;
-  }
-
   .object,
   .cover {
     right: -16%;
@@ -191,8 +156,7 @@
 @media (prefers-reduced-motion: reduce) {
   .card,
   .object,
-  .cover,
-  .arrow {
+  .cover {
     transition: none;
   }
 }

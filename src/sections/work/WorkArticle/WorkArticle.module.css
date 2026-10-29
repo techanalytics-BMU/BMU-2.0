@@ -29,29 +29,7 @@
   margin: 0 auto;
 }
 
-.back {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--color-text-dim);
-  font-size: var(--font-size-sm);
-  transition: color 0.2s ease;
-}
-
-.back:hover {
-  color: var(--color-text);
-}
-
-.back span {
-  transition: transform 0.25s ease;
-}
-
-.back:hover span {
-  transform: translateX(-3px);
-}
-
 .category {
-  margin-top: var(--space-5);
   padding: 4px 12px;
   border: 1px solid rgba(140, 198, 63, 0.4);
   border-radius: var(--radius-pill);

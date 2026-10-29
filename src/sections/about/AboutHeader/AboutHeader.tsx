@@ -33,7 +33,7 @@ export default function AboutHeader({
         </span>
         {accent && (
           <span
-            className={`${styles.accent} ${styles.rise}`}
+            className={`text-accent ${styles.rise}`}
             style={{ '--i': 2 } as React.CSSProperties}
           >
             {accent}

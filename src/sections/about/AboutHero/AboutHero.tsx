@@ -33,7 +33,7 @@ export default function AboutHero() {
 
         <div className={styles.content}>
           <p className={styles.statement}>
-            {statement} <span className={styles.accent}>{accent}</span>
+            {statement} <span className="text-accent">{accent}</span>
           </p>
           <dl className={styles.stats}>
             {stats.map((stat) => (

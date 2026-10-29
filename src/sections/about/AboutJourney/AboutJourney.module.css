@@ -99,12 +99,6 @@
   white-space: nowrap;
 }
 
-.current .marker {
-  background: linear-gradient(180deg, #e3f6bf, #8cc63f 85%);
-  -webkit-background-clip: text;
-  background-clip: text;
-}
-
 .live {
   display: inline-flex;
   align-items: center;

@@ -1,5 +1,8 @@
 import type { ContactFaqContent } from '@/types/contact';
 
+// The message WhatsApp opens with (also shown as a chat bubble on the card)
+const preview = 'Hi BMU! I have a question about…';
+
 export const contactFaq: ContactFaqContent = {
   badge: 'Read FAQ',
   headingStart: 'General',
@@ -28,7 +31,14 @@ export const contactFaq: ContactFaqContent = {
     },
   ],
   more: {
-    text: 'Still have a question?',
-    cta: { label: 'Ask us on WhatsApp', href: 'https://wa.me/918105491414' },
+    eyebrow: 'Still have a question?',
+    title: 'Ask us on WhatsApp',
+    text: 'Message the team directly – a real person replies within one working day.',
+    preview,
+    // WhatsApp opens with the preview message already typed in
+    cta: {
+      label: 'Chat on WhatsApp',
+      href: `https://wa.me/918105491414?text=${encodeURIComponent(preview)}`,
+    },
   },
 };

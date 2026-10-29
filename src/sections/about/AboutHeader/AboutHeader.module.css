@@ -29,11 +29,6 @@
   color: transparent;
 }
 
-/* Second line in lime, like the home hero's "We Make It Grow." */
-.accent {
-  color: var(--color-accent);
-}
-
 .description {
   max-width: 560px;
   margin-top: var(--space-4);

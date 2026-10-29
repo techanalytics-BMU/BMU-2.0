@@ -42,7 +42,7 @@ function Block({ block }: { block: WorkPostBlock }) {
   }
 }
 
-// One article: back link, category, title, intro and author line; a large tinted cover with the
+// One article: category, title, intro and author line; a large tinted cover with the
 // post's image (or its category's chrome object); the body; then "Keep reading" and a call to action.
 export default function WorkArticle({ post }: { post: WorkPost }) {
   const t = workArticle;
@@ -54,9 +54,6 @@ export default function WorkArticle({ post }: { post: WorkPost }) {
       <WorkReadingProgress targetId="article-body" />
 
       <header className={styles.header}>
-        <Link href="/work#articles" className={styles.back}>
-          <span aria-hidden="true">←</span> {t.back}
-        </Link>
         <Link
           href={`/work?category=${encodeURIComponent(post.category)}#articles`}
           className={styles.category}

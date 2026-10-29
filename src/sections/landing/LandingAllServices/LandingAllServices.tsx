@@ -60,7 +60,7 @@ export default function LandingAllServices() {
                   tabIndex={isDuplicate ? -1 : undefined}
                   aria-label={`View more about ${tile.title}`}
                 >
-                  View More <span aria-hidden="true">→</span>
+                  View More
                 </Link>
               ) : (
                 <button
@@ -69,7 +69,7 @@ export default function LandingAllServices() {
                   tabIndex={isDuplicate ? -1 : undefined}
                   aria-label={`View more about ${tile.title}`}
                 >
-                  View More <span aria-hidden="true">→</span>
+                  View More
                 </button>
               )}
             </div>

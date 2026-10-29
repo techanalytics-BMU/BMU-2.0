@@ -31,7 +31,15 @@ export default function AboutJourney() {
             >
               <div className={styles.body}>
                 <p className={styles.markerRow}>
-                  <span className={styles.marker}>{milestone.marker}</span>
+                  <span className={styles.marker}>
+                    {/* where BMU is now: the site's lime accent (inner span – it paints over
+                        the marker's own white fill) */}
+                    {milestone.current ? (
+                      <span className="text-accent">{milestone.marker}</span>
+                    ) : (
+                      milestone.marker
+                    )}
+                  </span>
                   {milestone.current && <span className={styles.live}>{liveLabel}</span>}
                 </p>
                 <h3 className={styles.title}>{milestone.title}</h3>

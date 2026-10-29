@@ -41,10 +41,6 @@ export default function WorkCard({ post, index = 0, minRead }: Props) {
           className={post.cover ? styles.cover : styles.object}
         />
       )}
-
-      <span className={styles.arrow} aria-hidden="true">
-        ↗
-      </span>
     </Link>
   );
 }

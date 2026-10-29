@@ -33,8 +33,7 @@ export default function LandingConversionRate() {
           <Badge>{badge}</Badge>
         </div>
         <h2 className={`${styles.heading} ${styles.reveal}`} style={{ '--delay': '0.15s' } as React.CSSProperties}>
-          {headingStart} <span className={styles.accent}>{headingHighlight}</span>
-          <span className={styles.accent}>.</span>
+          {headingStart} <span className="text-accent">{headingHighlight}.</span>
         </h2>
         <p className={`${styles.description} ${styles.reveal}`} style={{ '--delay': '0.3s' } as React.CSSProperties}>
           {description}

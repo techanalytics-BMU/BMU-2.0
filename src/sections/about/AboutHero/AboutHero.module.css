@@ -235,13 +235,6 @@
   text-wrap: balance;
 }
 
-/* Its own opaque fill paints over the white gradient clipped to the statement */
-.accent {
-  background: linear-gradient(180deg, #d6f5a1, #8cc63f);
-  -webkit-background-clip: text;
-  background-clip: text;
-}
-
 /* Four facts along the bottom of the window, split by hairlines */
 .stats {
   display: grid;

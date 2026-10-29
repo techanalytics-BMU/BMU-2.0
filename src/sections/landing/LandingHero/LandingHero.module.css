@@ -137,11 +137,6 @@
   color: transparent;
 }
 
-.headingLine2,
-.accent {
-  color: var(--color-accent);
-}
-
 .description {
   max-width: 560px;
   margin-top: var(--space-5);

@@ -35,10 +35,6 @@
   line-height: var(--heading-line-height);
 }
 
-.accent {
-  color: var(--color-accent);
-}
-
 .description {
   max-width: 640px;
   color: var(--color-text-muted);

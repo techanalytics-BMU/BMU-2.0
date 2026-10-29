@@ -140,7 +140,6 @@ export default function WorkListing() {
               </span>
               <span className={styles.featuredCta}>
                 {t.readArticle}
-                <span aria-hidden="true">↗</span>
               </span>
             </span>
             {visualOf(featured) && (

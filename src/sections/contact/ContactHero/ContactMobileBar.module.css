@@ -1,0 +1,76 @@
+/* Phones only: a floating glass bar along the bottom, sliding up once the form is out of view */
+.bar {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .bar {
+    position: fixed;
+    z-index: 50;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    left: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 8px;
+    padding: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    background: rgba(12, 13, 14, 0.88);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    transform: translateY(calc(100% + 24px));
+    transition:
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .bar[data-show='true'] {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+}
+
+.whatsapp,
+.form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 46px;
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+}
+
+.whatsapp {
+  border: 1px solid rgba(140, 198, 63, 0.45);
+  background: rgba(140, 198, 63, 0.08);
+  color: var(--color-text);
+}
+
+/* The free-audit button: the same lime as the form's send button */
+.form {
+  border: 0;
+  background: linear-gradient(180deg, #a6dc58, #8cc63f);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  color: var(--color-dark);
+  cursor: pointer;
+}
+
+.whatsapp:focus-visible,
+.form:focus-visible {
+  outline: 2px solid var(--color-light);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    transition: none;
+  }
+}
