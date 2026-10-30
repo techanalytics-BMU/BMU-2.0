@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import styles from './WorkArticle.module.css';
+import styles from './BlogArticle.module.css';
 
 // Thin lime bar along the top of the screen that fills as you read the article body
 // (the element with id `targetId`). Updates once per frame and never re-renders React.
-export default function WorkReadingProgress({ targetId }: { targetId: string }) {
+export default function BlogReadingProgress({ targetId }: { targetId: string }) {
   const barRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

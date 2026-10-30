@@ -1,0 +1,97 @@
+/* The blog list in the dashboard – shares the leads page's cards and table (DashboardLeads.module.css) */
+.note {
+  padding: 12px 16px;
+  border: 1px solid rgba(140, 198, 63, 0.3);
+  border-radius: 12px;
+  background: rgba(140, 198, 63, 0.06);
+  color: #d9f0b6;
+  font-size: var(--font-size-sm);
+}
+
+.title {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+a.title:hover {
+  color: var(--color-accent);
+}
+
+.newPost {
+  height: 40px;
+  padding: 0 18px;
+  border: 1px solid rgba(226, 248, 186, 0.6);
+  border-radius: var(--radius-pill);
+  background: linear-gradient(180deg, #a9dc5c, #82bb37);
+  box-shadow: 0 0 20px rgba(140, 198, 63, 0.3);
+  color: var(--color-dark);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.newPost:focus-visible {
+  outline: 2px solid var(--color-light);
+  outline-offset: 3px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.delete {
+  color: #f6b3b5;
+}
+
+.delete:hover:not(:disabled) {
+  border-color: rgba(240, 126, 130, 0.5);
+  color: #f6b3b5;
+}
+
+/* Preview page: a strip across the top, then the article as the website shows it */
+.preview {
+  margin: calc(-1 * clamp(20px, 3vw, 32px)) calc(-1 * clamp(16px, 3vw, 32px)) 0;
+}
+
+.previewBar {
+  position: sticky;
+  top: 64px;
+  z-index: 20;
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(124, 196, 255, 0.35);
+  background: rgba(124, 196, 255, 0.12);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  text-align: center;
+}
+
+.previewBar a {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.status {
+  padding: 3px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-pill);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status[data-status='published'] {
+  border-color: rgba(140, 198, 63, 0.5);
+  background: rgba(140, 198, 63, 0.1);
+  color: var(--color-text);
+}
+
+.status[data-status='scheduled'] {
+  border-color: rgba(124, 196, 255, 0.5);
+  background: rgba(124, 196, 255, 0.1);
+  color: var(--color-text);
+}

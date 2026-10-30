@@ -4,7 +4,7 @@ import { CAMPAIGN_FIELDS } from './fields';
 // Browser storage can be blocked (private windows, settings) – everything still works without it.
 
 const CAMPAIGN_KEY = 'bmu-campaign'; // sessionStorage: where this visit came from
-export const LEAD_SENT_KEY = 'bmu-lead-popup-sent'; // localStorage: they sent us their details
+const LEAD_SENT_KEY = 'bmu-lead-popup-sent'; // sessionStorage: they sent us their details this visit
 
 /**
  * On the first page of a visit: remember the ?utm_… tags, the website that sent them and the page
@@ -41,11 +41,25 @@ export function addVisitDetails(data: FormData) {
   }
 }
 
-/** They've sent their details (either form) – the lead popup never shows again */
+/**
+ * They've sent their details (either form) – the lead popup stays away for the rest of this visit
+ * and comes back on their next one (a repeat send is tagged REPEAT in the dashboard)
+ */
 export function markLeadSent() {
   try {
-    localStorage.setItem(LEAD_SENT_KEY, '1');
+    sessionStorage.setItem(LEAD_SENT_KEY, '1');
   } catch {
     // not remembered – fine
+  }
+}
+
+/** Whether they've sent their details during this visit */
+export function leadSentThisVisit() {
+  try {
+    // Earlier versions remembered a send forever – that marker is cleared, so the popup returns
+    localStorage.removeItem(LEAD_SENT_KEY);
+    return sessionStorage.getItem(LEAD_SENT_KEY) === '1';
+  } catch {
+    return false;
   }
 }

@@ -1,0 +1,735 @@
+.article {
+  padding: calc(var(--navbar-height) + var(--navbar-offset) + clamp(40px, 8svh, 80px))
+    var(--space-4) var(--space-8);
+  background:
+    radial-gradient(ellipse 60% 420px at 50% 0%, rgba(140, 198, 63, 0.06), transparent 70%),
+    var(--color-bg);
+}
+
+/* Reading progress: a thin lime line along the very top of the screen */
+.progress {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 101;
+  height: 2px;
+  background: var(--color-accent);
+  box-shadow: 0 0 10px rgba(140, 198, 63, 0.7);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* ---------- Header ---------- */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.category {
+  padding: 4px 12px;
+  border: 1px solid rgba(140, 198, 63, 0.4);
+  border-radius: var(--radius-pill);
+  background: rgba(140, 198, 63, 0.08);
+  color: var(--color-accent);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.category:hover {
+  background: rgba(140, 198, 63, 0.16);
+}
+
+/* White fading softly to silver */
+.title {
+  margin-top: var(--space-3);
+  padding-bottom: 0.08em;
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Shared heading style (see variables.css) – a little smaller, as article titles run long */
+  font-size: clamp(2.1rem, 4.4vw, 3.75rem);
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: var(--heading-line-height);
+  text-wrap: balance;
+}
+
+.excerpt {
+  margin-top: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-subheading);
+  text-wrap: balance;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: var(--space-4);
+  color: var(--color-text-dim);
+  font-size: var(--font-size-sm);
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #b4e36b, #5f8f2a);
+  color: var(--color-dark);
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+/* ---------- Cover: a wide tinted panel (the card colours) with the object ---------- */
+.cover {
+  position: relative;
+  display: grid;
+  place-items: center;
+  max-width: 1120px;
+  aspect-ratio: 2.6;
+  margin: var(--space-6) auto 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 40px 80px -40px rgba(0, 0, 0, 0.9);
+}
+
+/* No cover photo: the category's chrome object, tilted */
+.coverObject {
+  width: auto;
+  height: 82%;
+  filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.45));
+  transform: rotate(-6deg);
+}
+
+/* A cover photo fills the panel */
+.coverPhoto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---------- Body: a comfortable reading column ---------- */
+/* The text column – with the table of contents beside it on wide screens when there is one */
+.bodyLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 680px);
+  justify-content: center;
+  gap: 56px;
+  margin-top: var(--space-7);
+}
+
+@media (min-width: 1200px) {
+  .bodyLayout[data-contents='true'] {
+    grid-template-columns: 220px minmax(0, 680px);
+    margin-left: -276px; /* keeps the text in the middle of the page, like posts without contents */
+    margin-right: 0;
+  }
+}
+
+.body {
+  min-width: 0;
+}
+
+/* Headings stop just below the navbar when jumped to */
+.body h2 {
+  scroll-margin-top: calc(var(--navbar-height) + var(--navbar-offset) + 24px);
+}
+
+/* ---------- Breadcrumb: Home › Blog › title ---------- */
+.breadcrumb {
+  margin-bottom: var(--space-3);
+}
+
+.breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
+  list-style: none;
+}
+
+.breadcrumb li + li::before {
+  content: '›';
+  margin-right: 6px;
+  color: #5c6168;
+}
+
+.breadcrumb li[aria-current] {
+  max-width: 40ch;
+  overflow: hidden;
+  color: var(--color-text-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.breadcrumb a {
+  transition: color 0.2s ease;
+}
+
+.breadcrumb a:hover {
+  color: var(--color-text);
+}
+
+/* ---------- Tags under the author line ---------- */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  padding: 2px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-pill);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+/* ---------- Table of contents ---------- */
+.contents {
+  min-width: 0;
+}
+
+.contentsWide {
+  position: sticky;
+  top: calc(var(--navbar-height) + var(--navbar-offset) + 32px);
+  display: none;
+}
+
+.contentsLabel {
+  color: var(--color-text-dim);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.contentsList {
+  display: grid;
+  margin: 14px 0 0;
+  padding: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  list-style: none;
+}
+
+.contentsLink {
+  position: relative;
+  display: block;
+  padding: 6px 0 6px 14px;
+  color: var(--color-text-dim);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  transition: color 0.2s ease;
+}
+
+.contentsLink::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: -1px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--color-accent);
+  box-shadow: 0 0 8px rgba(140, 198, 63, 0.6);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.contentsLink:hover {
+  color: var(--color-text-muted);
+}
+
+.contentsLink[aria-current] {
+  color: var(--color-text);
+}
+
+.contentsLink[aria-current]::before {
+  opacity: 1;
+}
+
+.contentsNarrow {
+  padding: 12px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.contentsNarrow summary {
+  cursor: pointer;
+}
+
+@media (min-width: 1200px) {
+  .contentsWide {
+    display: block;
+  }
+
+  .contentsNarrow {
+    display: none;
+  }
+}
+
+/* ---------- Share ---------- */
+.share {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.shareLabel {
+  margin-right: 4px;
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.body .shareButton,
+.shareButton {
+  padding: 6px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.body .shareButton:hover,
+.shareButton:hover {
+  border-color: rgba(140, 198, 63, 0.5);
+  background: rgba(140, 198, 63, 0.08);
+}
+
+.shareButton:focus-visible,
+.contentsLink:focus-visible,
+.breadcrumb a:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.p {
+  margin-top: 1.25em;
+  color: #c9ccd0;
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  text-wrap: pretty;
+}
+
+.body > :first-child {
+  margin-top: 0;
+}
+
+/* Links and bold text written in the dashboard ([text](/link), **bold**) */
+.body a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-color: rgba(140, 198, 63, 0.4);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s ease;
+}
+
+.body a:hover {
+  text-decoration-color: var(--color-accent);
+}
+
+.body strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+/* The opening paragraph: a little larger and brighter */
+.intro {
+  margin-top: 1.25em;
+  color: #e6e7e9;
+  font-size: 1.1875rem;
+  line-height: 1.75;
+  text-wrap: pretty;
+}
+
+.h3 {
+  margin-top: 1.6em;
+  color: var(--color-text);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.orderedList {
+  display: grid;
+  gap: 0.7em;
+  margin: 1.25em 0 0;
+  padding-left: 1.4em;
+  color: #c9ccd0;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+}
+
+.orderedList li::marker {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+/* Tables: scroll sideways on phones instead of squashing */
+.tableWrap {
+  margin-top: 1.5em;
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.table th {
+  padding: 12px 14px;
+  background: rgba(140, 198, 63, 0.08);
+  color: var(--color-text);
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 11px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  color: #c9ccd0;
+  vertical-align: top;
+}
+
+/* 💡 Tip (green) and ⚠️ Warning (amber) boxes */
+.callout {
+  display: flex;
+  gap: 12px;
+  margin-top: 1.5em;
+  padding: 14px 16px;
+  border: 1px solid rgba(140, 198, 63, 0.35);
+  border-radius: 14px;
+  background: rgba(140, 198, 63, 0.07);
+  color: #e3f6bf;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.callout[data-kind='warning'] {
+  border-color: rgba(240, 181, 74, 0.4);
+  background: rgba(240, 181, 74, 0.08);
+  color: #f7dfae;
+}
+
+.calloutIcon {
+  flex-shrink: 0;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.credit {
+  font-style: italic;
+}
+
+/* Service cards – links to BMU's service pages */
+.services {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 1.5em;
+}
+
+.service {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: linear-gradient(160deg, #161719, #0e0f10);
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.body a.service {
+  color: inherit;
+  text-decoration: none;
+}
+
+.service:hover {
+  border-color: rgba(140, 198, 63, 0.5);
+  transform: translateY(-2px);
+}
+
+.serviceName {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.serviceReason {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.55;
+}
+
+.serviceLink {
+  margin-top: 4px;
+  color: var(--color-accent);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+/* A call to action inside the article */
+.inlineCta {
+  display: grid;
+  justify-items: start;
+  gap: 14px;
+  margin-top: 2em;
+  padding: 20px 22px;
+  border: 1px solid rgba(140, 198, 63, 0.3);
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse 60% 120% at 100% 0%, rgba(140, 198, 63, 0.14), transparent 70%),
+    linear-gradient(135deg, #17191b, #0c0d0e);
+}
+
+/* The site's button inside the box – not the article's lime underlined link style */
+.body .inlineCta a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.inlineCtaText {
+  color: var(--color-text);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+/* FAQs at the end of the article */
+.faqs {
+  margin-top: 1em;
+}
+
+.faq {
+  margin-top: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.faq:first-of-type {
+  margin-top: 1.25em;
+}
+
+.faqQuestion {
+  padding: 14px 16px;
+  color: var(--color-text);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.faqQuestion::marker {
+  color: var(--color-accent);
+}
+
+.faqAnswer {
+  padding: 0 16px 14px;
+  color: #c9ccd0;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+/* Same treatment as the site's card titles */
+.h2 {
+  margin-top: 2em;
+  padding-bottom: 0.08em;
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(1.5rem, 2.2vw, 1.875rem);
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: 1.2;
+}
+
+.list {
+  display: grid;
+  gap: 0.7em;
+  margin: 1.25em 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list li {
+  position: relative;
+  padding-left: 1.6em;
+  color: #c9ccd0;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+}
+
+/* Lime dot bullets */
+.list li::before {
+  content: '';
+  position: absolute;
+  top: 0.68em;
+  left: 0.3em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 8px rgba(140, 198, 63, 0.6);
+}
+
+.quote {
+  margin: 2em 0 0;
+  padding: 0.2em 0 0.2em 1.2em;
+  border-left: 2px solid var(--color-accent);
+  color: #f2f3f4;
+  font-size: clamp(1.3rem, 2vw, 1.625rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+}
+
+.figure {
+  margin: 2em 0 0;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+}
+
+.caption {
+  margin-top: 10px;
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
+  text-align: center;
+}
+
+/* ---------- Keep reading ---------- */
+.related {
+  max-width: 1120px;
+  margin: var(--space-8) auto 0;
+  padding-top: var(--space-6);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.relatedHeading {
+  padding-bottom: 0.08em;
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: var(--font-size-title);
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: var(--heading-line-height);
+}
+
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: var(--space-4);
+}
+
+/* ---------- Call to action ---------- */
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  max-width: 1120px;
+  margin: var(--space-7) auto 0;
+  padding: clamp(24px, 3.5vw, 40px);
+  border: 1px solid transparent;
+  border-radius: 24px;
+  background:
+    radial-gradient(ellipse 50% 120% at 100% 0%, rgba(140, 198, 63, 0.18), transparent 70%)
+      padding-box,
+    linear-gradient(135deg, #17191b, #0c0d0e) padding-box,
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.05)) border-box;
+}
+
+.ctaHeading {
+  padding-bottom: 0.08em;
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: var(--font-size-title);
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: var(--heading-line-height);
+}
+
+.ctaText {
+  margin-top: 6px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-md);
+}
+
+/* ---------- Tablet and phone ---------- */
+@media (max-width: 1024px) {
+  .relatedGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .relatedGrid > :nth-child(3) {
+    display: none; /* two fit nicely – the third would sit alone */
+  }
+}
+
+@media (max-width: 640px) {
+  .cover {
+    aspect-ratio: 1.5;
+    border-radius: 18px;
+  }
+
+  .relatedGrid {
+    gap: 10px;
+  }
+
+  .p,
+  .list li {
+    font-size: 1rem;
+  }
+}

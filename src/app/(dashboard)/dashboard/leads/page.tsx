@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { getProfile } from '@/lib/auth/session';
+import { redirect } from 'next/navigation';
+import { getProfile, isStaff } from '@/lib/auth/session';
 import { parseFilters } from '@/lib/leads/filters';
 import { getLeadsPage, getLeadsPerDay, getLeadStats } from '@/lib/leads/queries';
 import { DashboardLeads } from '@/sections/dashboard';
@@ -9,10 +10,11 @@ export const metadata: Metadata = { title: 'Leads – BMU' };
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
 // Leads dashboard (/dashboard/leads). The filters live in the address (?range=7d&status=new…),
-// `?lead=<id>` opens a lead in the side panel. Staff only – checked in the (dashboard) layout.
+// `?lead=<id>` opens a lead in the side panel. Admins and managers only.
 export default async function LeadsPage({ searchParams }: Props) {
   const params = await searchParams;
   const profile = (await getProfile())!;
+  if (!isStaff(profile.role)) redirect('/dashboard/blogs'); // SEO writers only have the blog
   const isAdmin = profile.role === 'admin';
 
   const filters = parseFilters(params);

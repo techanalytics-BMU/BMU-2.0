@@ -5,35 +5,33 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { leadPopup } from '@/data/leadPopup';
-import { LEAD_SENT_KEY as SENT_KEY } from '@/lib/leads/browser';
+import { leadSentThisVisit } from '@/lib/leads/browser';
 import styles from './LeadPopup.module.css';
 import LeadPopupForm from './LeadPopupForm';
 
 const CLOSES_KEY = 'bmu-lead-popup-closes'; // sessionStorage: times closed this visit
-// SENT_KEY (localStorage): they sent the popup or the contact page form – never show again
 
 // Browser storage can be blocked (private windows, settings) – the popup still works without it
-function read(storage: 'local' | 'session', key: string) {
+function closesThisVisit() {
   try {
-    return (storage === 'local' ? localStorage : sessionStorage).getItem(key);
+    return Number(sessionStorage.getItem(CLOSES_KEY) ?? 0);
   } catch {
-    return null;
+    return 0;
   }
 }
 
-function write(storage: 'local' | 'session', key: string, value: string) {
+function rememberCloses(closes: number) {
   try {
-    (storage === 'local' ? localStorage : sessionStorage).setItem(key, value);
+    sessionStorage.setItem(CLOSES_KEY, String(closes));
   } catch {
     // not saved – fine
   }
 }
 
-const closesThisVisit = () => Number(read('session', CLOSES_KEY) ?? 0);
-
 // "Let's build your next growth move." – a lead form that floats over every page (added in
-// src/app/(site)/layout.tsx). Shows 5s after arriving; after a close, once more 30s later; never again
-// once submitted (timings in src/data/leadPopup.ts). Never on /login or /contact – if it's due
+// src/app/(site)/layout.tsx). On every visit: shows 5s after arriving; after a close, once more 30s
+// later (timings in src/data/leadPopup.ts). Once they send it (or the contact page form) it stays
+// away for the rest of the visit and returns on the next. Never on /login or /contact – if it's due
 // there, it waits until the visitor leaves. The page behind is dimmed and blurred but still
 // scrolls; a click outside the card, the ✕ or Escape closes it.
 export default function LeadPopup() {
@@ -52,18 +50,18 @@ export default function LeadPopup() {
     timer.current = window.setTimeout(() => setOpen(true), delay);
   }, []);
 
-  // First showing, unless they already submitted or closed it enough times this visit
+  // First showing, unless they already sent their details or closed it enough times this visit
   useEffect(() => {
-    if (read('local', SENT_KEY) || closesThisVisit() >= timing.maxCloses) return;
+    if (leadSentThisVisit() || closesThisVisit() >= timing.maxCloses) return;
     schedule(timing.firstDelay);
     return () => window.clearTimeout(timer.current);
   }, [schedule, timing]);
 
   const close = useCallback(() => {
     setOpen(false);
-    if (read('local', SENT_KEY)) return;
+    if (leadSentThisVisit()) return;
     const closes = closesThisVisit() + 1;
-    write('session', CLOSES_KEY, String(closes));
+    rememberCloses(closes);
     if (closes < timing.maxCloses) schedule(timing.repeatDelay);
   }, [schedule, timing]);
 

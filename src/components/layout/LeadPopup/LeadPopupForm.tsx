@@ -29,7 +29,7 @@ const check = (field: ContactFormField, data: FormData) => {
 
 // Name · Phone · Email, then the silver Submit pill. Checked in the browser before sending, then
 // saved as a lead in Supabase (src/lib/leads/actions.ts); the form gives way to a thank-you and
-// the popup never shows again.
+// the popup stays away for the rest of the visit.
 export default function LeadPopupForm({ content }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});

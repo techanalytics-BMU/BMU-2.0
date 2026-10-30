@@ -20,10 +20,10 @@ function FooterItem({ item, className }: { item: FooterLink; className?: string 
 }
 
 // Site footer – shown on every page (added in src/app/layout.tsx). It continues the look of the
-// free-trial section: brand + social · Site map · Resources · newsletter card → tabs block →
+// free-trial section: logo + contact details · Site map · Resources · newsletter card → tabs block →
 // the wordmark dissolving into a green horizon → bottom line.
 export default function Footer() {
-  const { tagline, contact, columns, join, wordmark, backToTop, bottom } = footer;
+  const { contact, columns, join, wordmark, backToTop, bottom } = footer;
 
   return (
     <footer className={styles.footer}>
@@ -38,7 +38,6 @@ export default function Footer() {
                 height={54}
               />
             </Link>
-            <p className={styles.tagline}>{tagline}</p>
 
             <address className={styles.contact}>
               <ul className={styles.contactList}>

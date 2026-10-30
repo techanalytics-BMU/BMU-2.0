@@ -7,12 +7,13 @@ export const site = {
   phone: '+91 81054 91414',
   phoneHref: 'tel:+918105491414',
   whatsapp: 'https://wa.me/918105491414',
-  email: 'hello@bmumarketing.in',
+  email: 'support@bmumarketing.in',
+  // The same address as the footer (src/data/footer.ts)
   address: {
-    street: 'JP Nagar 9th Phase', // add the full street address once confirmed
+    street: '376, Phase 9, Royal Park Residency Layout, JP Nagar 9th Phase',
     locality: 'Bengaluru',
     region: 'Karnataka',
-    postalCode: '', // add the PIN code – it's left out of structured data until set
+    postalCode: '560108',
     country: 'IN',
   },
   // The studio, for distances on locality pages

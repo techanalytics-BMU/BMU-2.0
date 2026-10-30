@@ -4,8 +4,6 @@ import type { FooterContent } from '@/types/footer';
 // The link tabs (Services / Industries / Bangalore / India / Dubai / International) are built in
 // src/data/serviceAreas.ts.
 export const footer: FooterContent = {
-  tagline:
-    'AI-first growth partner for businesses and real estate. Strategy, creative, media and software from one team.',
   contact: [
     {
       icon: 'location',
@@ -28,7 +26,7 @@ export const footer: FooterContent = {
         { label: 'FAQs', href: '/contact#faq' },
         { label: 'Contact us', href: '/contact' },
         { label: 'Our team', href: '/team' },
-        { label: 'Case studies' },
+        { label: 'Blogs', href: '/blog' },
         { label: 'Client dashboard' },
       ],
     },

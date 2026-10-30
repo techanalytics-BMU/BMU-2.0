@@ -4,20 +4,30 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import Button from '@/components/ui/Button/Button';
-import { workArticle } from '@/data/work/workArticle';
-import { workListing } from '@/data/work/workListing';
+import { blogArticle } from '@/data/blog/blogArticle';
+import { blogListing } from '@/data/blog/blogListing';
 import { useInView } from '@/hooks/useInView';
-import { categories, formatDate, sortedPosts, visualOf } from '@/lib/work';
-import WorkCard from '../WorkCard/WorkCard';
-import styles from './WorkListing.module.css';
+import { categoriesOf, formatDate, visualOf } from '@/lib/blog/posts';
+import type { BlogPostSummary } from '@/types/blog';
+import BlogCard from '../BlogCard/BlogCard';
+import styles from './BlogListing.module.css';
 
 const PAGE_SIZE = 9; // cards shown at first, and added by each "Load more"
 
-// The articles on /work: the featured article large at the top, then a toolbar (category chips
-// with counts, search, sort) and a grid of cards with "Load more". The category and search are
-// kept in the address (?category=…&q=…) so a filtered view can be shared or bookmarked.
-export default function WorkListing() {
-  const t = workListing;
+type Props = {
+  posts: BlogPostSummary[]; // published posts, newest first (src/lib/blog/queries.ts)
+  asPage?: boolean; // on /blog it's the whole page: the heading is the page's h1, with room for the navbar
+};
+
+// The blog's articles (on /blog, and under the hero on /work): the featured article large at the
+// top, then a toolbar (category chips with counts, search, sort) and a grid of cards with
+// "Load more". The category and search are kept in the address (?category=…&q=…) so a filtered
+// view can be shared or bookmarked.
+export default function BlogListing({ posts, asPage = false }: Props) {
+  const t = blogListing;
+  const sortedPosts = posts;
+  const categories = useMemo(() => categoriesOf(posts), [posts]);
+  const Heading = asPage ? 'h1' : 'h2';
   const [category, setCategory] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [oldestFirst, setOldestFirst] = useState(false);
@@ -30,7 +40,7 @@ export default function WorkListing() {
     const fromUrl = params.get('category');
     if (fromUrl && categories.some((c) => c.name === fromUrl)) setCategory(fromUrl);
     setQuery(params.get('q') ?? '');
-  }, []);
+  }, [categories]);
 
   // …and write them back whenever they change (without adding history entries)
   useEffect(() => {
@@ -58,11 +68,11 @@ export default function WorkListing() {
         post !== featured &&
         (!category || post.category === category) &&
         words.every((word) =>
-          `${post.title} ${post.excerpt} ${post.category}`.toLowerCase().includes(word)
+          `${post.title} ${post.excerpt} ${post.category ?? ''}`.toLowerCase().includes(word)
         )
     );
     return oldestFirst ? [...list].reverse() : list;
-  }, [category, query, oldestFirst, featured]);
+  }, [sortedPosts, category, query, oldestFirst, featured]);
 
   const choose = (next: string | null) => {
     setCategory(next);
@@ -78,10 +88,14 @@ export default function WorkListing() {
   const total = results.length + (featured ? 1 : 0);
 
   return (
-    <section id="articles" className={styles.section}>
+    <section
+      id="articles"
+      className={`${styles.section} ${asPage ? styles.page : ''}`}
+      data-no-posts={sortedPosts.length === 0} // hides search, chips and count until there are posts
+    >
       <div ref={ref} className={styles.inner} data-in-view={inView}>
         <div className={styles.header}>
-          <h2 className={styles.heading}>{t.heading}</h2>
+          <Heading className={styles.heading}>{t.heading}</Heading>
           <p className={styles.description}>{t.description}</p>
         </div>
 
@@ -120,23 +134,27 @@ export default function WorkListing() {
         </div>
 
         {featured && (
-          <Link href={`/work/${featured.slug}`} className={styles.featured}>
+          <Link href={`/blog/${featured.slug}`} className={styles.featured}>
             <span className={styles.featuredText}>
               <span className={styles.tags}>
                 <span className={styles.featuredTag}>{t.featuredLabel}</span>
-                <span className={styles.categoryTag}>{featured.category}</span>
+                {featured.category && (
+                  <span className={styles.categoryTag}>{featured.category}</span>
+                )}
               </span>
               <span className={styles.featuredTitle}>{featured.title}</span>
               <span className={styles.featuredExcerpt}>{featured.excerpt}</span>
               <span className={styles.featuredMeta}>
                 <span className={styles.avatar} aria-hidden="true">
-                  {featured.author.charAt(0)}
+                  {featured.author_name.charAt(0)}
                 </span>
-                {featured.author}
+                {featured.author_name}
                 <span aria-hidden="true">·</span>
-                <time dateTime={featured.date}>{formatDate(featured.date)}</time>
+                <time dateTime={featured.published_at ?? undefined}>
+                  {featured.published_at && formatDate(featured.published_at)}
+                </time>
                 <span aria-hidden="true">·</span>
-                {workArticle.minRead.replace('{count}', String(featured.readTime))}
+                {blogArticle.minRead.replace('{count}', String(featured.read_minutes))}
               </span>
               <span className={styles.featuredCta}>
                 {t.readArticle}
@@ -187,12 +205,19 @@ export default function WorkListing() {
                 className={styles.cell}
                 style={{ '--i': i % PAGE_SIZE } as React.CSSProperties}
               >
-                <WorkCard post={post} minRead={workArticle.minRead} />
+                <BlogCard post={post} all={sortedPosts} minRead={blogArticle.minRead} />
               </div>
             ))}
           </div>
         ) : (
-          !featured && (
+          !featured &&
+          (sortedPosts.length === 0 ? (
+            // No posts published yet
+            <div className={styles.empty}>
+              <p className={styles.emptyHeading}>{t.noPostsHeading}</p>
+              <p className={styles.emptyText}>{t.noPostsText}</p>
+            </div>
+          ) : (
             <div className={styles.empty}>
               <p className={styles.emptyHeading}>{t.emptyHeading}</p>
               <p className={styles.emptyText}>{t.emptyText}</p>
@@ -200,7 +225,7 @@ export default function WorkListing() {
                 {t.clearFilters}
               </Button>
             </div>
-          )
+          ))
         )}
 
         {results.length > visible && (

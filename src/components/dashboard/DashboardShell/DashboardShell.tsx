@@ -15,28 +15,30 @@ import styles from './DashboardShell.module.css';
 
 type Props = {
   user: { name: string; email: string; role: AppRole };
-  unseen: { count: number; leads: UnseenLead[] };
+  unseen: { count: number; leads: UnseenLead[] } | null; // null: no leads for this person (SEO writer)
   children: React.ReactNode;
 };
 
-// The staff area's frame (added in src/app/(dashboard)/layout.tsx): sidebar with the sections
-// (Leads now; Clients, Users and Settings marked "Soon"), a top bar with the bell and the user
-// menu, and the live new-lead alerts. On phones the sidebar slides in from the menu button.
+// The staff area's frame (added in src/app/(dashboard)/layout.tsx): sidebar with the sections this
+// person may open (Leads and Blogs; Clients, Users and Settings marked "Soon"), a top bar with the
+// bell and the user menu, and the live new-lead alerts – the bell and alerts only for people who
+// see leads. On phones the sidebar slides in from the menu button.
 export default function DashboardShell({ user, unseen, children }: Props) {
   const t = dashboardShell;
   const pathname = usePathname();
   const [menuOpenOn, setMenuOpenOn] = useState<string | null>(null);
   const menuOpen = menuOpenOn === pathname; // closes by itself on navigation
+  const nav = t.nav.filter((item) => item.roles.includes(user.role));
 
   return (
     <div className={styles.shell}>
       <aside className={styles.sidebar} data-open={menuOpen}>
-        <Link href="/dashboard/leads" className={styles.logo} aria-label="BMU dashboard">
+        <Link href="/dashboard" className={styles.logo} aria-label="BMU dashboard">
           <Image src="/images/common/bmu-logo-light.webp" alt="BMU Marketing" width={112} height={54} />
         </Link>
 
         <nav className={styles.nav} aria-label="Dashboard">
-          {t.nav.map((item) =>
+          {nav.map((item) =>
             item.href ? (
               <Link
                 key={item.label}
@@ -46,7 +48,7 @@ export default function DashboardShell({ user, unseen, children }: Props) {
               >
                 <DashboardIcon name={item.icon} />
                 {item.label}
-                {item.icon === 'leads' && unseen.count > 0 && (
+                {item.icon === 'leads' && unseen && unseen.count > 0 && (
                   <span className={styles.navCount}>{unseen.count}</span>
                 )}
               </Link>
@@ -87,7 +89,7 @@ export default function DashboardShell({ user, unseen, children }: Props) {
             <DashboardIcon name="menu" size={20} />
           </button>
           <div className={styles.topbarEnd}>
-            <DashboardBell count={unseen.count} leads={unseen.leads} />
+            {unseen && <DashboardBell count={unseen.count} leads={unseen.leads} />}
             <DashboardUserMenu user={user} />
           </div>
         </header>
@@ -95,7 +97,7 @@ export default function DashboardShell({ user, unseen, children }: Props) {
         <div className={styles.content}>{children}</div>
       </div>
 
-      <DashboardAlerts unseenCount={unseen.count} />
+      {unseen && <DashboardAlerts unseenCount={unseen.count} />}
     </div>
   );
 }

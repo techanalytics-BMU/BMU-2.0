@@ -15,6 +15,8 @@ const nextConfig: NextConfig = {
   // Locality aliases from the pSEO sheet (LOCALITY_ALIASES): one place, one set of pages
   async redirects() {
     return [
+      // Articles moved from /work/<slug> to /blog/<slug> – old links keep working
+      { source: '/work/:slug', destination: '/blog/:slug', permanent: true },
       {
         source: '/:service/bengaluru/krishnarajapuram',
         destination: '/:service/bengaluru/kr-puram',

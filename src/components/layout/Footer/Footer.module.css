@@ -44,15 +44,7 @@
   height: auto;
 }
 
-.tagline {
-  max-width: 320px;
-  margin-top: 20px;
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-  line-height: 1.7;
-}
-
-/* Address, email and phone: a lime icon in a frosted round chip, then the text */
+/* Address, email and phone (right under the logo): a lime icon in a frosted round chip, then the text */
 .contact {
   margin-top: 24px;
   font-style: normal;

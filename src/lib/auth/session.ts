@@ -31,9 +31,20 @@ export function isStaff(role: AppRole) {
   return role === 'admin' || role === 'manager';
 }
 
+/** Everyone with a section in the dashboard: staff (leads and blog) and SEO writers (blog only) */
+export function canOpenDashboard(role: AppRole) {
+  return isStaff(role) || role === 'seo';
+}
+
+/** SEO writers create, edit, publish and delete blog posts; admins and managers only view them */
+export function canWriteBlog(role: AppRole) {
+  return role === 'seo';
+}
+
 /** Where someone goes after logging in */
 export function homeFor(role: AppRole) {
-  return isStaff(role) ? '/dashboard' : '/account';
+  if (isStaff(role)) return '/dashboard';
+  return role === 'seo' ? '/dashboard/blogs' : '/account';
 }
 
 /** 'Mukesh' – their name if they gave one, otherwise the start of their email, capitalised */

@@ -1,6 +1,7 @@
 // Line icons for the dashboard (stroke = current text colour)
 const PATHS = {
   leads: 'M4 13h4l2 3h4l2-3h4M5.5 5h13L21 13v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5z',
+  blogs: 'M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z',
   clients: 'M4 8h16v11H4zM9 8V5h6v3M4 13h16',
   users: 'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 6.5M18 14.5a6.5 6.5 0 0 1 3.5 5.5',
   settings:

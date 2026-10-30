@@ -1,6 +1,6 @@
 // ---------- Accounts (Supabase table public.profiles – supabase/migrations/0001_profiles.sql) ----------
 
-export type AppRole = 'admin' | 'manager' | 'client';
+export type AppRole = 'admin' | 'manager' | 'seo' | 'client'; // seo = SEO writer (blog only)
 
 export type Profile = {
   id: string;

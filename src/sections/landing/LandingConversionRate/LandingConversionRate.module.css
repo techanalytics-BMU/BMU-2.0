@@ -79,20 +79,10 @@
     transform 0.6s ease;
 }
 
+/* The site's own button (travelling green edge) – nothing extra on top */
 .cta[data-in-view='true'] {
   opacity: 1;
   transform: none;
-  animation: cta-glow 3s ease-in-out 0.6s infinite;
-}
-
-@keyframes cta-glow {
-  0%,
-  100% {
-    filter: drop-shadow(0 0 6px rgba(140, 198, 63, 0.35));
-  }
-  50% {
-    filter: drop-shadow(0 0 18px rgba(140, 198, 63, 0.7));
-  }
 }
 
 @media (max-width: 720px) {
@@ -108,9 +98,5 @@
     opacity: 1;
     transform: none;
     transition: none;
-  }
-
-  .cta[data-in-view='true'] {
-    animation: none;
   }
 }

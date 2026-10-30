@@ -1,0 +1,24 @@
+import type { DashboardBlogsContent } from '@/types/dashboard';
+
+// The blog in the dashboard (/dashboard/blogs)
+export const dashboardBlogs: DashboardBlogsContent = {
+  heading: 'Blogs',
+  description: 'Articles shown on the website at /blog.',
+  viewOnly: 'You can view posts here; the SEO writer creates and edits them.',
+  newPost: 'New post',
+  search: 'Search posts',
+  allStatuses: 'All',
+  empty: 'No posts yet.',
+  emptyWriter: 'No posts yet – click “New post” to write the first one.',
+  noMatch: 'No posts match.',
+  columns: { title: 'Title', status: 'Status', date: 'Published', updated: 'Last edited' },
+  statuses: { draft: 'Draft', published: 'Published', scheduled: 'Scheduled' },
+  edit: 'Edit',
+  view: 'View',
+  preview: 'Preview',
+  viewOnSite: 'View on site',
+  delete: 'Delete',
+  deleteConfirm: 'Delete the draft “{title}” for good? This can’t be undone.',
+  previewBar: 'Preview – this is how the post will look on the website.',
+  backToEditor: 'Back to the editor',
+};

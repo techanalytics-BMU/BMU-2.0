@@ -9,7 +9,7 @@ export type FooterColumn = {
   links: FooterLink[];
 };
 
-// One contact line under the tagline: address, email or phone
+// One contact line under the logo: address, email or phone
 export type FooterContactItem = {
   icon: 'location' | 'mail' | 'phone'; // icon in public/icons/common
   label: string; // for screen readers
@@ -26,8 +26,7 @@ export type FooterNewsletter = {
 };
 
 export type FooterContent = {
-  tagline: string;
-  contact: FooterContactItem[]; // address, email and phone under the tagline
+  contact: FooterContactItem[]; // address, email and phone under the logo
   columns: FooterColumn[];
   // Newsletter card
   join: {

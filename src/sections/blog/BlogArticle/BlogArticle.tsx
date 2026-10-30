@@ -1,0 +1,295 @@
+import Image from 'next/image';
+import Link from 'next/link';
+import Button from '@/components/ui/Button/Button';
+import { blogArticle } from '@/data/blog/blogArticle';
+import { site } from '@/data/site';
+import { formatDate, relatedPosts, toneOf, visualOf } from '@/lib/blog/posts';
+import { slugify } from '@/lib/blog/text';
+import type { BlogBlock, BlogPost, BlogPostSummary } from '@/types/blog';
+import cardStyles from '../BlogCard/BlogCard.module.css';
+import BlogCard from '../BlogCard/BlogCard';
+import styles from './BlogArticle.module.css';
+import BlogContents from './BlogContents';
+import BlogReadingProgress from './BlogReadingProgress';
+import BlogShare from './BlogShare';
+import BlogText from './BlogText';
+
+const CONTENTS_FROM = 3; // H2 headings needed before the table of contents is shown
+
+/** An id for every H2 (for the table of contents and "jump to" links), unique within the post */
+function headingIds(blocks: BlogBlock[]) {
+  const used = new Map<string, number>();
+  return blocks.map((block) => {
+    if (block.type !== 'h2') return undefined;
+    const base = slugify(block.text) || 'section';
+    const seen = used.get(base) ?? 0;
+    used.set(base, seen + 1);
+    return seen ? `${base}-${seen + 1}` : base;
+  });
+}
+
+function Block({ block, id }: { block: BlogBlock; id?: string }) {
+  switch (block.type) {
+    case 'intro':
+      return (
+        <p className={styles.intro}>
+          <BlogText text={block.text} />
+        </p>
+      );
+    case 'h2':
+      return (
+        <h2 id={id} className={styles.h2}>
+          {block.text}
+        </h2>
+      );
+    case 'h3':
+      return <h3 className={styles.h3}>{block.text}</h3>;
+    case 'list': {
+      const List = block.ordered ? 'ol' : 'ul';
+      return (
+        <List className={block.ordered ? styles.orderedList : styles.list}>
+          {block.items.map((item, i) => (
+            <li key={i}>
+              <BlogText text={item} />
+            </li>
+          ))}
+        </List>
+      );
+    }
+    case 'table':
+      return (
+        <div className={styles.tableWrap}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                {block.headers.map((header, i) => (
+                  <th key={i} scope="col">
+                    {header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {block.rows.map((row, i) => (
+                <tr key={i}>
+                  {row.map((cell, j) => (
+                    <td key={j}>
+                      <BlogText text={cell} />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    case 'tip':
+    case 'warning':
+      return (
+        <aside className={styles.callout} data-kind={block.type}>
+          <span className={styles.calloutIcon} aria-hidden="true">
+            {block.type === 'tip' ? '💡' : '⚠️'}
+          </span>
+          <p>
+            <BlogText text={block.text} />
+          </p>
+        </aside>
+      );
+    case 'quote':
+      return <blockquote className={styles.quote}>{block.text}</blockquote>;
+    case 'image':
+      if (!block.src) return null; // no picture chosen yet
+      return (
+        <figure className={styles.figure}>
+          <Image
+            src={block.src}
+            alt={block.alt}
+            width={1360}
+            height={860}
+            sizes="(max-width: 760px) 100vw, 680px"
+            className={styles.image}
+          />
+          {(block.caption || block.credit) && (
+            <figcaption className={styles.caption}>
+              {block.caption}
+              {block.caption && block.credit && ' · '}
+              {block.credit && <span className={styles.credit}>{block.credit}</span>}
+            </figcaption>
+          )}
+        </figure>
+      );
+    case 'services':
+      return (
+        <div className={styles.services}>
+          {block.items.map((item) => (
+            <Link key={item.slug} href={`/services/${item.slug}`} className={styles.service}>
+              <span className={styles.serviceName}>{item.name}</span>
+              <span className={styles.serviceReason}>{item.reason}</span>
+              <span className={styles.serviceLink} aria-hidden="true">
+                View service →
+              </span>
+            </Link>
+          ))}
+        </div>
+      );
+    case 'cta':
+      return (
+        <aside className={styles.inlineCta}>
+          <p className={styles.inlineCtaText}>{block.text}</p>
+          <Button href={block.buttonLink}>{block.buttonText}</Button>
+        </aside>
+      );
+    default:
+      return (
+        <p className={styles.p}>
+          <BlogText text={block.text} />
+        </p>
+      );
+  }
+}
+
+type Props = {
+  post: BlogPost;
+  all: BlogPostSummary[]; // every published post – for "Keep reading" and the card colours
+};
+
+// One article (/blog/<slug>): breadcrumb, category, title, intro, author line (with "Updated …"
+// once edited) and tags; a large tinted cover with the post's image (or its category's chrome
+// object); the body – with a table of contents beside it when there are 3+ H2s; the FAQs and share
+// buttons; then "Keep reading" and a call to action.
+export default function BlogArticle({ post, all }: Props) {
+  const t = blogArticle;
+  const visual = visualOf(post);
+  const related = relatedPosts(post.slug, post.category, all);
+  const ids = headingIds(post.content);
+  const contents = post.content.flatMap((block, i) =>
+    block.type === 'h2' && ids[i] ? [{ id: ids[i]!, text: block.text }] : []
+  );
+  // Edited a day or more after publishing → show the update date too
+  const updated =
+    post.published_at &&
+    new Date(post.updated_at).getTime() - new Date(post.published_at).getTime() > 86400000;
+
+  return (
+    <article className={styles.article}>
+      <BlogReadingProgress targetId="article-body" />
+
+      <header className={styles.header}>
+        <nav className={styles.breadcrumb} aria-label="Breadcrumb">
+          <ol>
+            <li>
+              <Link href="/">{t.breadcrumb.home}</Link>
+            </li>
+            <li>
+              <Link href="/blog">{t.breadcrumb.blog}</Link>
+            </li>
+            <li aria-current="page">{post.title}</li>
+          </ol>
+        </nav>
+        {post.category && (
+          <Link
+            href={`/blog?category=${encodeURIComponent(post.category)}#articles`}
+            className={styles.category}
+          >
+            {post.category}
+          </Link>
+        )}
+        <h1 className={styles.title}>{post.title}</h1>
+        {post.excerpt && <p className={styles.excerpt}>{post.excerpt}</p>}
+        <p className={styles.meta}>
+          <span className={styles.avatar} aria-hidden="true">
+            {post.author_name.charAt(0)}
+          </span>
+          {post.author_name}
+          {post.published_at && (
+            <>
+              <span aria-hidden="true">·</span>
+              <time dateTime={post.published_at}>{formatDate(post.published_at)}</time>
+            </>
+          )}
+          {updated && (
+            <>
+              <span aria-hidden="true">·</span>
+              <time dateTime={post.updated_at}>
+                {t.updated.replace('{date}', formatDate(post.updated_at))}
+              </time>
+            </>
+          )}
+          <span aria-hidden="true">·</span>
+          {t.minRead.replace('{count}', String(post.read_minutes))}
+        </p>
+        {post.tags.length > 0 && (
+          <ul className={styles.tags}>
+            {post.tags.map((tag) => (
+              <li key={tag} className={styles.tag}>
+                {tag}
+              </li>
+            ))}
+          </ul>
+        )}
+      </header>
+
+      <div className={`${styles.cover} ${cardStyles[toneOf(post, all)]}`}>
+        {visual && (
+          <Image
+            src={visual}
+            alt={post.cover_image_url ? (post.cover_image_alt ?? '') : ''}
+            width={post.cover_image_url ? 1200 : 420}
+            height={post.cover_image_url ? 630 : 420}
+            priority
+            className={post.cover_image_url ? styles.coverPhoto : styles.coverObject}
+          />
+        )}
+      </div>
+
+      <div className={styles.bodyLayout} data-contents={contents.length >= CONTENTS_FROM}>
+        {contents.length >= CONTENTS_FROM && <BlogContents label={t.contents} items={contents} />}
+
+        <div id="article-body" className={styles.body}>
+          {post.content.map((block, i) => (
+            <Block key={i} block={block} id={ids[i]} />
+          ))}
+
+          {post.faqs.length > 0 && (
+            <section className={styles.faqs} aria-labelledby="faq-heading">
+              <h2 id="faq-heading" className={styles.h2}>
+                {t.faqHeading}
+              </h2>
+              {post.faqs.map((faq, i) => (
+                <details key={i} className={styles.faq} open={i === 0}>
+                  <summary className={styles.faqQuestion}>{faq.question}</summary>
+                  <p className={styles.faqAnswer}>
+                    <BlogText text={faq.answer} />
+                  </p>
+                </details>
+              ))}
+            </section>
+          )}
+
+          <BlogShare url={`${site.url}/blog/${post.slug}`} title={post.title} labels={t.share} />
+        </div>
+      </div>
+
+      {related.length > 0 && (
+        <section className={styles.related} aria-labelledby="related-heading">
+          <h2 id="related-heading" className={styles.relatedHeading}>
+            {t.relatedHeading}
+          </h2>
+          <div className={styles.relatedGrid}>
+            {related.map((other) => (
+              <BlogCard key={other.slug} post={other} all={all} minRead={t.minRead} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      <aside className={styles.cta}>
+        <div>
+          <p className={styles.ctaHeading}>{t.ctaHeading}</p>
+          <p className={styles.ctaText}>{t.ctaText}</p>
+        </div>
+        <Button href={t.cta.href}>{t.cta.label}</Button>
+      </aside>
+    </article>
+  );
+}

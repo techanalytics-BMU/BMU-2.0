@@ -1,7 +1,8 @@
-import type { WorkListingContent } from '@/types/work';
+import type { BlogListingContent } from '@/types/blog';
 
-// Text for the articles listing on /work (the posts themselves are in ./posts.ts)
-export const workListing: WorkListingContent = {
+// Text for the article list on /blog (and under the hero on /work). The posts themselves are
+// written in the dashboard (/dashboard/blogs) and stored in Supabase.
+export const blogListing: BlogListingContent = {
   heading: 'From the studio',
   description:
     'Guides, case studies and ideas from the BMU team – on getting found, chosen and remembered.',
@@ -15,6 +16,8 @@ export const workListing: WorkListingContent = {
   loadMore: 'Load more',
   emptyHeading: 'Nothing here yet',
   emptyText: 'No articles match your search. Try another word or category.',
+  noPostsHeading: 'New articles are on the way',
+  noPostsText: 'Our first guides are being written right now – check back soon.',
   clearFilters: 'Clear filters',
   readArticle: 'Read article',
 };

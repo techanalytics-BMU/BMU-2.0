@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { site } from '@/data/site';
 import { catalog, SITEMAP_IDS } from '@/lib/pseo/catalog';
-import { sortedPosts } from '@/lib/work';
+import { getPublishedPosts } from '@/lib/blog/queries';
 
 // One sitemap per page category – /sitemap/pages.xml, /sitemap/hubs.xml, /sitemap/service-industry.xml…
 // – so Search Console reports indexing for each category separately. Only indexable pages are
@@ -19,16 +19,20 @@ export default async function sitemap(props: {
   const id = await props.id;
 
   if (id === 'pages') {
+    // Blog posts come from Supabase (written in the dashboard)
+    const posts = await getPublishedPosts();
     return [
-      ...['/', '/about', '/services', '/industries', '/work', '/team', '/contact'].map((path) => ({
-        url: url(path),
+      ...['/', '/about', '/services', '/industries', '/work', '/blog', '/team', '/contact'].map(
+        (path) => ({
+          url: url(path),
+          changeFrequency: 'monthly' as const,
+          priority: path === '/' ? 1 : 0.8,
+        })
+      ),
+      ...posts.map((post) => ({
+        url: url(`/blog/${post.slug}`),
+        lastModified: post.published_at ?? undefined,
         changeFrequency: 'monthly' as const,
-        priority: path === '/' ? 1 : 0.8,
-      })),
-      ...sortedPosts.map((post) => ({
-        url: url(`/work/${post.slug}`),
-        lastModified: post.date,
-        changeFrequency: 'yearly' as const,
         priority: 0.6,
       })),
     ];

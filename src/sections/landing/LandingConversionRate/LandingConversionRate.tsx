@@ -46,7 +46,7 @@ export default function LandingConversionRate() {
       </div>
 
       <div ref={ctaView.ref} className={styles.cta} data-in-view={ctaView.inView}>
-        <Button href={cta.href} variant="accent" shape="rounded">
+        <Button href={cta.href}>
           {cta.label}
         </Button>
       </div>

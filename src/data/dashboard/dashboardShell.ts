@@ -3,14 +3,15 @@ import type { DashboardShellContent } from '@/types/dashboard';
 // The staff area's frame: sidebar, top bar, bell and user menu
 export const dashboardShell: DashboardShellContent = {
   nav: [
-    { label: 'Leads', href: '/dashboard/leads', icon: 'leads' },
-    { label: 'Clients', icon: 'clients' },
-    { label: 'Users', icon: 'users' },
-    { label: 'Settings', icon: 'settings' },
+    { label: 'Leads', href: '/dashboard/leads', icon: 'leads', roles: ['admin', 'manager'] },
+    { label: 'Blogs', href: '/dashboard/blogs', icon: 'blogs', roles: ['admin', 'manager', 'seo'] },
+    { label: 'Clients', icon: 'clients', roles: ['admin', 'manager'] },
+    { label: 'Users', icon: 'users', roles: ['admin', 'manager'] },
+    { label: 'Settings', icon: 'settings', roles: ['admin', 'manager'] },
   ],
   soon: 'Soon',
   backToSite: 'Back to website',
-  roles: { admin: 'Admin', manager: 'Manager', client: 'Client' },
+  roles: { admin: 'Admin', manager: 'Manager', seo: 'SEO writer', client: 'Client' },
   menu: {
     alerts: 'Sound & desktop alerts',
     alertsOn: 'On',

@@ -1,6 +1,13 @@
-/* Lead popup: a dark glass card in silver and grey, with two thin rings behind it, over a dimmed
-   and blurred page. Everything inside .frame is sized in em, so the whole popup grows on large
-   screens and TVs from one font-size (see .frame). */
+/* Lead popup: a dark glass card in silver and grey with a light-green glow travelling around its
+   edge, over a dimmed and blurred page. Everything inside .frame is sized in em, so the whole popup
+   grows on large screens and TVs from one font-size (see .frame). */
+
+/* The angle the green light has reached on its way round the card (0 → 360deg) */
+@property --popup-glow-angle {
+  syntax: '<angle>';
+  inherits: true;
+  initial-value: 0deg;
+}
 
 /* The page behind: dimmed and blurred, still scrollable (no scroll lock) */
 .overlay {
@@ -27,11 +34,16 @@
 /* 16px on phones, tablets and laptops; grows on big monitors and TVs, but never taller
    than the screen allows */
 .frame {
+  --glow: 140, 198, 63;
+  --card-radius: 1.5em;
+
   position: relative;
-  isolation: isolate; /* keeps the rings (z-index: -1) behind the card, not behind the page */
+  isolation: isolate; /* keeps the halo (z-index: -1) behind the card, not behind the page */
   width: min(29em, 100%);
   font-size: clamp(16px, min(0.55vw + 6px, 2.3svh), 30px);
-  animation: card-in 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  animation:
+    card-in 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    popup-glow-travel 5s linear infinite;
 }
 
 @keyframes card-in {
@@ -41,30 +53,67 @@
   }
 }
 
-/* Two thin rings: one peeking out at the top right, a larger one at the bottom left */
+@keyframes popup-glow-travel {
+  to {
+    --popup-glow-angle: 360deg;
+  }
+}
+
+/* The glow lives on the frame, not the card – the card scrolls on short screens and would clip it.
+   ::before – a bright green light running along the card's edge (as on the site's buttons), a ring
+   cut out with a mask; ::after – a soft green halo behind the card that slowly breathes. */
 .frame::before,
 .frame::after {
   content: '';
   position: absolute;
-  z-index: -1;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.04), transparent 60%);
+  border-radius: var(--card-radius);
   pointer-events: none;
 }
 
 .frame::before {
-  top: -2.5em;
-  right: -4.5em;
-  width: 12em;
-  height: 12em;
+  inset: -1px;
+  z-index: 1;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--popup-glow-angle),
+    transparent 0deg,
+    rgba(var(--glow), 0) 200deg,
+    rgba(var(--glow), 0.9) 300deg,
+    #eaffcf 328deg,
+    rgba(var(--glow), 0) 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
 }
 
 .frame::after {
-  bottom: -5.5em;
-  left: -8em;
-  width: 17em;
-  height: 17em;
+  inset: -0.75em;
+  z-index: -1;
+  border-radius: calc(var(--card-radius) + 0.75em);
+  background:
+    conic-gradient(
+      from var(--popup-glow-angle),
+      transparent 0deg 200deg,
+      rgba(var(--glow), 0.35) 310deg,
+      transparent 360deg
+    ),
+    radial-gradient(closest-side, rgba(var(--glow), 0.18), transparent);
+  filter: blur(1.4em);
+  animation: popup-glow-breathe 4s ease-in-out infinite;
+}
+
+@keyframes popup-glow-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }
 
 /* ---------- Card ---------- */
@@ -74,7 +123,7 @@
   overflow-y: auto;
   padding: 2em 1.75em 1.75em;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 1.5em;
+  border-radius: var(--card-radius);
   /* a soft sheen down the left edge, deep charcoal to black */
   background:
     radial-gradient(ellipse 35% 70% at 0% 35%, rgba(255, 255, 255, 0.07), transparent 70%),
@@ -460,9 +509,12 @@
 
 /* ---------- Phones: fields in one column, a little tighter ---------- */
 @media (max-width: 520px) {
+  .frame {
+    --card-radius: 1.25em;
+  }
+
   .card {
     padding: 1.75em 1.125em 1.25em;
-    border-radius: 1.25em;
   }
 
   .heading {
@@ -477,18 +529,18 @@
   .half {
     grid-column: 1 / -1;
   }
-
-  .frame::before {
-    right: -3em;
-    width: 9em;
-    height: 9em;
-  }
 }
 
+/* Animations off: the glow stays still at the top right */
 @media (prefers-reduced-motion: reduce) {
   .overlay,
   .frame,
+  .frame::after,
   .success {
     animation: none;
+  }
+
+  .frame {
+    --popup-glow-angle: 40deg;
   }
 }

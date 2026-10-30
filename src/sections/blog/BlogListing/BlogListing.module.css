@@ -3,6 +3,21 @@
   background: var(--color-bg);
 }
 
+/* On /blog the list is the whole page: room for the navbar and a faint green glow at the top */
+.page {
+  padding-top: calc(var(--navbar-height) + var(--navbar-offset) + clamp(40px, 8svh, 80px));
+  background:
+    radial-gradient(ellipse 60% 420px at 50% 0%, rgba(140, 198, 63, 0.06), transparent 70%),
+    var(--color-bg);
+}
+
+/* No posts published yet: just the heading and a "coming soon" note */
+.section[data-no-posts='true'] .controls,
+.section[data-no-posts='true'] .toolbar,
+.section[data-no-posts='true'] .count {
+  display: none;
+}
+
 /* Heading on the left with search + sort beside it; everything else full width below */
 .inner {
   display: grid;
