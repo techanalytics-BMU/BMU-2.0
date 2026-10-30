@@ -11,7 +11,7 @@ import {
 } from '@/sections/about';
 
 export const metadata: Metadata = {
-  title: 'About – BMU Marketing',
+  title: 'About',
   description:
     'From a Bengaluru real estate agency to one team for every digital service – the story, principles and people behind BMU Marketing.',
 };

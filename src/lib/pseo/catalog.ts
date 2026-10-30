@@ -7,6 +7,7 @@ import {
 import { businesses } from '@/data/pseo/businesses';
 import { CITY_PAGE_SLUGS, cities } from '@/data/pseo/cities';
 import { dubaiAreas } from '@/data/pseo/dubai';
+import { SERVICE_GROUP_SLUGS, serviceGroups, type ServiceGroupSlug } from '@/data/pseo/groups';
 import { markets } from '@/data/pseo/markets';
 import { industries } from '@/data/pseo/industries';
 import { launch } from '@/data/pseo/launch';
@@ -147,6 +148,7 @@ export const catalog = (): CatalogEntry[] => {
   const add = (group: SitemapGroup, path: string, isIndexable: boolean) =>
     entries.push({ group, path, indexable: isIndexable });
 
+  SERVICE_GROUP_SLUGS.forEach((group) => add('hubs', paths.serviceGroup(group), true));
   SERVICE_SLUGS.forEach((service) =>
     add('hubs', paths.serviceHub(service), indexable.serviceHub())
   );
@@ -240,6 +242,8 @@ export const parseServiceFor = (slug: string): ServiceFor | null => {
 };
 
 export const isService = (slug: string): slug is ServiceSlug => slug in services;
+export const isServiceGroup = (slug: string): slug is ServiceGroupSlug =>
+  Object.hasOwn(serviceGroups, slug);
 export const isIndustry = (slug: string): slug is IndustrySlug => slug in industries;
 export const isBusiness = (slug: string): slug is BusinessSlug => slug in businesses;
 export const isLocality = (slug: string): slug is AreaSlug => slug in localities;

@@ -1,85 +1,76 @@
 'use client';
 
 import Link from 'next/link';
-import { useRef, useState, type KeyboardEvent } from 'react';
-import type { ServiceAreasGroup } from '@/types/footer';
+import { useState } from 'react';
+import type { ServiceAreasGroup, ServiceAreasItem } from '@/types/footer';
 import styles from './FooterServiceAreas.module.css';
 
-// Footer link groups (Services / Industries / Bangalore / India / Dubai / International) as tabs:
-// tab row → heading with a count → list. Every list stays in the page (inactive ones are only
-// hidden), so search engines see all the links. Phones show the first few items of a list with
-// a "Show all" button. The lists are built on the server – see src/data/serviceAreas.ts.
+// Footer link groups (Services / Industries / Locations), each a block of its own, one under the
+// other: green label → heading with a count → list, with a hairline between blocks. Locations is
+// split into titled columns (Bangalore / India / Dubai / International). Phones show the first
+// few items with a "Show all" button (the rest stay in the page, so search engines see every
+// link). The lists are built on the server – see src/data/serviceAreas.ts.
+
+function Items({ items }: { items: ServiceAreasItem[] }) {
+  return items.map((item) => (
+    <li key={item.label}>
+      {item.href ? (
+        <Link href={item.href} className={styles.item}>
+          {item.label}
+        </Link>
+      ) : (
+        <span className={styles.item}>{item.label}</span>
+      )}
+    </li>
+  ));
+}
+
 export default function FooterServiceAreas({ groups }: { groups: ServiceAreasGroup[] }) {
-  const [active, setActive] = useState(groups[0]?.id);
   const [expanded, setExpanded] = useState<string[]>([]);
-  const tabs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const toggle = (id: string) =>
     setExpanded((open) => (open.includes(id) ? open.filter((x) => x !== id) : [...open, id]));
 
-  // Left / right arrows move between tabs, as in any tab list
-  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
-    const current = groups.findIndex((group) => group.id === active);
-    const next = (current + (event.key === 'ArrowRight' ? 1 : -1) + groups.length) % groups.length;
-    setActive(groups[next].id);
-    tabs.current[next]?.focus();
-    event.preventDefault();
-  };
-
   return (
     <div id="service-areas" className={styles.areas}>
-      <div role="tablist" aria-label="Where we work" className={styles.tabs} onKeyDown={onKeyDown}>
-        {groups.map((group, i) => (
-          <button
-            key={group.id}
-            ref={(el) => {
-              tabs.current[i] = el;
-            }}
-            type="button"
-            role="tab"
-            id={`service-areas-tab-${group.id}`}
-            aria-selected={group.id === active}
-            aria-controls={`service-areas-${group.id}`}
-            tabIndex={group.id === active ? 0 : -1}
-            className={styles.tab}
-            onClick={() => setActive(group.id)}
-          >
-            {group.label}
-          </button>
-        ))}
-      </div>
-
       {groups.map((group) => {
         const isOpen = expanded.includes(group.id);
-        const listId = `service-areas-${group.id}-list`;
+        const headingId = `service-areas-${group.id}`;
+        const listId = `${headingId}-list`;
+        const itemCount =
+          group.items?.length ??
+          (group.columns ?? []).reduce((sum, column) => sum + column.items.length, 0);
         return (
-          <section
-            key={group.id}
-            id={`service-areas-${group.id}`}
-            role="tabpanel"
-            aria-labelledby={`service-areas-tab-${group.id}`}
-            hidden={group.id !== active}
-            className={styles.group}
-          >
+          <section key={group.id} aria-labelledby={headingId} className={styles.group}>
+            <p className={styles.label}>{group.label}</p>
             <div className={styles.headingRow}>
-              <h2 className={styles.heading}>{group.heading}</h2>
-              <span className={styles.count}>{group.total ?? group.items.length}</span>
+              <h2 id={headingId} className={styles.heading}>
+                {group.heading}
+              </h2>
+              <span className={styles.count}>{group.total ?? itemCount}</span>
             </div>
 
-            <ul id={listId} className={styles.list} data-expanded={isOpen}>
-              {group.items.map((item) => (
-                <li key={item.label}>
-                  {item.href ? (
-                    <Link href={item.href} className={styles.item}>
-                      {item.label}
-                    </Link>
-                  ) : (
-                    <span className={styles.item}>{item.label}</span>
-                  )}
-                </li>
-              ))}
-            </ul>
+            {group.columns ? (
+              <div id={listId} className={styles.columns} data-expanded={isOpen}>
+                {group.columns.map((column) => (
+                  <div key={column.title}>
+                    <h3 className={styles.columnTitle}>{column.title}</h3>
+                    <ul className={styles.columnList}>
+                      <Items items={column.items} />
+                    </ul>
+                    {column.more?.href && (
+                      <Link href={column.more.href} className={styles.viewAll}>
+                        {column.more.label}
+                      </Link>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <ul id={listId} className={styles.list} data-expanded={isOpen}>
+                <Items items={group.items ?? []} />
+              </ul>
+            )}
 
             <div className={styles.actions}>
               {/* Phones only (hidden on larger screens in the CSS) */}
@@ -90,7 +81,7 @@ export default function FooterServiceAreas({ groups }: { groups: ServiceAreasGro
                 aria-controls={listId}
                 onClick={() => toggle(group.id)}
               >
-                {isOpen ? 'Show less' : `Show all ${group.items.length}`}
+                {isOpen ? 'Show less' : `Show all ${itemCount}`}
               </button>
               {group.more?.href && (
                 <Link href={group.more.href} className={styles.viewAll}>

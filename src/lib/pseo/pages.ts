@@ -1,4 +1,5 @@
 import { DUBAI_DISTRICTS, type DubaiAreaSlug, type MarketSlug } from '@/data/pseo/abroad';
+import { serviceGroups, type ServiceGroupSlug } from '@/data/pseo/groups';
 import { site } from '@/data/site';
 import {
   BUSINESS_SLUGS,
@@ -9,13 +10,19 @@ import {
   type IndustrySlug,
   type ServiceSlug,
 } from '@/data/pseo/slugs';
-import type { Competition, Faq, PageLink, PageSection, PseoPage, SectionItem } from '@/types/pseo';
+import type {
+  Competition,
+  Faq,
+  PageLink,
+  PageSection,
+  PseoPage,
+  SectionItem,
+  ServiceGroupContent,
+} from '@/types/pseo';
 import {
   CITY_PAGE_SLUGS,
   DUBAI_AREA_SLUGS,
-  LOCAL_INDUSTRIES,
   LOCALITY_PAGE_SLUGS,
-  MARKET_SLUGS,
   OTHER_MARKET_SLUGS,
   businessChannelsOf,
   dubaiAreas,
@@ -31,7 +38,6 @@ import {
   isLocalIndustry,
   isLocalService,
   linkable,
-  localServices,
   localities,
   services,
   type AreaSlug,
@@ -45,6 +51,7 @@ import {
   listJoin,
   lowerFirst,
   rotate,
+  titleCase,
   upperFirst,
   withArticle,
 } from './text';
@@ -223,7 +230,6 @@ export const servicesIndex = (): PseoPage => {
     description: clip(
       'SEO, ads, social media, branding, websites, AI and video production from one team in Bengaluru. See every service BMU Marketing offers.'
     ),
-    eyebrow: 'Services',
     h1: 'Every service',
     h1Accent: 'from one team.',
     intro:
@@ -248,12 +254,6 @@ export const servicesIndex = (): PseoPage => {
       ),
     })),
     faqs: [],
-    related: [
-      {
-        heading: 'Browse by industry',
-        links: [{ label: 'All industries', href: paths.industries() }],
-      },
-    ],
     breadcrumbs: [crumb.home, crumb.services],
     cta: ctaFor('business'),
     indexable: true,
@@ -268,7 +268,6 @@ export const industriesIndex = (): PseoPage =>
     description: clip(
       'Marketing built for your sector – real estate, healthcare, restaurants, education, retail and more. See how BMU Marketing works with each industry.'
     ),
-    eyebrow: 'Industries',
     h1: 'Marketing built',
     h1Accent: 'for your industry.',
     intro:
@@ -303,13 +302,132 @@ export const industriesIndex = (): PseoPage =>
       },
     ],
     faqs: [],
-    related: [
-      { heading: 'Browse by service', links: [{ label: 'All services', href: paths.services() }] },
-    ],
     breadcrumbs: [crumb.home, crumb.industries],
     cta: ctaFor('business'),
     indexable: true,
   });
+
+// ---------- Service groups: /services/[group] – the cards in the navbar's Services menu ----------
+
+// The same on every group page
+const groupWhy: SectionItem[] = [
+  {
+    title: 'One team, every channel',
+    text: 'Strategy, creative and media under one roof, working from the same plan.',
+  },
+  {
+    title: 'Plans before spend',
+    text: 'Nothing launches until goals and budgets are agreed in writing.',
+  },
+  {
+    title: 'Numbers you can read',
+    text: 'Plain-language reporting on the results that matter to you.',
+  },
+];
+
+const groupProcess: SectionItem[] = [
+  { title: 'Free call', text: 'A 30-minute call to understand your goals and current numbers.' },
+  { title: 'Written plan', text: 'A clear plan within three working days. It’s yours either way.' },
+  { title: 'Build and launch', text: 'We set up and launch the work agreed in your plan.' },
+  {
+    title: 'Report and review',
+    text: 'One monthly report and review, so you always know what’s working.',
+  },
+];
+
+export const serviceGroupPage = (slug: ServiceGroupSlug): PseoPage => {
+  const content = serviceGroups[slug];
+  const { group } = content;
+  const page = {
+    kind: 'service-group' as const,
+    path: paths.serviceGroup(slug),
+    title: `${group} Services in Bengaluru | ${site.name}`,
+    description: clip(`${content.intro} ${content.price}.`),
+    h1: group,
+    h1Accent: `${content.tagline}.`,
+    intro: content.intro,
+    facts: [
+      { label: 'Starts at', value: content.price },
+      { label: 'Reply', value: 'Within one working day' },
+      { label: 'Written plan', value: 'In 3 working days – yours to keep' },
+      { label: 'Reporting', value: 'One report a month' },
+    ],
+    sections: [
+      {
+        kind: 'cards',
+        id: 'why',
+        eyebrow: 'Why BMU',
+        heading: 'Built to show results',
+        intro: 'One team for strategy, creative and execution, so nothing gets lost between agencies.',
+        items: groupWhy,
+      },
+      {
+        kind: 'cards',
+        id: 'services',
+        eyebrow: 'What you get',
+        heading: 'Services we provide',
+        intro: 'Pick one or combine a few. Every service comes with a monthly report and review.',
+        items: (content.offers as ServiceGroupContent['offers']).map((offer) => ({
+          title: offer.title,
+          text: offer.text,
+          meta: offer.price,
+          ...(offer.service ? { href: paths.serviceHub(offer.service) } : {}),
+        })),
+      },
+      {
+        kind: 'steps',
+        id: 'process',
+        eyebrow: 'How it runs',
+        heading: 'The process',
+        intro: 'Four stages, in this order. Nothing launches before the plan is agreed.',
+        items: groupProcess,
+      },
+      {
+        kind: 'stats',
+        id: 'results',
+        eyebrow: 'Achievements',
+        heading: 'Results that speak',
+        intro: `What you get with ${group}: the services, cadence and support behind every result we deliver.`,
+        items: content.stats,
+      },
+      {
+        kind: 'phases',
+        id: 'roadmap',
+        eyebrow: 'Your roadmap',
+        heading: 'From kickoff to results',
+        intro: `How a ${group} engagement runs, step by step.`,
+        items: content.phases,
+      },
+      {
+        kind: 'links',
+        id: 'all-services',
+        eyebrow: 'Every service',
+        heading: `${group}, service by service`,
+        links: keep(
+          SERVICE_SLUGS.filter((service) => services[service].group === group).map((service) => ({
+            label: services[service].title,
+            href: paths.serviceHub(service),
+            note: services[service].summary,
+            live: indexable.serviceHub(),
+          }))
+        ),
+      },
+    ] satisfies PageSection[],
+    faqs: [],
+    breadcrumbs: [crumb.home, crumb.services, { label: group, href: paths.serviceGroup(slug) }],
+    cta: content.cta,
+    indexable: true,
+  };
+  return withSchema(page, [
+    serviceSchema({
+      name: `${group} services`,
+      description: content.intro,
+      path: page.path,
+      serviceType: group,
+      areaServed: 'Bengaluru',
+    }),
+  ]);
+};
 
 // ---------- 1. Service hub: /services/[service] ----------
 
@@ -441,9 +559,8 @@ export const serviceHub = (slug: ServiceSlug): PseoPage => {
   const page = {
     kind: 'service-hub' as const,
     path: paths.serviceHub(slug),
-    title: `${upperFirst(service.agencyNoun)} in Bengaluru | ${site.name}`,
+    title: `${titleCase(service.agencyNoun)} in Bengaluru | ${site.name}`,
     description: clip(`${service.summary} ${upperFirst(service.agencyNoun)} in Bengaluru.`),
-    eyebrow: service.group,
     h1: upperFirst(service.agencyNoun),
     h1Accent: 'in Bengaluru.',
     intro: service.intro,
@@ -457,19 +574,6 @@ export const serviceHub = (slug: ServiceSlug): PseoPage => {
     ],
     sections,
     faqs: service.faqs,
-    related: [
-      {
-        heading: 'Works well with',
-        links: keep(
-          service.related.map((other) => ({
-            label: services[other].title,
-            href: paths.serviceHub(other),
-            note: services[other].summary,
-            live: indexable.serviceHub(),
-          }))
-        ),
-      },
-    ],
     breadcrumbs: [
       crumb.home,
       crumb.services,
@@ -574,26 +678,13 @@ export const industryHub = (slug: IndustrySlug): PseoPage => {
     );
   }
 
-  // Related industries: the ones whose top channels overlap most with this one's
-  const top = new Set(channels.slice(0, 4).map((c) => c.service));
-  const similar = INDUSTRY_SLUGS.filter((other) => other !== slug)
-    .map((other) => ({
-      other,
-      overlap: channelsOf(other)
-        .slice(0, 4)
-        .filter((c) => top.has(c.service)).length,
-    }))
-    .sort((a, b) => b.overlap - a.overlap)
-    .slice(0, 4);
-
   const page = {
     kind: 'industry-hub' as const,
     path: paths.industryHub(slug),
-    title: `${industry.marketingLabel} Agency in Bengaluru | ${site.name}`,
+    title: `${titleCase(industry.marketingLabel)} Agency in Bengaluru | ${site.name}`,
     description: clip(
       `${industry.marketingLabel} in Bengaluru for ${industry.audience}. ${firstSentence(industry.intro)}`
     ),
-    eyebrow: 'Industries',
     h1: industry.marketingLabel,
     h1Accent: 'in Bengaluru.',
     intro: industry.intro,
@@ -607,18 +698,6 @@ export const industryHub = (slug: IndustrySlug): PseoPage => {
     ],
     sections,
     faqs: industry.faqs,
-    related: [
-      {
-        heading: 'Similar industries',
-        links: keep(
-          similar.map(({ other }) => ({
-            label: industries[other].marketingLabel,
-            href: paths.industryHub(other),
-            live: indexable.industryHub(),
-          }))
-        ),
-      },
-    ],
     breadcrumbs: [
       crumb.home,
       crumb.industries,
@@ -743,7 +822,6 @@ export const serviceIndustry = (
     path: paths.serviceIndustry(serviceSlug, industrySlug),
     title: `${service.title} for ${industry.title} in Bengaluru | ${site.name}`,
     description: clip(`${service.title} for ${industry.name}: ${lowerFirst(channel.why)}`),
-    eyebrow: industry.marketingLabel,
     h1: `${service.title} for`,
     h1Accent: `${industry.name}.`,
     intro: channel.why,
@@ -761,52 +839,6 @@ export const serviceIndustry = (
     ],
     sections,
     faqs,
-    related: [
-      {
-        heading: `More for ${industry.name}`,
-        links: [
-          { label: industry.marketingLabel, href: paths.industryHub(industrySlug) },
-          ...keep(
-            others.slice(4, 8).map(({ service: other }) => ({
-              label: `${services[other].title} for ${industry.name}`,
-              href: paths.serviceIndustry(other, industrySlug),
-              live: indexable.serviceIndustry(other, industrySlug),
-            }))
-          ),
-        ],
-      },
-      {
-        heading: `${service.title} for specific businesses`,
-        links: keep(
-          BUSINESS_SLUGS.filter(
-            (business) =>
-              businesses[business].industry === industrySlug &&
-              exists.serviceBusiness(serviceSlug, business)
-          ).map((business) => ({
-            label: `${service.title} for ${businesses[business].name}`,
-            href: paths.serviceBusiness(serviceSlug, business),
-            live: indexable.serviceBusiness(serviceSlug, business),
-          }))
-        ),
-      },
-      {
-        heading: `${service.title} for other industries`,
-        links: [
-          { label: `${service.title} in Bengaluru`, href: paths.serviceHub(serviceSlug) },
-          ...keep(
-            rotate(
-              industriesUsing(serviceSlug).filter((other) => other !== industrySlug),
-              seed,
-              4
-            ).map((other) => ({
-              label: `${service.title} for ${industries[other].name}`,
-              href: paths.serviceIndustry(serviceSlug, other),
-              live: indexable.serviceIndustry(serviceSlug, other),
-            }))
-          ),
-        ],
-      },
-    ],
     breadcrumbs: [
       crumb.home,
       crumb.services,
@@ -850,13 +882,6 @@ export const serviceBusiness = (
   const channel = channels[rank];
   const others = channels.filter((c) => c.service !== serviceSlug);
   const seed = `${serviceSlug}/${businessSlug}`;
-  const parentPage = exists.serviceIndustry(serviceSlug, business.industry);
-  const siblings = BUSINESS_SLUGS.filter(
-    (other) =>
-      other !== businessSlug &&
-      businesses[other].category === business.category &&
-      exists.serviceBusiness(serviceSlug, other)
-  );
 
   const faqs: Faq[] = [
     {
@@ -949,7 +974,6 @@ export const serviceBusiness = (
     path: paths.serviceBusiness(serviceSlug, businessSlug),
     title: `${service.title} for ${business.title} in Bengaluru | ${site.name}`,
     description: clip(`${service.title} for ${business.name}: ${lowerFirst(channel.why)}`),
-    eyebrow: business.category,
     h1: `${service.title} for`,
     h1Accent: `${business.name}.`,
     intro: channel.why,
@@ -961,46 +985,6 @@ export const serviceBusiness = (
     ],
     sections,
     faqs,
-    related: [
-      {
-        heading: `More for ${business.name}`,
-        links: keep(
-          others.slice(4).map(({ service: other }) => ({
-            label: `${services[other].title} for ${business.name}`,
-            href: paths.serviceBusiness(other, businessSlug),
-            live: indexable.serviceBusiness(other, businessSlug),
-          }))
-        ),
-      },
-      {
-        heading: parent.title,
-        links: [
-          { label: parent.marketingLabel, href: paths.industryHub(business.industry) },
-          ...(parentPage
-            ? keep([
-                {
-                  label: `${service.title} for ${parent.name}`,
-                  href: paths.serviceIndustry(serviceSlug, business.industry),
-                  live: indexable.serviceIndustry(serviceSlug, business.industry),
-                },
-              ])
-            : []),
-        ],
-      },
-      {
-        heading: `${service.title} for similar businesses`,
-        links: [
-          { label: `${service.title} in Bengaluru`, href: paths.serviceHub(serviceSlug) },
-          ...keep(
-            rotate(siblings, seed, 5).map((other) => ({
-              label: `${service.title} for ${businesses[other].name}`,
-              href: paths.serviceBusiness(serviceSlug, other),
-              live: indexable.serviceBusiness(serviceSlug, other),
-            }))
-          ),
-        ],
-      },
-    ],
     breadcrumbs: [
       crumb.home,
       crumb.services,
@@ -1128,11 +1112,10 @@ export const serviceLocality = (serviceSlug: ServiceSlug, areaSlug: AreaSlug): P
   const page = {
     kind: 'service-locality' as const,
     path: paths.serviceLocality(serviceSlug, areaSlug),
-    title: `${upperFirst(service.agencyNoun)} in ${area.name}, Bengaluru | ${site.name}`,
+    title: `${titleCase(service.agencyNoun)} in ${area.name}, Bengaluru | ${site.name}`,
     description: clip(
       `${upperFirst(service.agencyNoun)} in ${area.name}, Bengaluru – for ${area.businesses[0]} and other local businesses. ${service.summary}`
     ),
-    eyebrow: `${area.zone} Bengaluru`,
     h1: upperFirst(service.agencyNoun),
     h1Accent: `in ${area.name}.`,
     intro: `${firstSentence(service.localAngle)} ${firstSentence(area.searchHabits)}`,
@@ -1144,53 +1127,6 @@ export const serviceLocality = (serviceSlug: ServiceSlug, areaSlug: AreaSlug): P
     ],
     sections,
     faqs,
-    related: [
-      {
-        heading: `Other services in ${area.name}`,
-        links: keep(
-          localServices
-            .filter((other) => other !== serviceSlug)
-            .map((other) => ({
-              label: `${services[other].title} in ${area.name}`,
-              href: paths.serviceLocality(other, areaSlug),
-              live: indexable.serviceLocality(other, areaSlug),
-            }))
-        ),
-      },
-      {
-        // the zone the sheet puts this area in, beyond its next-door neighbours
-        heading: `More in ${area.zone} Bengaluru`,
-        links: keep(
-          rotate(
-            LOCALITY_PAGE_SLUGS.filter(
-              (other) =>
-                other !== areaSlug &&
-                localities[other].zone === area.zone &&
-                !near.some((n) => n.slug === other)
-            ),
-            seed,
-            6
-          ).map((other) => ({
-            label: `${service.title} in ${localities[other].name}`,
-            href: paths.serviceLocality(serviceSlug, other),
-            live: indexable.serviceLocality(serviceSlug, other),
-          }))
-        ),
-      },
-      {
-        heading: `More about ${service.name}`,
-        links: [
-          { label: `${service.title} in Bengaluru`, href: paths.serviceHub(serviceSlug) },
-          ...keep(
-            localIndustriesFor(areaSlug).map((industry) => ({
-              label: `${industries[industry].marketingLabel} in ${area.name}`,
-              href: paths.industryLocality(industry, areaSlug),
-              live: indexable.industryLocality(industry, areaSlug),
-            }))
-          ),
-        ],
-      },
-    ],
     breadcrumbs: [
       crumb.home,
       crumb.services,
@@ -1210,10 +1146,6 @@ export const serviceLocality = (serviceSlug: ServiceSlug, areaSlug: AreaSlug): P
     }),
   ]);
 };
-
-// Industries with locality pages that are strong in an area
-const localIndustriesFor = (area: AreaSlug) =>
-  LOCAL_INDUSTRIES.filter((industry) => localities[area].industries.includes(industry));
 
 // ---------- 5. Industry × Bengaluru locality: /industries/[industry]/bengaluru/[area] ----------
 
@@ -1321,11 +1253,10 @@ export const industryLocality = (
   const page = {
     kind: 'industry-locality' as const,
     path: paths.industryLocality(industrySlug, areaSlug),
-    title: `${industry.marketingLabel} in ${area.name}, Bengaluru | ${site.name}`,
+    title: `${titleCase(industry.marketingLabel)} in ${area.name}, Bengaluru | ${site.name}`,
     description: clip(
       `${industry.marketingLabel} in ${area.name}, Bengaluru. ${firstSentence(market[0])}`
     ),
-    eyebrow: industry.marketingLabel,
     h1: industry.marketingLabel,
     h1Accent: `in ${area.name}.`,
     intro: `${industry.localAngle} ${firstSentence(market[0])}`,
@@ -1337,24 +1268,6 @@ export const industryLocality = (
     ],
     sections,
     faqs,
-    related: [
-      {
-        heading: `More ${label}`,
-        links: [
-          {
-            label: `${industry.marketingLabel} in Bengaluru`,
-            href: paths.industryHub(industrySlug),
-          },
-          ...keep(
-            LOCAL_INDUSTRIES.filter((other) => other !== industrySlug).map((other) => ({
-              label: `${industries[other].marketingLabel} in ${area.name}`,
-              href: paths.industryLocality(other, areaSlug),
-              live: indexable.industryLocality(other, areaSlug),
-            }))
-          ),
-        ],
-      },
-    ],
     breadcrumbs: [
       crumb.home,
       crumb.industries,
@@ -1389,19 +1302,6 @@ export const serviceCity = (serviceSlug: ServiceSlug, citySlug: CitySlug): PseoP
   const km = Math.round(distanceKm(site.coords, city.coords));
   // Close enough to drive to for a shoot or a meeting (Mysuru, Hosur, Tumakuru…)
   const visitable = km <= 400;
-  // The closest other cities with pages – same state first, then by distance
-  const nearestCities = CITY_PAGE_SLUGS.filter((other) => other !== citySlug)
-    .map((other) => {
-      const entry = getCity(other);
-      return {
-        slug: other,
-        name: entry.name,
-        km: Math.round(distanceKm(city.coords, entry.coords)),
-        sameState: entry.state === city.state,
-      };
-    })
-    .sort((a, b) => Number(b.sameState) - Number(a.sameState) || a.km - b.km)
-    .slice(0, 6);
 
   const faqs: Faq[] = [
     {
@@ -1471,11 +1371,10 @@ export const serviceCity = (serviceSlug: ServiceSlug, citySlug: CitySlug): PseoP
   const page = {
     kind: 'service-city' as const,
     path: paths.serviceCity(serviceSlug, citySlug),
-    title: `${upperFirst(service.agencyNoun)} in ${city.name} | ${site.name}`,
+    title: `${titleCase(service.agencyNoun)} in ${city.name} | ${site.name}`,
     description: clip(
       `${upperFirst(service.agencyNoun)} in ${city.name}, ${city.state}. ${service.summary}`
     ),
-    eyebrow: city.state,
     h1: upperFirst(service.agencyNoun),
     h1Accent: `in ${city.name}.`,
     intro: `${firstSentence(service.intro)} ${firstSentence(city.character)}`,
@@ -1490,33 +1389,6 @@ export const serviceCity = (serviceSlug: ServiceSlug, citySlug: CitySlug): PseoP
     ],
     sections,
     faqs,
-    related: [
-      {
-        heading: `Other services in ${city.name}`,
-        links: keep(
-          localServices
-            .filter((other) => other !== serviceSlug)
-            .map((other) => ({
-              label: `${services[other].title} in ${city.name}`,
-              href: paths.serviceCity(other, citySlug),
-              live: indexable.serviceCity(other, citySlug),
-            }))
-        ),
-      },
-      {
-        heading: `${service.title} nearby`,
-        links: [
-          { label: `${service.title} in Bengaluru`, href: paths.serviceHub(serviceSlug) },
-          ...keep(
-            nearestCities.map((other) => ({
-              label: `${service.title} in ${other.name}`,
-              href: paths.serviceCity(serviceSlug, other.slug),
-              live: indexable.serviceCity(serviceSlug, other.slug),
-            }))
-          ),
-        ],
-      },
-    ],
     breadcrumbs: [
       crumb.home,
       crumb.services,
@@ -1578,16 +1450,6 @@ export const serviceMarket = (
   const marketIndustries = market.industries.filter((industry) =>
     exists.serviceIndustry(serviceSlug, industry)
   );
-  // The closest other cities abroad – same region first, then by distance
-  const nearest = MARKET_SLUGS.filter((other) => other !== marketSlug)
-    .map((other) => ({
-      slug: other,
-      name: markets[other].name,
-      km: Math.round(distanceKm(market.coords, markets[other].coords)),
-      sameRegion: markets[other].region === market.region,
-    }))
-    .sort((a, b) => Number(b.sameRegion) - Number(a.sameRegion) || a.km - b.km)
-    .slice(0, 6);
 
   const faqs: Faq[] = [
     { q: `Do you work with businesses in ${market.name}?`, a: remoteAnswer(market.workingHours) },
@@ -1669,11 +1531,10 @@ export const serviceMarket = (
   const page = {
     kind: 'service-market' as const,
     path: paths.serviceMarket(serviceSlug, marketSlug),
-    title: `${upperFirst(service.agencyNoun)} in ${market.name} | ${site.name}`,
+    title: `${titleCase(service.agencyNoun)} in ${market.name} | ${site.name}`,
     description: clip(
       `${upperFirst(service.agencyNoun)} in ${market.name}, ${market.country}. ${service.summary}`
     ),
-    eyebrow: market.country,
     h1: upperFirst(service.agencyNoun),
     h1Accent: `in ${market.name}.`,
     intro: `${firstSentence(service.intro)} ${firstSentence(market.character)}`,
@@ -1685,33 +1546,6 @@ export const serviceMarket = (
     ],
     sections,
     faqs,
-    related: [
-      {
-        heading: `Other services in ${market.name}`,
-        links: keep(
-          localServices
-            .filter((other) => other !== serviceSlug)
-            .map((other) => ({
-              label: `${services[other].title} in ${market.name}`,
-              href: paths.serviceMarket(other, marketSlug),
-              live: indexable.serviceMarket(other, marketSlug),
-            }))
-        ),
-      },
-      {
-        heading: `${service.title} nearby`,
-        links: [
-          { label: `${service.title} in Bengaluru`, href: paths.serviceHub(serviceSlug) },
-          ...keep(
-            nearest.map((other) => ({
-              label: `${service.title} in ${other.name}`,
-              href: paths.serviceMarket(serviceSlug, other.slug),
-              live: indexable.serviceMarket(serviceSlug, other.slug),
-            }))
-          ),
-        ],
-      },
-    ],
     breadcrumbs: [
       crumb.home,
       crumb.services,
@@ -1847,11 +1681,10 @@ export const serviceDubaiArea = (
   const page = {
     kind: 'service-dubai-area' as const,
     path: paths.serviceDubaiArea(serviceSlug, areaSlug),
-    title: `${upperFirst(service.agencyNoun)} in ${area.name}, Dubai | ${site.name}`,
+    title: `${titleCase(service.agencyNoun)} in ${area.name}, Dubai | ${site.name}`,
     description: clip(
       `${upperFirst(service.agencyNoun)} in ${area.name}, Dubai – for ${area.businesses[0]} and other local businesses. ${service.summary}`
     ),
-    eyebrow: `${area.district}, Dubai`,
     h1: upperFirst(service.agencyNoun),
     h1Accent: `in ${area.name}.`,
     intro: `${firstSentence(service.localAngle)} ${firstSentence(area.searchHabits)}`,
@@ -1868,52 +1701,6 @@ export const serviceDubaiArea = (
     ],
     sections,
     faqs,
-    related: [
-      {
-        heading: `Other services in ${area.name}`,
-        links: keep(
-          localServices
-            .filter((other) => other !== serviceSlug)
-            .map((other) => ({
-              label: `${services[other].title} in ${area.name}`,
-              href: paths.serviceDubaiArea(other, areaSlug),
-              live: indexable.serviceDubaiArea(other, areaSlug),
-            }))
-        ),
-      },
-      {
-        heading: `More in ${area.district}`,
-        links: keep(
-          rotate(
-            DUBAI_AREA_SLUGS.filter(
-              (other) =>
-                other !== areaSlug &&
-                dubaiAreas[other].district === area.district &&
-                !near.some((n) => n.slug === other)
-            ),
-            seed,
-            6
-          ).map((other) => ({
-            label: `${service.title} in ${dubaiAreas[other].name}`,
-            href: paths.serviceDubaiArea(serviceSlug, other),
-            live: indexable.serviceDubaiArea(serviceSlug, other),
-          }))
-        ),
-      },
-      {
-        heading: `More about ${service.name}`,
-        links: [
-          ...keep([
-            {
-              label: `${service.title} in Dubai`,
-              href: paths.serviceMarket(serviceSlug, 'dubai'),
-              live: indexable.serviceMarket(serviceSlug, 'dubai'),
-            },
-          ]),
-          { label: `${service.title} in Bengaluru`, href: paths.serviceHub(serviceSlug) },
-        ],
-      },
-    ],
     breadcrumbs: [
       crumb.home,
       crumb.services,

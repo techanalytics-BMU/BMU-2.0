@@ -5,7 +5,7 @@ import { canOpenDashboard, displayName, getProfile, getUserId, isStaff } from '@
 import { getUnseenLeads } from '@/lib/leads/queries';
 
 export const metadata: Metadata = {
-  title: 'Dashboard – BMU Marketing',
+  title: 'Dashboard',
   robots: { index: false },
 };
 

@@ -4,7 +4,7 @@ import { BlogListing } from '@/sections/blog';
 import { WorkHero } from '@/sections/work';
 
 export const metadata: Metadata = {
-  title: 'Our Work – BMU Marketing',
+  title: 'Our Work',
   description:
     'Brands, websites, campaigns and films BMU Marketing has built for businesses across Bengaluru and India.',
 };

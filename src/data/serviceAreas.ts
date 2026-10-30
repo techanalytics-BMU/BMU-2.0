@@ -1,3 +1,4 @@
+import type { DubaiAreaSlug, MarketSlug } from '@/data/pseo/abroad';
 import { SERVICE_SLUGS, type CitySlug, type IndustrySlug } from '@/data/pseo/slugs';
 import {
   CITY_PAGE_SLUGS,
@@ -19,13 +20,13 @@ import { paths } from '@/lib/pseo/paths';
 import { titleCase } from '@/lib/pseo/text';
 import type { ServiceAreasContent, ServiceAreasItem } from '@/types/footer';
 
-// The footer's link groups, one tab each. Every item links to a real programmatic page (built
+// The footer's link groups, one block each. Every item links to a real programmatic page (built
 // from the same data), and only to pages Google may index. Server-only – the footer passes the
 // finished lists to its client component, so none of the page content reaches the browser.
 
 const FOOTER_SERVICE = 'digital-marketing'; // the service the place links use
 
-// The best-known areas and cities; the rest are a "View all" away
+// The best-known places in each column; the rest are an "All …" link away
 const POPULAR_AREAS: AreaSlug[] = [
   'koramangala',
   'indiranagar',
@@ -33,32 +34,10 @@ const POPULAR_AREAS: AreaSlug[] = [
   'whitefield',
   'jp-nagar',
   'jayanagar',
-  'btm-layout',
   'electronic-city',
   'marathahalli',
-  'bellandur',
-  'sarjapur-road',
   'hebbal',
-  'yelahanka',
-  'malleshwaram',
-  'rajajinagar',
-  'banashankari',
-  'basavanagudi',
   'mg-road',
-  'bannerghatta-road',
-  'hennur',
-  'kalyan-nagar',
-  'rt-nagar',
-  'frazer-town',
-  'ulsoor',
-  'domlur',
-  'kr-puram',
-  'mahadevapura',
-  'brookefield',
-  'kengeri',
-  'vijayanagar',
-  'yeshwanthpur',
-  'sadashivanagar',
 ];
 
 const POPULAR_CITIES: CitySlug[] = [
@@ -70,30 +49,33 @@ const POPULAR_CITIES: CitySlug[] = [
   'kolkata',
   'ahmedabad',
   'gurugram',
-  'noida',
-  'jaipur',
-  'chandigarh',
   'kochi',
-  'coimbatore',
   'mysuru',
-  'mangaluru',
-  'hubballi-dharwad',
-  'visakhapatnam',
-  'vijayawada',
-  'indore',
-  'bhopal',
-  'lucknow',
-  'nagpur',
-  'surat',
-  'vadodara',
-  'navi-mumbai',
-  'thiruvananthapuram',
-  'madurai',
-  'bhubaneswar',
-  'dehradun',
-  'ludhiana',
-  'nashik',
-  'patna',
+];
+
+const POPULAR_DUBAI_AREAS: DubaiAreaSlug[] = [
+  'business-bay',
+  'downtown-dubai',
+  'dubai-marina',
+  'jlt',
+  'difc',
+  'deira',
+  'bur-dubai',
+  'al-barsha',
+  'jumeirah',
+];
+
+const POPULAR_MARKETS: MarketSlug[] = [
+  'abu-dhabi',
+  'sharjah',
+  'riyadh',
+  'jeddah',
+  'doha',
+  'muscat',
+  'kuwait-city',
+  'new-york',
+  'san-francisco',
+  'toronto',
 ];
 
 // Keep only links to pages Google may index (all pages while developing)
@@ -101,8 +83,18 @@ const live = (items: (ServiceAreasItem & { live: boolean })[]): ServiceAreasItem
   items.filter((item) => linkable(item.live)).map(({ live: _live, ...item }) => item);
 
 const label = (where: string) => `Digital Marketing Agency in ${where}`;
+const hubSection = (id: string) => `${paths.serviceHub(FOOTER_SERVICE)}#${id}`;
 
-const topIndustries: IndustrySlug[] = INDUSTRY_SLUGS_BY_PRIORITY.slice(0, 32);
+const topIndustries: IndustrySlug[] = INDUSTRY_SLUGS_BY_PRIORITY.slice(0, 16);
+
+// How many place pages each column stands for (the Locations count badge adds them up)
+const indianCities = CITY_PAGE_SLUGS.filter((city) => indexable.serviceCity(FOOTER_SERVICE, city));
+const placeCount =
+  LOCALITY_PAGE_SLUGS.length +
+  indianCities.length +
+  DUBAI_AREA_SLUGS.length +
+  1 + // Dubai itself
+  OTHER_MARKET_SLUGS.length;
 
 export const serviceAreas: ServiceAreasContent = {
   groups: [
@@ -136,67 +128,67 @@ export const serviceAreas: ServiceAreasContent = {
       },
     },
     {
-      id: 'bangalore',
-      label: 'Bangalore',
-      heading: 'Digital Marketing Across Bangalore',
-      items: live(
-        POPULAR_AREAS.map((area) => ({
-          label: label(localities[area].name),
-          href: paths.serviceLocality(FOOTER_SERVICE, area),
-          live: indexable.serviceLocality(FOOTER_SERVICE, area),
-        }))
-      ),
-      total: LOCALITY_PAGE_SLUGS.length,
-      more: {
-        label: `All ${LOCALITY_PAGE_SLUGS.length} Bangalore areas`,
-        href: `${paths.serviceHub(FOOTER_SERVICE)}#areas-central`,
-      },
-    },
-    {
-      id: 'india',
-      label: 'India',
-      heading: 'Digital Marketing Across India',
-      items: live(
-        POPULAR_CITIES.map((city) => ({
-          label: label(getCity(city).name),
-          href: paths.serviceCity(FOOTER_SERVICE, city),
-          live: indexable.serviceCity(FOOTER_SERVICE, city),
-        }))
-      ),
-      total: CITY_PAGE_SLUGS.filter((city) => indexable.serviceCity(FOOTER_SERVICE, city)).length,
-      more: {
-        label: 'All Indian cities',
-        href: `${paths.serviceHub(FOOTER_SERVICE)}#cities`,
-      },
-    },
-    {
-      id: 'dubai',
-      label: 'Dubai',
-      heading: 'Digital Marketing Across Dubai',
-      items: live([
+      id: 'locations',
+      label: 'Locations',
+      heading: 'Digital Marketing Across Bangalore, India & Abroad',
+      total: placeCount,
+      columns: [
         {
-          label: label('Dubai'),
-          href: paths.serviceMarket(FOOTER_SERVICE, 'dubai'),
-          live: indexable.serviceMarket(FOOTER_SERVICE, 'dubai'),
+          title: 'Bangalore',
+          items: live(
+            POPULAR_AREAS.map((area) => ({
+              label: label(localities[area].name),
+              href: paths.serviceLocality(FOOTER_SERVICE, area),
+              live: indexable.serviceLocality(FOOTER_SERVICE, area),
+            }))
+          ),
+          more: {
+            label: `All ${LOCALITY_PAGE_SLUGS.length} Bangalore areas`,
+            href: hubSection('areas-central'),
+          },
         },
-        ...DUBAI_AREA_SLUGS.map((area) => ({
-          label: label(dubaiAreas[area].name),
-          href: paths.serviceDubaiArea(FOOTER_SERVICE, area),
-          live: indexable.serviceDubaiArea(FOOTER_SERVICE, area),
-        })),
-      ]),
-    },
-    {
-      id: 'international',
-      label: 'International',
-      heading: 'Digital Marketing in the GCC, USA & Canada',
-      items: live(
-        OTHER_MARKET_SLUGS.map((market) => ({
-          label: label(markets[market].name),
-          href: paths.serviceMarket(FOOTER_SERVICE, market),
-          live: indexable.serviceMarket(FOOTER_SERVICE, market),
-        }))
-      ),
+        {
+          title: 'India',
+          items: live(
+            POPULAR_CITIES.map((city) => ({
+              label: label(getCity(city).name),
+              href: paths.serviceCity(FOOTER_SERVICE, city),
+              live: indexable.serviceCity(FOOTER_SERVICE, city),
+            }))
+          ),
+          more: { label: `All ${indianCities.length} Indian cities`, href: hubSection('cities') },
+        },
+        {
+          title: 'Dubai',
+          items: live([
+            {
+              label: label('Dubai'),
+              href: paths.serviceMarket(FOOTER_SERVICE, 'dubai'),
+              live: indexable.serviceMarket(FOOTER_SERVICE, 'dubai'),
+            },
+            ...POPULAR_DUBAI_AREAS.map((area) => ({
+              label: label(dubaiAreas[area].name),
+              href: paths.serviceDubaiArea(FOOTER_SERVICE, area),
+              live: indexable.serviceDubaiArea(FOOTER_SERVICE, area),
+            })),
+          ]),
+          more: { label: `All ${DUBAI_AREA_SLUGS.length} Dubai areas`, href: hubSection('dubai') },
+        },
+        {
+          title: 'International',
+          items: live(
+            POPULAR_MARKETS.map((market) => ({
+              label: label(markets[market].name),
+              href: paths.serviceMarket(FOOTER_SERVICE, market),
+              live: indexable.serviceMarket(FOOTER_SERVICE, market),
+            }))
+          ),
+          more: {
+            label: `All ${OTHER_MARKET_SLUGS.length} cities abroad`,
+            href: hubSection('international'),
+          },
+        },
+      ],
     },
   ],
 };

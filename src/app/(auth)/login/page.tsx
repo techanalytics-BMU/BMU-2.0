@@ -3,7 +3,7 @@ import { authLogin } from '@/data/auth/authLogin';
 import { AuthLogin } from '@/sections/auth';
 
 export const metadata: Metadata = {
-  title: 'Log in – BMU Marketing',
+  title: 'Log In',
   robots: { index: false },
 };
 

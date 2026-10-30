@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { ContactFaq, ContactHero } from '@/sections/contact';
 
 export const metadata: Metadata = {
-  title: 'Contact – BMU Marketing',
+  title: 'Contact',
   description:
     'Tell us about your business. We reply within one working day, or drop by the studio in Bengaluru.',
 };

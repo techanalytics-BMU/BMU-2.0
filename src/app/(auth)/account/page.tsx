@@ -5,7 +5,7 @@ import { canOpenDashboard, displayName, getProfile, getUserId, homeFor } from '@
 import { AuthAccount } from '@/sections/auth';
 
 export const metadata: Metadata = {
-  title: 'Your account – BMU Marketing',
+  title: 'Your Account',
   robots: { index: false },
 };
 

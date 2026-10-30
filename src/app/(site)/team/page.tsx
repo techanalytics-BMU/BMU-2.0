@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { TeamFounders, TeamHero, TeamMembers } from '@/sections/team';
 
 export const metadata: Metadata = {
-  title: 'Our Team – BMU Marketing',
+  title: 'Our Team',
   description:
     'Meet the founders and the team behind BMU Marketing – strategists, designers, editors and engineers in Bengaluru.',
 };

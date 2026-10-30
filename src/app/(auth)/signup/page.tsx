@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { AuthSignup } from '@/sections/auth';
 
 export const metadata: Metadata = {
-  title: 'Create an account – BMU Marketing',
+  title: 'Create an Account',
   robots: { index: false },
 };
 

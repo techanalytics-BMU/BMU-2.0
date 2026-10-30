@@ -158,10 +158,25 @@ export type Market = MarketProfile & {
   region: MarketRegion;
 };
 
+// The overview page for one service group – the cards in the navbar's Services menu, at
+// /services/[group] (content in src/data/pseo/groups.ts, from the live bmumarketing.in pages)
+export type ServiceGroupContent = {
+  group: ServiceGroup;
+  tagline: string; // the H1's second line – 'Be seen by the right people'
+  intro: string;
+  price: string; // where engagements start – 'From ₹35,000/month'
+  // What the group offers, as BMU sells it; `service` links the card to that service's own page
+  offers: { title: string; text: string; price: string; service?: ServiceSlug }[];
+  stats: { value: string; label: string; text: string }[]; // 4, "Results that speak"
+  phases: { title: string; points: string[] }[]; // 3, "From kickoff to results"
+  cta: { heading: string; text: string };
+};
+
 // ---------- One page, ready for the template ----------
 
 export type PageKind =
   | 'index'
+  | 'service-group'
   | 'service-hub'
   | 'industry-hub'
   | 'service-industry'
@@ -174,8 +189,9 @@ export type PageKind =
 
 export type PageLink = { label: string; href: string; note?: string };
 
-// One card / step / tick in a section; a tag is a small label on it ("#1", "Where SEO helps")
-export type SectionItem = { title: string; text?: string; href?: string; tag?: string };
+// One card / step / tick in a section; a tag is a small label on it ("#1", "Where SEO helps");
+// meta is a short line at the foot of a card ("From ₹25,000")
+export type SectionItem = { title: string; text?: string; href?: string; tag?: string; meta?: string };
 
 // The blocks a page is built from, in order. The one template knows how to draw each kind.
 export type PageSection =
@@ -197,6 +213,24 @@ export type PageSection =
       intro?: string;
       links: PageLink[];
       compact?: boolean; // plain text columns instead of cards – for long lists
+    }
+  // Big figures with a label – "Weekly · Optimisation"
+  | {
+      kind: 'stats';
+      id: string;
+      eyebrow?: string;
+      heading: string;
+      intro?: string;
+      items: { value: string; label: string; text?: string }[];
+    }
+  // A roadmap: numbered phases, each a few points
+  | {
+      kind: 'phases';
+      id: string;
+      eyebrow?: string;
+      heading: string;
+      intro?: string;
+      items: { title: string; points: string[] }[];
     };
 
 export type PseoPage = {
@@ -204,15 +238,13 @@ export type PseoPage = {
   path: string; // '/seo/bengaluru/koramangala'
   title: string; // <title>
   description: string; // meta description, under 155 characters
-  eyebrow: string; // pill badge above the H1
   h1: string;
   h1Accent?: string; // second line of the H1, in the lime accent
   intro: string;
   facts: { label: string; value: string }[]; // "at a glance" strip under the hero
   sections: PageSection[];
   faqs: Faq[];
-  related: { heading: string; links: PageLink[] }[]; // internal links at the bottom
-  breadcrumbs: PageLink[];
+  breadcrumbs: PageLink[]; // structured data only – not shown on the page
   cta: { heading: string; text: string };
   indexable: boolean; // false → noindex and left out of the sitemap
   schema: Record<string, unknown>[]; // JSON-LD

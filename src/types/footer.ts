@@ -45,22 +45,29 @@ export type FooterContent = {
   };
 };
 
-// Service areas: the link groups in the footer (Services / Industries / Bangalore / India /
-// Dubai / International), one tab each
+// Service areas: the link groups in the footer (Services / Industries / Locations), one block each
 export type ServiceAreasItem = {
   label: string;
   href?: string; // plain text until a link is added
 };
 
+// A titled column inside a group – Locations has one each for Bangalore / India / Dubai / abroad
+export type ServiceAreasColumn = {
+  title: string;
+  items: ServiceAreasItem[];
+  more?: ServiceAreasItem; // link to the full list, under the column
+};
+
 export type ServiceAreasGroup = {
   id: string;
-  label: string; // the tab
+  label: string; // small green label above the heading
   heading: string;
-  items: ServiceAreasItem[];
+  items?: ServiceAreasItem[]; // one list, flowing across four columns…
+  columns?: ServiceAreasColumn[]; // …or titled columns, a list each
   total?: number; // shown in the count badge when the list is a selection of a longer one
   more?: ServiceAreasItem; // link to the full list, after the items
 };
 
 export type ServiceAreasContent = {
-  groups: ServiceAreasGroup[]; // tabs, in this order
+  groups: ServiceAreasGroup[]; // blocks, top to bottom
 };

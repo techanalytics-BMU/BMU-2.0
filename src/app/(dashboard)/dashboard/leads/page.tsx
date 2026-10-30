@@ -5,7 +5,7 @@ import { parseFilters } from '@/lib/leads/filters';
 import { getLeadsPage, getLeadsPerDay, getLeadStats } from '@/lib/leads/queries';
 import { DashboardLeads } from '@/sections/dashboard';
 
-export const metadata: Metadata = { title: 'Leads – BMU' };
+export const metadata: Metadata = { title: 'Leads' };
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
