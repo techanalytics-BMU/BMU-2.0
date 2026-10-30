@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { footer } from '@/data/footer';
+import { serviceAreas } from '@/data/serviceAreas';
 import type { FooterLink } from '@/types/footer';
 import styles from './Footer.module.css';
 import FooterServiceAreas from './FooterServiceAreas';
@@ -88,7 +89,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <FooterServiceAreas />
+        <FooterServiceAreas groups={serviceAreas.groups} />
       </div>
 
       <FooterSignature wordmark={wordmark} backToTop={backToTop} />

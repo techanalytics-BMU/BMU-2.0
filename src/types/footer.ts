@@ -44,7 +44,8 @@ export type FooterContent = {
   };
 };
 
-// Service areas: the link groups in the footer (Services / Industries / Bangalore Areas / Cities)
+// Service areas: the link groups in the footer (Services / Industries / Bangalore / India /
+// Dubai / International), one tab each
 export type ServiceAreasItem = {
   label: string;
   href?: string; // plain text until a link is added
@@ -52,11 +53,13 @@ export type ServiceAreasItem = {
 
 export type ServiceAreasGroup = {
   id: string;
-  label: string; // small label above the heading
+  label: string; // the tab
   heading: string;
   items: ServiceAreasItem[];
+  total?: number; // shown in the count badge when the list is a selection of a longer one
+  more?: ServiceAreasItem; // link to the full list, after the items
 };
 
 export type ServiceAreasContent = {
-  groups: ServiceAreasGroup[]; // shown one after another, in this order
+  groups: ServiceAreasGroup[]; // tabs, in this order
 };

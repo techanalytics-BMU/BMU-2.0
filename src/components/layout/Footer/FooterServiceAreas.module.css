@@ -1,31 +1,66 @@
 .areas {
   margin-top: clamp(var(--space-7), 8vw, 6.5rem);
-}
-
-/* ---------- One group: label → heading + count → list, separated by a hairline ---------- */
-.group {
   padding-top: var(--space-5);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.group + .group {
-  margin-top: var(--space-6);
+/* ---------- Tab row: small uppercase labels, the active one in green ---------- */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
 }
 
-/* Small green label above the heading */
-.label {
-  color: var(--color-accent);
+.tab {
+  position: relative;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: #8b9097;
+  font-family: inherit;
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.tab:hover {
+  color: var(--color-text);
+}
+
+.tab[aria-selected='true'] {
+  color: var(--color-accent);
+}
+
+/* Hairline under the active tab */
+.tab[aria-selected='true']::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 1px;
+  background: var(--color-accent);
+}
+
+.tab:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+/* ---------- One group: heading + count → list ---------- */
+.group[hidden] {
+  display: none;
 }
 
 .headingRow {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 8px;
+  margin-top: var(--space-4);
 }
 
 /* White fading softly to silver */
@@ -41,7 +76,7 @@
   line-height: var(--heading-line-height);
 }
 
-/* How many places are listed */
+/* How many places are covered */
 .count {
   padding: 2px 9px;
   border: 1px solid rgba(140, 198, 63, 0.35);
@@ -77,6 +112,26 @@ a.item:hover {
   color: var(--color-accent);
 }
 
+/* "Show all" (phones) and "All 236 Bangalore areas" */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  margin-top: var(--space-4);
+}
+
+.viewAll {
+  color: var(--color-accent);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.viewAll:hover {
+  color: var(--color-text);
+}
+
 /* "Show all" – phones only */
 .more {
   display: none;
@@ -91,6 +146,10 @@ a.item:hover {
 
 /* ---------- Phone: 2 columns and the first 8 items of each group until "Show all" is tapped ---------- */
 @media (max-width: 720px) {
+  .tabs {
+    gap: 8px 20px;
+  }
+
   .list {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem var(--space-4);
@@ -104,7 +163,6 @@ a.item:hover {
     display: inline-flex;
     align-items: center;
     height: 38px;
-    margin-top: var(--space-4);
     padding: 0 1.1rem;
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: var(--radius-pill);

@@ -1,7 +1,8 @@
 import type { FooterContent } from '@/types/footer';
 
 // Site footer. Items without `href` show as plain text – add the link once the page exists.
-// The link groups (Services / Industries / Bangalore Areas / Cities) are in src/data/serviceAreas.ts.
+// The link tabs (Services / Industries / Bangalore / India / Dubai / International) are built in
+// src/data/serviceAreas.ts.
 export const footer: FooterContent = {
   tagline:
     'AI-first growth partner for businesses and real estate. Strategy, creative, media and software from one team.',

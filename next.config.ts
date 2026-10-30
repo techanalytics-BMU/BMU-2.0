@@ -12,6 +12,21 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: '*.supabase.co', pathname: '/storage/v1/object/public/**' },
     ],
   },
+  // Locality aliases from the pSEO sheet (LOCALITY_ALIASES): one place, one set of pages
+  async redirects() {
+    return [
+      {
+        source: '/:service/bengaluru/krishnarajapuram',
+        destination: '/:service/bengaluru/kr-puram',
+        permanent: true,
+      },
+      {
+        source: '/industries/:industry/bengaluru/krishnarajapuram',
+        destination: '/industries/:industry/bengaluru/kr-puram',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
