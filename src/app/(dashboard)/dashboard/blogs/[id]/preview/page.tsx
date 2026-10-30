@@ -8,7 +8,7 @@ import { BlogArticle } from '@/sections/blog';
 import type { BlogPost } from '@/types/blog';
 import styles from '@/sections/dashboard/DashboardBlogs/DashboardBlogs.module.css';
 
-export const metadata: Metadata = { title: 'Preview – BMU', robots: { index: false } };
+export const metadata: Metadata = { title: 'Preview', robots: { index: false } };
 
 type Props = { params: Promise<{ id: string }> };
 

@@ -27,7 +27,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alt: post.cover_image_url ? (post.cover_image_alt ?? post.title) : post.title,
   };
   return {
-    title,
+    // A meta title written in the editor is used as it is; otherwise the post's title, and the
+    // root layout adds " | BMU Marketing"
+    title: post.meta_title ? { absolute: post.meta_title } : post.title,
     description,
     keywords: post.main_keyword ? [post.main_keyword, ...post.tags] : post.tags,
     alternates: { canonical: `/blog/${post.slug}` },

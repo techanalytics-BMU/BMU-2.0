@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/server';
 import { DashboardBlogEditor } from '@/sections/dashboard';
 import type { BlogPost } from '@/types/blog';
 
-export const metadata: Metadata = { title: 'Edit post – BMU' };
+export const metadata: Metadata = { title: 'Edit Post' };
 
 type Props = { params: Promise<{ id: string }> };
 

@@ -3,7 +3,7 @@ import { canWriteBlog, getProfile } from '@/lib/auth/session';
 import { createClient } from '@/lib/supabase/server';
 import { DashboardBlogs } from '@/sections/dashboard';
 
-export const metadata: Metadata = { title: 'Blogs – BMU' };
+export const metadata: Metadata = { title: 'Blogs' };
 
 // The blog in the dashboard (/dashboard/blogs): SEO writers write here; admins and managers view.
 // Signed-in, so the database shows drafts and scheduled posts too.

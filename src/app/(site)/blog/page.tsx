@@ -9,7 +9,7 @@ const description =
 const image = { url: '/blog/share-image?title=Blog', width: 1200, height: 630, alt: 'BMU Marketing Blog' };
 
 export const metadata: Metadata = {
-  title,
+  title: 'Blog', // the root layout adds " | BMU Marketing"
   description,
   alternates: {
     canonical: '/blog',
