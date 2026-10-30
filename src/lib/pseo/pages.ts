@@ -900,7 +900,8 @@ export const serviceBusiness = (
       eyebrow: 'How they search',
       heading: 'Searches we build around',
       intro: `${service.title} for ${business.name} starts with what customers actually type – searches like these:`,
-      items: business.searches.map((search) => ({ title: `“${search}”` })),
+      items: business.searches.map((search) => ({ title: search })),
+      display: 'search',
     },
     deliverables(serviceSlug, `${service.title} for ${business.name}: what you get`),
     process(serviceSlug),
@@ -1134,7 +1135,7 @@ export const serviceLocality = (serviceSlug: ServiceSlug, areaSlug: AreaSlug): P
     eyebrow: `${area.zone} Bengaluru`,
     h1: upperFirst(service.agencyNoun),
     h1Accent: `in ${area.name}.`,
-    intro: `${service.localAngle} ${area.searchHabits}`,
+    intro: `${firstSentence(service.localAngle)} ${firstSentence(area.searchHabits)}`,
     facts: [
       { label: 'Distance', value: visit.fact },
       { label: 'Local competition', value: competitionLabel[area.competition] },
@@ -1853,7 +1854,7 @@ export const serviceDubaiArea = (
     eyebrow: `${area.district}, Dubai`,
     h1: upperFirst(service.agencyNoun),
     h1Accent: `in ${area.name}.`,
-    intro: `${service.localAngle} ${area.searchHabits}`,
+    intro: `${firstSentence(service.localAngle)} ${firstSentence(area.searchHabits)}`,
     facts: [
       { label: 'District', value: area.district },
       { label: 'Local competition', value: competitionLabel[area.competition] },

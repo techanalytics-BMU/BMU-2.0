@@ -187,6 +187,7 @@ export type PageSection =
       heading: string;
       intro?: string;
       items: SectionItem[];
+      display?: 'search'; // checks only: draw the items as search boxes (searches customers type)
     }
   | {
       kind: 'links';
