@@ -84,7 +84,7 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  animation: marquee 32s linear infinite;
+  animation: marquee 43s linear infinite; /* ~5.4s per name – lengthen it when adding names */
 }
 
 .marquee:hover .track {
@@ -110,9 +110,6 @@
 }
 
 .wordmark {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
   color: #e6e7e9;
   font-size: 0.9375rem;
   font-weight: 700;
@@ -146,13 +143,9 @@
   }
 }
 
+/* The client strip keeps rolling even with reduced motion (to be revisited) */
 @media (prefers-reduced-motion: reduce) {
-  .rise,
-  .track {
+  .rise {
     animation: none;
-  }
-
-  .marquee {
-    overflow-x: auto;
   }
 }

@@ -3,23 +3,18 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
+import { submitLead } from '@/lib/leads/actions';
+import { addVisitDetails, markLeadSent } from '@/lib/leads/browser';
+import { HONEYPOT_FIELD } from '@/lib/leads/fields';
+import { EMAIL, isPhone } from '@/lib/validation';
 import type { ContactFormField, ContactHeroContent } from '@/types/contact';
+import type { SubmitLeadResult } from '@/types/leads';
 import styles from './ContactHeroForm.module.css';
 
 type Props = {
   form: ContactHeroContent['form'];
   nextSteps: ContactHeroContent['nextSteps']; // shown again after sending
   children: React.ReactNode; // the heading, at the top of the card
-};
-
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-// A 10-digit Indian number, whether or not they typed +91 / 0 in front of it
-const isPhone = (value: string) => {
-  let digits = value.replace(/\D/g, '');
-  if (digits.length === 12 && digits.startsWith('91')) digits = digits.slice(2);
-  if (digits.length === 11 && digits.startsWith('0')) digits = digits.slice(1);
-  return /^\d{10}$/.test(digits);
 };
 
 // What's wrong with a field's answer ('' when it's fine)
@@ -76,12 +71,13 @@ function Field({ field, error }: { field: ContactFormField; error?: string }) {
 
 // The contact card: a glass panel (the beam of light behind it shows through – see ContactHero)
 // with the heading and the form. Checked in the browser before sending; the form then gives way
-// to a thank-you with what happens next.
-// Saving the request (Supabase) will be added later in handleSubmit.
+// to a thank-you with what happens next. Saved as a lead in Supabase (src/lib/leads/actions.ts),
+// and the lead popup won't ask them again.
 export default function ContactHeroForm({ form, nextSteps, children }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [failed, setFailed] = useState(false);
   const [firstName, setFirstName] = useState('');
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -100,8 +96,19 @@ export default function ContactHeroForm({ form, nextSteps, children }: Props) {
     }
 
     setStatus('sending');
-    // TODO (Supabase): save Object.fromEntries(data) here
-    await new Promise((resolve) => setTimeout(resolve, 700));
+    setFailed(false);
+    addVisitDetails(data);
+    const result: SubmitLeadResult = await submitLead('contact_page', data).catch(() => ({
+      ok: false,
+    }));
+    if (!result.ok) {
+      if (result.fieldErrors) setErrors(result.fieldErrors);
+      else setFailed(true);
+      setStatus('idle');
+      return;
+    }
+
+    markLeadSent();
     setFirstName(
       String(data.get('name') ?? '')
         .trim()
@@ -159,10 +166,33 @@ export default function ContactHeroForm({ form, nextSteps, children }: Props) {
             ))}
           </div>
 
+          {/* Hidden trap for bots (see src/lib/leads/fields.ts) */}
+          <input
+            type="text"
+            name={HONEYPOT_FIELD}
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            className={styles.trap}
+          />
+
           <button type="submit" className={styles.submit} disabled={status === 'sending'}>
             {status === 'sending' ? form.sending : form.submit}
           </button>
-          <p className={styles.privacy}>{form.privacy}</p>
+          {failed && (
+            <p className={styles.failed} role="alert">
+              {form.failed.text}{' '}
+              <a href={form.failed.link.href} target="_blank" rel="noopener noreferrer">
+                {form.failed.link.label}
+              </a>
+              .
+            </p>
+          )}
+          <p className={styles.privacy}>
+            {form.privacy}
+            <br />
+            {form.consent.text} <Link href={form.consent.link.href}>{form.consent.link.label}</Link>.
+          </p>
         </form>
       )}
     </div>

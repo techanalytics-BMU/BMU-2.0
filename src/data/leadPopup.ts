@@ -1,43 +1,54 @@
 import type { LeadPopupContent } from '@/types/leadPopup';
 
-// The lead popup: appears 5s after landing on any page except /login, and again 30s after each close,
-// until the form is sent. Saving the details (Supabase) will be added later.
+// The lead popup shown over the site (src/components/layout/LeadPopup). Times are in milliseconds.
 export const leadPopup: LeadPopupContent = {
-  headingStart: "Let's build your next",
+  timing: { firstDelay: 5000, repeatDelay: 30000, maxCloses: 2 },
+  hiddenOn: ['/login', '/contact'], // /contact already has the full form
+  closeLabel: 'Close',
+  headingStart: 'Let’s build your next',
   headingHighlight: 'growth move.',
   description: 'Share your goals and discover the strategies that move your business forward.',
-  chip: { label: 'Curious what we do?', href: '/services' },
+  explore: { label: 'Curious what we do?', href: '/services' },
   fields: [
     {
       name: 'name',
       label: 'Name',
-      placeholder: 'Enter your name',
       type: 'text',
-      autoComplete: 'name',
-      error: 'Please enter your name',
+      placeholder: 'Enter your name',
+      required: true,
       half: true,
+      autoComplete: 'name',
     },
     {
       name: 'phone',
       label: 'Phone',
-      placeholder: 'Enter your phone',
       type: 'tel',
-      autoComplete: 'tel',
-      error: 'Please enter a valid phone number',
+      placeholder: 'Enter your phone',
+      required: true,
+      error: 'Please enter your phone number',
       half: true,
+      autoComplete: 'tel',
     },
     {
       name: 'email',
       label: 'Email',
-      placeholder: 'Enter your email',
       type: 'email',
+      placeholder: 'Enter your email',
+      required: true,
       autoComplete: 'email',
-      error: 'Please enter a valid email',
     },
   ],
   submit: 'Submit',
   sending: 'Sending…',
+  consent: {
+    text: 'By submitting, you agree to our',
+    link: { label: 'Privacy Policy', href: '/privacy-policy' },
+  },
+  failed: {
+    text: 'Something went wrong. Please try again, or',
+    link: { label: 'WhatsApp us', href: 'https://wa.me/918105491414' },
+  },
   successTitle: 'Thanks, {name}!',
-  successText: 'We’ll call you within one working day to talk about your next growth move.',
-  close: 'Close',
+  successText: 'We’ll call you within one working day.',
+  successCta: { label: 'Want a faster reply? WhatsApp us', href: 'https://wa.me/918105491414' },
 };

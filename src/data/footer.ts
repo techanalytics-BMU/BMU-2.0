@@ -6,11 +6,20 @@ import type { FooterContent } from '@/types/footer';
 export const footer: FooterContent = {
   tagline:
     'AI-first growth partner for businesses and real estate. Strategy, creative, media and software from one team.',
-  social: [
-    { platform: 'instagram', label: 'Instagram' },
-    { platform: 'linkedin', label: 'LinkedIn' },
-    { platform: 'youtube', label: 'YouTube' },
-    { platform: 'whatsapp', label: 'WhatsApp', href: 'https://wa.me/918105491414' },
+  contact: [
+    {
+      icon: 'location',
+      label: 'Address',
+      value:
+        '376, Phase 9, Royal Park Residency Layout, JP Nagar 9th Phase, J. P. Nagar, Bengaluru, Karnataka 560108',
+    },
+    {
+      icon: 'mail',
+      label: 'Email',
+      value: 'support@bmumarketing.in',
+      href: 'mailto:support@bmumarketing.in',
+    },
+    { icon: 'phone', label: 'Phone', value: '+91 81054 91414', href: 'tel:+918105491414' },
   ],
   columns: [
     {
@@ -25,7 +34,11 @@ export const footer: FooterContent = {
     },
     {
       title: 'Resources',
-      links: [{ label: 'Terms of use' }, { label: 'Privacy policy' }, { label: 'Refund policy' }],
+      links: [
+        { label: 'Terms of use' },
+        { label: 'Privacy policy', href: '/privacy-policy' },
+        { label: 'Refund policy' },
+      ],
     },
   ],
   join: {
@@ -45,6 +58,6 @@ export const footer: FooterContent = {
   bottom: {
     copyright: '© 2026 BMU Marketing',
     location: 'Bengaluru, India',
-    email: 'hello@bmumarketing.in',
+    email: 'support@bmumarketing.in',
   },
 };

@@ -194,7 +194,42 @@ textarea.input {
   margin-top: 12px;
   color: var(--color-text-dim);
   font-size: var(--font-size-xs);
+  line-height: 1.7;
   text-align: center;
+}
+
+.privacy a,
+.failed a {
+  color: var(--color-text-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+
+.privacy a:hover,
+.failed a:hover {
+  color: var(--color-text);
+}
+
+/* Couldn't be saved – try again or WhatsApp */
+.failed {
+  margin-top: 12px;
+  color: #f07e82;
+  font-size: var(--font-size-sm);
+  text-align: center;
+}
+
+.failed a {
+  color: #f6b3b5;
+}
+
+/* The bots' trap field: off screen, never seen or reached with Tab */
+.trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
 }
 
 /* ---------- Thank you (takes the form's place, under the heading) ---------- */

@@ -9,10 +9,12 @@ export type FooterColumn = {
   links: FooterLink[];
 };
 
-export type FooterSocial = {
-  platform: 'instagram' | 'linkedin' | 'youtube' | 'whatsapp'; // icon in public/icons/social
+// One contact line under the tagline: address, email or phone
+export type FooterContactItem = {
+  icon: 'location' | 'mail' | 'phone'; // icon in public/icons/common
   label: string; // for screen readers
-  href?: string;
+  value: string;
+  href?: string; // mailto: / tel: – plain text without one
 };
 
 export type FooterNewsletter = {
@@ -25,7 +27,7 @@ export type FooterNewsletter = {
 
 export type FooterContent = {
   tagline: string;
-  social: FooterSocial[]; // round buttons under the tagline
+  contact: FooterContactItem[]; // address, email and phone under the tagline
   columns: FooterColumn[];
   // Newsletter card
   join: {

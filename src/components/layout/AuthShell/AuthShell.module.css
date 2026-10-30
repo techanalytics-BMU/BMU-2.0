@@ -1,0 +1,119 @@
+.shell {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 50% 35% at 50% 0%, rgba(140, 198, 63, 0.06), transparent 70%),
+    var(--color-bg);
+}
+
+/* Faint dot grid, fading out towards the edges */
+.grid {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1.2px);
+  background-size: 28px 28px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 55% at 50% 45%, #000000 20%, transparent 80%);
+  mask-image: radial-gradient(ellipse 60% 55% at 50% 45%, #000000 20%, transparent 80%);
+  pointer-events: none;
+}
+
+/* The top of a huge green planet just showing at the bottom, its rim lit up */
+.horizon {
+  position: absolute;
+  top: calc(100% - clamp(70px, 14svh, 140px));
+  left: 50%;
+  z-index: -1;
+  width: max(160vw, 1400px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 0%,
+    rgba(140, 198, 63, 0.22),
+    rgba(140, 198, 63, 0.06) 12%,
+    #050705 30%
+  );
+  box-shadow:
+    0 -1px 0 rgba(206, 242, 150, 0.55),
+    0 -20px 80px rgba(140, 198, 63, 0.25);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* ---------- Logo and "Back to website" ---------- */
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 20px var(--space-4) 0;
+}
+
+.logo img {
+  width: 96px;
+  height: auto;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.back:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: var(--color-text);
+}
+
+.logo:focus-visible,
+.back:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-pill);
+}
+
+.back svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+/* ---------- The card in the middle ---------- */
+.main {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  padding: clamp(28px, 6svh, 64px) var(--space-3) clamp(96px, 18svh, 180px);
+}
+
+@media (max-width: 520px) {
+  .back {
+    padding: 8px;
+    font-size: 0; /* icon only */
+  }
+
+  .back svg {
+    width: 18px;
+    height: 18px;
+  }
+}

@@ -1,0 +1,160 @@
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 10px 4px 4px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--color-text);
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.trigger:hover,
+.trigger[aria-expanded='true'] {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.trigger:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Lime initial, like the article author avatar */
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #b4e36b, #5f8f2a);
+  color: var(--color-dark);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.who {
+  display: grid;
+  text-align: left;
+  line-height: 1.2;
+}
+
+.name {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.role {
+  color: var(--color-text-dim);
+  font-size: 0.6875rem;
+}
+
+.chevron {
+  color: var(--color-text-dim);
+}
+
+.email {
+  overflow: hidden;
+  padding: 8px 10px 4px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.switch {
+  margin-left: auto;
+  padding: 1px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-pill);
+  color: var(--color-text-dim);
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+.switch[data-on='true'] {
+  border-color: rgba(140, 198, 63, 0.45);
+  background: rgba(140, 198, 63, 0.12);
+  color: var(--color-accent);
+}
+
+/* ---------- Change password dialog ---------- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.6);
+  /* -webkit- line first: if it comes after, the CSS build drops both and there's no blur */
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.dialog {
+  position: relative;
+  width: min(400px, 100%);
+  padding: 28px 24px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 22px;
+  background: linear-gradient(160deg, #1a1b1d, #0d0e0f);
+  box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.95);
+}
+
+.dialog:focus {
+  outline: none;
+}
+
+.dialogTitle {
+  padding-bottom: 0.08em;
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
+}
+
+.dialogClose {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.dialogClose:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.dialogDone {
+  margin-top: var(--space-4);
+}
+
+@media (max-width: 600px) {
+  .who,
+  .chevron {
+    display: none;
+  }
+
+  .trigger {
+    padding: 4px;
+  }
+}

@@ -23,7 +23,7 @@ function FooterItem({ item, className }: { item: FooterLink; className?: string 
 // free-trial section: brand + social · Site map · Resources · newsletter card → tabs block →
 // the wordmark dissolving into a green horizon → bottom line.
 export default function Footer() {
-  const { tagline, social, columns, join, wordmark, backToTop, bottom } = footer;
+  const { tagline, contact, columns, join, wordmark, backToTop, bottom } = footer;
 
   return (
     <footer className={styles.footer}>
@@ -40,32 +40,25 @@ export default function Footer() {
             </Link>
             <p className={styles.tagline}>{tagline}</p>
 
-            <ul className={styles.social}>
-              {social.map((item) => {
-                const icon = (
-                  <Image src={`/icons/social/${item.platform}.svg`} alt="" width={16} height={16} />
-                );
-                return (
-                  <li key={item.platform}>
+            <address className={styles.contact}>
+              <ul className={styles.contactList}>
+                {contact.map((item) => (
+                  <li key={item.icon} className={styles.contactItem}>
+                    <span className={styles.contactIcon}>
+                      <Image src={`/icons/common/${item.icon}.svg`} alt="" width={14} height={14} />
+                    </span>
+                    <span className={styles.srOnly}>{item.label}: </span>
                     {item.href ? (
-                      <a
-                        href={item.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={item.label}
-                        className={styles.socialButton}
-                      >
-                        {icon}
+                      <a href={item.href} className={`${styles.link} ${styles.contactText}`}>
+                        {item.value}
                       </a>
                     ) : (
-                      <span role="img" aria-label={item.label} className={styles.socialButton}>
-                        {icon}
-                      </span>
+                      <span className={styles.contactText}>{item.value}</span>
                     )}
                   </li>
-                );
-              })}
-            </ul>
+                ))}
+              </ul>
+            </address>
           </div>
 
           {columns.map((column) => (

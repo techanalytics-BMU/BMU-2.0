@@ -41,6 +41,8 @@ export type ContactHeroContent = {
     submit: string;
     sending: string;
     privacy: string; // small line under the button
+    consent: { text: string; link: NavLink }; // "By submitting, you agree to our Privacy Policy."
+    failed: { text: string; link: NavLink }; // when saving fails – with a way to reach us anyway
     successTitle: string; // {name} is replaced with the first name they gave
     successText: string;
     successCta: NavLink; // e.g. a faster reply on WhatsApp

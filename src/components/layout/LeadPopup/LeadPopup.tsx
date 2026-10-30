@@ -3,198 +3,153 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { leadPopup } from '@/data/leadPopup';
-import type { LeadPopupField } from '@/types/leadPopup';
+import { LEAD_SENT_KEY as SENT_KEY } from '@/lib/leads/browser';
 import styles from './LeadPopup.module.css';
+import LeadPopupForm from './LeadPopupForm';
 
-const FIRST_DELAY = 5000; // ms after landing
-const AGAIN_DELAY = 30000; // ms after each close
-const HIDDEN_ON = ['/login'];
-const DONE_KEY = 'bmu-lead-popup-sent'; // set once the form is sent – then it never shows again
+const CLOSES_KEY = 'bmu-lead-popup-closes'; // sessionStorage: times closed this visit
+// SENT_KEY (localStorage): they sent the popup or the contact page form – never show again
 
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE = /^\+?[\d\s-]{10,15}$/;
-
-const isValid = (field: LeadPopupField, value: string) => {
-  if (!value) return false;
-  if (field.type === 'email') return EMAIL.test(value);
-  if (field.type === 'tel') return PHONE.test(value);
-  return true;
-};
-
-const sentBefore = () => {
+// Browser storage can be blocked (private windows, settings) – the popup still works without it
+function read(storage: 'local' | 'session', key: string) {
   try {
-    return localStorage.getItem(DONE_KEY) === '1';
+    return (storage === 'local' ? localStorage : sessionStorage).getItem(key);
   } catch {
-    return false;
+    return null;
   }
-};
+}
 
-// Lead popup, on every page but /login: 5s after landing, and again 30s after each close, until the
-// form is sent. The page behind is dimmed and blurred but keeps scrolling; a click or tap outside
-// the card, the ✕ or Esc closes it.
+function write(storage: 'local' | 'session', key: string, value: string) {
+  try {
+    (storage === 'local' ? localStorage : sessionStorage).setItem(key, value);
+  } catch {
+    // not saved – fine
+  }
+}
+
+const closesThisVisit = () => Number(read('session', CLOSES_KEY) ?? 0);
+
+// "Let's build your next growth move." – a lead form that floats over every page (added in
+// src/app/(site)/layout.tsx). Shows 5s after arriving; after a close, once more 30s later; never again
+// once submitted (timings in src/data/leadPopup.ts). Never on /login or /contact – if it's due
+// there, it waits until the visitor leaves. The page behind is dimmed and blurred but still
+// scrolls; a click outside the card, the ✕ or Escape closes it.
 export default function LeadPopup() {
+  const { timing, hiddenOn, closeLabel, headingStart, headingHighlight, description, explore } =
+    leadPopup;
   const pathname = usePathname();
-  const hidden = HIDDEN_ON.includes(pathname);
-  const [open, setOpen] = useState(false);
-  const [timerKey, setTimerKey] = useState(0); // bumped on each close, to start the next wait
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
-  const [firstName, setFirstName] = useState('');
   const cardRef = useRef<HTMLDivElement>(null);
-  const returnFocus = useRef<HTMLElement | null>(null);
+  const timer = useRef<number | undefined>(undefined);
+  const [open, setOpen] = useState(false);
 
-  // Wait, then open (5s the first time, 30s after a close); never on /login or once sent
+  const hidden = hiddenOn.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+  const visible = open && !hidden;
+
+  const schedule = useCallback((delay: number) => {
+    window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => setOpen(true), delay);
+  }, []);
+
+  // First showing, unless they already submitted or closed it enough times this visit
   useEffect(() => {
-    if (hidden || open || status === 'sent' || sentBefore()) return;
-    const timer = window.setTimeout(() => setOpen(true), timerKey === 0 ? FIRST_DELAY : AGAIN_DELAY);
-    return () => window.clearTimeout(timer);
-  }, [hidden, open, status, timerKey]);
+    if (read('local', SENT_KEY) || closesThisVisit() >= timing.maxCloses) return;
+    schedule(timing.firstDelay);
+    return () => window.clearTimeout(timer.current);
+  }, [schedule, timing]);
 
-  // Going to /login closes it
-  useEffect(() => {
-    if (hidden) setOpen(false);
-  }, [hidden]);
-
-  const close = () => {
+  const close = useCallback(() => {
     setOpen(false);
-    setErrors({});
-    if (status !== 'sent') setTimerKey((k) => k + 1);
-    returnFocus.current?.focus?.();
-  };
+    if (read('local', SENT_KEY)) return;
+    const closes = closesThisVisit() + 1;
+    write('session', CLOSES_KEY, String(closes));
+    if (closes < timing.maxCloses) schedule(timing.repeatDelay);
+  }, [schedule, timing]);
 
-  // While open: focus into the card, Esc closes
+  // While open: focus moves into the card (and back afterwards), Escape closes,
+  // and Tab stays inside the card
   useEffect(() => {
-    if (!open) return;
-    returnFocus.current = document.activeElement as HTMLElement | null;
-    cardRef.current?.focus();
+    if (!visible) return;
+    const card = cardRef.current;
+    const previous = document.activeElement as HTMLElement | null;
+    card?.focus({ preventScroll: true });
+
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') close();
+      if (event.key === 'Escape') {
+        close();
+        return;
+      }
+      if (event.key !== 'Tab' || !card) return;
+      const focusable = card.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled])'
+      );
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && (document.activeElement === first || document.activeElement === card)) {
+        event.preventDefault();
+        last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
     };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-    // close only reads state that is current when Esc is pressed
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const found: Record<string, string> = {};
-    for (const field of leadPopup.fields) {
-      if (!isValid(field, String(data.get(field.name) ?? '').trim())) found[field.name] = field.error;
-    }
-    setErrors(found);
-    if (Object.keys(found).length) return;
-    setStatus('sending');
-    // TODO (Supabase): save Object.fromEntries(data) here
-    await new Promise((resolve) => setTimeout(resolve, 700));
-    setFirstName(String(data.get('name') ?? '').trim().split(/\s+/)[0]);
-    setStatus('sent');
-    try {
-      localStorage.setItem(DONE_KEY, '1');
-    } catch {
-      // private mode: it just won't be remembered next visit
-    }
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      previous?.focus({ preventScroll: true });
+    };
+  }, [visible, close]);
+
+  if (!visible) return null;
+
+  // Any click that doesn't land on the card closes it (scrolling never fires a click)
+  const onOverlayClick = (event: React.MouseEvent) => {
+    if (!cardRef.current?.contains(event.target as Node)) close();
   };
-
-  // Typing in a field clears its error
-  const clearError = (event: React.FormEvent<HTMLFormElement>) => {
-    const { name } = event.target as HTMLInputElement;
-    if (!errors[name]) return;
-    setErrors((current) => {
-      const next = { ...current };
-      delete next[name];
-      return next;
-    });
-  };
-
-  if (hidden || !open) return null;
-  const { headingStart, headingHighlight, description, chip, fields, submit, sending } = leadPopup;
 
   return (
-    // The dimmed, blurred backdrop: a click or tap on it closes; the wheel / a swipe still scroll the page
-    <div className={styles.overlay} onClick={(event) => event.target === event.currentTarget && close()}>
-      <div
-        ref={cardRef}
-        className={styles.card}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="lead-popup-title"
-        tabIndex={-1}
-      >
-        <button type="button" className={styles.close} aria-label={leadPopup.close} onClick={close}>
-          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
-            <path d="M3.5 3.5l9 9m0-9l-9 9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-          </svg>
-        </button>
+    <div className={styles.overlay} onClick={onOverlayClick}>
+      <div className={styles.frame}>
+        <div
+          ref={cardRef}
+          className={styles.card}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="lead-popup-heading"
+          tabIndex={-1}
+          data-lenis-prevent // a card taller than the screen scrolls on its own
+        >
+          <button type="button" className={styles.close} aria-label={closeLabel} onClick={close}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
 
-        <Image
-          src="/images/common/bmu-logo-light.webp"
-          alt="BMU Marketing"
-          width={556}
-          height={268}
-          className={styles.logo}
-        />
+          <Image
+            src="/images/common/bmu-logo-light.webp"
+            alt="BMU Marketing"
+            width={112}
+            height={54}
+            className={styles.logo}
+          />
 
-        {status === 'sent' ? (
-          <div className={styles.success} role="status">
-            <h2 id="lead-popup-title" className={styles.heading}>
-              {leadPopup.successTitle.replace('{name}', firstName)}
-            </h2>
-            <p className={styles.description}>{leadPopup.successText}</p>
-          </div>
-        ) : (
-          <>
-            <h2 id="lead-popup-title" className={styles.heading}>
-              {headingStart} <span className={styles.highlight}>{headingHighlight}</span>
-            </h2>
-            <p className={styles.description}>{description}</p>
-            <Link href={chip.href} className={styles.chip} onClick={close}>
-              <span className={styles.chipDot} aria-hidden="true" />
-              {chip.label}
-              <span aria-hidden="true">→</span>
-            </Link>
+          <h2 id="lead-popup-heading" className={styles.heading}>
+            {headingStart} <span className={styles.headingMuted}>{headingHighlight}</span>
+          </h2>
+          <p className={styles.description}>{description}</p>
 
-            <form className={styles.form} onSubmit={handleSubmit} onChange={clearError} noValidate>
-              {fields.map((field) => {
-                const id = `lead-${field.name}`;
-                const error = errors[field.name];
-                return (
-                  <div key={field.name} className={`${styles.field} ${field.half ? styles.half : ''}`}>
-                    <label htmlFor={id} className={styles.label}>
-                      {field.label}
-                    </label>
-                    <input
-                      id={id}
-                      name={field.name}
-                      type={field.type}
-                      placeholder={field.placeholder}
-                      autoComplete={field.autoComplete}
-                      className={styles.input}
-                      aria-invalid={Boolean(error)}
-                      aria-describedby={error ? `${id}-error` : undefined}
-                    />
-                    {error && (
-                      <span id={`${id}-error`} className={styles.error} role="alert">
-                        {error}
-                      </span>
-                    )}
-                  </div>
-                );
-              })}
-              <button type="submit" className={styles.submit} disabled={status === 'sending'}>
-                {status === 'sending' ? sending : submit}
-                <span className={styles.submitArrow} aria-hidden="true">
-                  <svg viewBox="0 0 16 16" width="16" height="16">
-                    <path d="M6 3.5L10.5 8 6 12.5" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-              </button>
-            </form>
-          </>
-        )}
+          <Link href={explore.href} className={styles.explore} onClick={close}>
+            <span className={styles.exploreDot} aria-hidden="true" />
+            {explore.label}
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </Link>
+
+          <LeadPopupForm content={leadPopup} />
+        </div>
       </div>
     </div>
   );

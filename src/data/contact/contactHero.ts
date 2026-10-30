@@ -35,6 +35,7 @@ export const contactHero: ContactHeroContent = {
         label: 'Email',
         type: 'email',
         placeholder: 'you@business.com',
+        required: true,
         half: true,
         autoComplete: 'email',
       },
@@ -58,6 +59,14 @@ export const contactHero: ContactHeroContent = {
     submit: 'Book my coffee chat',
     sending: 'Sending…',
     privacy: 'No spam. We reply within one working day.',
+    consent: {
+      text: 'By submitting, you agree to our',
+      link: { label: 'Privacy Policy', href: '/privacy-policy' },
+    },
+    failed: {
+      text: 'Something went wrong. Please try again, or',
+      link: { label: 'WhatsApp us', href: whatsapp },
+    },
     successTitle: 'Thanks, {name}! The coffee’s on us.',
     successText: 'Here’s what happens next:',
     successCta: { label: 'Want a faster reply? WhatsApp us', href: whatsapp },
