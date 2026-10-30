@@ -11,7 +11,10 @@ const SUMMARY =
 
 /** Every published post, newest first – for /blog, /work, related posts and the sitemap */
 export async function getPublishedPosts(): Promise<BlogPostSummary[]> {
-  const { data, error } = await createPublicClient()
+  const supabase = createPublicClient();
+  if (!supabase) return []; // no Supabase keys – the blog shows "no posts yet"
+
+  const { data, error } = await supabase
     .from('blog_posts')
     .select(SUMMARY)
     .eq('status', 'published')
@@ -27,7 +30,10 @@ export async function getPublishedPosts(): Promise<BlogPostSummary[]> {
 
 /** One published post by its address, or null */
 export async function getPublishedPost(slug: string): Promise<BlogPost | null> {
-  const { data, error } = await createPublicClient()
+  const supabase = createPublicClient();
+  if (!supabase) return null;
+
+  const { data, error } = await supabase
     .from('blog_posts')
     .select('*')
     .eq('slug', slug)
