@@ -11,6 +11,7 @@ import { useDismiss } from '@/hooks/useDismiss';
 import { deletePost, savePost, unpublishPost, type PostInput } from '@/lib/blog/manage';
 import { importTemplate } from '@/lib/blog/template';
 import { slugify } from '@/lib/blog/text';
+import { formatDateTime } from '@/lib/leads/format';
 import type { BlogBlock, BlogPost } from '@/types/blog';
 import BlogBlockCard, { emptyBlock, type ServiceOption } from './BlogBlockCard';
 import BlogSeoPanel from './BlogSeoPanel';
@@ -140,13 +141,13 @@ export default function DashboardBlogEditor({ post: initial, services, canWrite 
       if (!result) {
         setSaveState('idle');
         setError('Something went wrong. Please try again.');
-        return false;
+        return null;
       }
       if (!result.ok) {
         setSaveState('idle');
         setError(result.error);
         setConflict(Boolean(result.conflict));
-        return false;
+        return null;
       }
       setUpdatedAt(result.updatedAt);
       setStatus(result.status);
@@ -154,7 +155,7 @@ export default function DashboardBlogEditor({ post: initial, services, canWrite 
       if (result.slug !== post.slug) setPost((current) => ({ ...current, slug: result.slug }));
       setDirty(false);
       setSaveState('saved');
-      return true;
+      return result;
     },
     [initial.id, post, updatedAt]
   );
@@ -181,12 +182,41 @@ export default function DashboardBlogEditor({ post: initial, services, canWrite 
     });
   };
 
-  // ---------- "Are you sure?" popups ----------
+  // ---------- "Are you sure?" and "Done" popups ----------
   const [confirm, confirmDialog] = useConfirm();
   const postTitle = post.title.trim() || initial.title;
 
+  // Once an action has worked: a ✓ popup saying what happened (with "View on site" once it's live)
+  const announce = (kind: keyof typeof t.done.messages, details?: { slug: string; publishedAt: string | null }) => {
+    const text = t.done.messages[kind];
+    return confirm({
+      title: text.title,
+      message: text.message
+        .replace('{title}', postTitle)
+        .replace('{date}', details?.publishedAt ? formatDateTime(details.publishedAt) : ''),
+      icon: 'check',
+      confirmLabel: t.done.ok,
+      cancelLabel: null,
+      link:
+        details && (kind === 'published' || kind === 'updated')
+          ? { href: `/blog/${details.slug}`, label: t.actions.viewOnSite }
+          : undefined,
+    });
+  };
+
+  // Publish now, schedule, or (once live) update
+  const publish = (at: string | null) =>
+    run(async () => {
+      const wasLive = isLive;
+      const result = await save({ at });
+      if (!result) return;
+      const scheduled = result.publishedAt !== null && new Date(result.publishedAt) > new Date();
+      void announce(scheduled ? (wasLive && !at ? 'updatedScheduled' : 'scheduled') : wasLive ? 'updated' : 'published', result);
+    });
+
   const askDelete = () => {
     closeMenu();
+    let deleted = false;
     void confirm({
       title: isLive ? t.actions.deletePostTitle : t.actions.deleteDraftTitle,
       message: (isLive ? t.actions.deletePublishedConfirm : t.actions.deleteConfirm).replace('{title}', postTitle),
@@ -202,13 +232,18 @@ export default function DashboardBlogEditor({ post: initial, services, canWrite 
           return;
         }
         setDirty(false); // no "unsaved changes" warning on the way out
-        router.push('/dashboard/blogs');
+        deleted = true;
       },
+    }).then(async () => {
+      if (!deleted) return;
+      await announce('deleted');
+      router.push('/dashboard/blogs');
     });
   };
 
   const askUnpublish = () => {
     closeMenu();
+    let unpublished = false;
     void confirm({
       title: t.actions.unpublishTitle,
       message: t.actions.unpublishConfirm.replace('{title}', postTitle),
@@ -223,8 +258,11 @@ export default function DashboardBlogEditor({ post: initial, services, canWrite 
           setStatus('draft');
           setPublishedAt(null);
           setUpdatedAt(result.updatedAt);
+          unpublished = true;
         } else setError(result.error);
       },
+    }).then(() => {
+      if (unpublished) void announce('unpublished');
     });
   };
 
@@ -305,7 +343,7 @@ export default function DashboardBlogEditor({ post: initial, services, canWrite 
                   type="button"
                   className={styles.primaryButton}
                   disabled={pending || conflict}
-                  onClick={() => (isLive ? run(() => save({ at: null })) : setMenuOpen((open) => !open))}
+                  onClick={() => (isLive ? publish(null) : setMenuOpen((open) => !open))}
                 >
                   {isLive ? t.actions.update : t.actions.publish}
                 </button>
@@ -339,7 +377,7 @@ export default function DashboardBlogEditor({ post: initial, services, canWrite 
                           type="button"
                           className={styles.primaryButton}
                           disabled={!scheduleAt}
-                          onClick={() => run(() => save({ at: new Date(scheduleAt).toISOString() }))}
+                          onClick={() => publish(new Date(scheduleAt).toISOString())}
                         >
                           {t.actions.scheduleConfirm}
                         </button>
@@ -347,7 +385,7 @@ export default function DashboardBlogEditor({ post: initial, services, canWrite 
                     ) : (
                       <>
                         {!isLive && (
-                          <button type="button" className={menu.item} onClick={() => run(() => save({ at: null }))}>
+                          <button type="button" className={menu.item} onClick={() => publish(null)}>
                             {t.actions.publishNow}
                           </button>
                         )}

@@ -39,8 +39,8 @@
 
   position: relative;
   isolation: isolate; /* keeps the halo (z-index: -1) behind the card, not behind the page */
-  width: min(29em, 100%);
-  font-size: clamp(16px, min(0.55vw + 6px, 2.3svh), 30px);
+  width: min(27em, 100%);
+  font-size: clamp(14px, min(0.5vw + 6px, 2.05svh), 26px);
   animation:
     card-in 0.5s cubic-bezier(0.22, 1, 0.36, 1),
     popup-glow-travel 5s linear infinite;
@@ -121,7 +121,7 @@
   position: relative;
   max-height: calc(100svh - 32px);
   overflow-y: auto;
-  padding: 2em 1.75em 1.75em;
+  padding: 1.5em 1.5em 1.25em;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--card-radius);
   /* a soft sheen down the left edge, deep charcoal to black */
@@ -182,14 +182,14 @@
 }
 
 .logo {
-  width: 5.5em;
+  width: 4.75em;
   height: auto;
   margin: 0 auto;
 }
 
 /* ---------- Heading, line and the "Curious what we do?" pill ---------- */
 .heading {
-  margin-top: 1.1em;
+  margin-top: 0.7em;
   color: var(--color-text);
   font-size: 1.375em;
   font-weight: 700;
@@ -204,7 +204,7 @@
 
 .description {
   max-width: 22em;
-  margin: 0.75em auto 0;
+  margin: 0.45em auto 0;
   color: var(--color-text-muted);
   font-size: 0.875em;
   line-height: 1.55;
@@ -214,7 +214,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.6em;
-  margin-top: 1.1em;
+  margin-top: 0.8em;
   padding: 0.5em 0.9em;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--radius-pill);
@@ -256,20 +256,20 @@
 
 /* ---------- Fields ---------- */
 .form {
-  margin-top: 1.75em;
+  margin-top: 1.2em;
   text-align: left;
 }
 
 .fields {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1em 0.875em;
+  gap: 0.75em 0.75em;
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 0.4em;
+  gap: 0.3em;
   grid-column: 1 / -1;
   min-width: 0;
 }
@@ -287,7 +287,7 @@
 /* Dark recessed box; a silver glow while typing */
 .input {
   width: 100%;
-  height: 2.875em;
+  height: 2.6em;
   padding: 0 0.875em;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 0.625em;
@@ -334,8 +334,8 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 3.5em;
-  margin-top: 1.5em;
+  height: 3em;
+  margin-top: 1.1em;
   padding: 0 3.5em;
   border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: var(--radius-pill);
@@ -385,8 +385,8 @@
   right: 0.35em;
   display: grid;
   place-items: center;
-  width: 2.75em;
-  height: 2.75em;
+  width: 2.4em;
+  height: 2.4em;
   border-radius: 50%;
   background: #121314;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
@@ -412,7 +412,7 @@
    "Something went wrong… WhatsApp us." */
 .consent,
 .failed {
-  margin-top: 0.85em;
+  margin-top: 0.65em;
   font-size: 0.75em;
   line-height: 1.5;
   text-align: center;
@@ -507,21 +507,33 @@
   height: 1.15em;
 }
 
-/* ---------- Phones: fields in one column, a little tighter ---------- */
+/* ---------- Phones: a smaller card in the middle of the screen (everything scales from the frame's
+   font-size, about 12–13px here) – Name and Phone stay side by side, so it's three rows shorter ---------- */
 @media (max-width: 520px) {
+  .overlay {
+    padding: 24px;
+  }
+
   .frame {
     --card-radius: 1.25em;
+
+    width: min(25em, 100%);
+    font-size: clamp(12px, min(3.4vw, 1.75svh), 14px);
   }
 
   .card {
-    padding: 1.75em 1.125em 1.25em;
+    max-height: calc(100svh - 48px);
+    padding: 1.35em 1.125em 1.15em;
   }
 
   .heading {
     padding: 0 1.25em; /* clear of the ✕ */
     font-size: 1.25em;
   }
+}
 
+/* Very narrow phones: one field per row */
+@media (max-width: 359px) {
   .fields {
     grid-template-columns: 1fr;
   }

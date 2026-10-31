@@ -18,6 +18,10 @@ const HALO = '226, 255, 120'; // city glow, yellow-green
 // only the city glows, the arcs and the horizon are bright
 const LAND_FILL = 'rgb(40, 45, 32)'; // continents
 const LAND_DOT = 'rgb(150, 162, 118)'; // their faint dot texture
+// The oceans: the same grey with the same dot texture, a touch darker – so the whole globe is
+// covered (no empty black when the wide Pacific turns into view) and the continents still show
+const SEA_FILL = '23, 26, 19'; // the land is 40, 45, 32
+const SEA_DOT_ALPHA = 0.22; // the land's dots are 0.38
 const TOWN_LIGHT = '#e8ff9a';
 const TOWN_SHARE = 0.015; // share of land dots that glow as towns
 const GOLD = '255, 172, 82'; // India's city lights at night
@@ -167,6 +171,7 @@ export function useEarthGlobe<T extends HTMLCanvasElement>({
     let dotSize = 1.5;
     let cellSize = 7; // the land fill square per dot – the gap between dots, so they join up
     let dots = new Float32Array(0); // sinLat, cosLat, lon (radians) per land dot
+    let seaDots = new Float32Array(0); // the same, per ocean dot
     let lit = new Uint8Array(0); // 1 = this land dot glows as a town
     let visible = new Float32Array(0); // per frame: x, y, fade, lit of the dots facing us
     let frame = 0;
@@ -206,6 +211,7 @@ export function useEarthGlobe<T extends HTMLCanvasElement>({
       const reach = Math.acos(Math.max(-1, 1 - (height - (cy - radius)) / radius)) / DEG;
       const minLat = horizon - reach - 5;
       const values: number[] = [];
+      const sea: number[] = []; // the dots between the continents, on the same grid
       const cellLat = 180 / land.rows;
       const cellLon = 360 / land.cols;
       for (let lat = 90 - spacing / 2; lat > Math.max(minLat, -90); lat -= spacing) {
@@ -213,12 +219,11 @@ export function useEarthGlobe<T extends HTMLCanvasElement>({
         const step = spacing / Math.max(Math.cos(lat * DEG), 0.05);
         for (let lon = -180 + step / 2; lon < 180; lon += step) {
           const col = Math.min(land.cols - 1, Math.floor((lon + 180) / cellLon));
-          if (land.grid[row * land.cols + col]) {
-            values.push(Math.sin(lat * DEG), Math.cos(lat * DEG), lon * DEG);
-          }
+          (land.grid[row * land.cols + col] ? values : sea).push(Math.sin(lat * DEG), Math.cos(lat * DEG), lon * DEG);
         }
       }
       dots = Float32Array.from(values);
+      seaDots = Float32Array.from(sea);
       // Towns: a fixed scatter (same every load), so the lights don't jump about on resize
       lit = Uint8Array.from({ length: dots.length / 3 }, (_, d) => {
         const h = Math.sin(dots[d * 3 + 2] * 913.7 + dots[d * 3] * 437.1) * 43758.5453;
@@ -243,6 +248,32 @@ export function useEarthGlobe<T extends HTMLCanvasElement>({
       // Turns slowly so the land drifts from right to left
       const turn = (startLongitude + speed * elapsed) * DEG;
       const lowest = (cy - height) / radius; // y below this is under the bottom of the screen
+
+      // The oceans first: one darker grey disc (fading out towards the horizon like the land – the
+      // stops follow the land's fade, (2z)^1.5 with z = √(1 − r²)), then its faint dot texture
+      const ocean = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+      for (const r of [0, 0.6, 0.8, 0.866, 0.92, 0.96, 0.985, 1]) {
+        ocean.addColorStop(r, `rgba(${SEA_FILL}, ${0.9 * Math.min(1, 2 * Math.sqrt(1 - r * r)) ** 1.5})`);
+      }
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = ocean;
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = LAND_DOT;
+      const half = dotSize / 2;
+      for (let i = 0; i < seaDots.length; i += 3) {
+        const sinLat = seaDots[i];
+        const cosLat = seaDots[i + 1];
+        const l = seaDots[i + 2] - turn;
+        const z0 = cosLat * Math.cos(l);
+        const y = sinLat * cosT + z0 * sinT;
+        if (y < lowest) continue;
+        const z = -sinLat * sinT + z0 * cosT;
+        if (z <= 0) continue;
+        ctx.globalAlpha = SEA_DOT_ALPHA * Math.min(1, z * 2) ** 1.5;
+        ctx.fillRect(cx + radius * cosLat * Math.sin(l) - half, cy - radius * y - half, dotSize, dotSize);
+      }
 
       // Land, in three passes over the dots facing us (all fading out towards the horizon,
       // where they crowd together): 1. dark olive cells that join up into solid continents
@@ -271,7 +302,6 @@ export function useEarthGlobe<T extends HTMLCanvasElement>({
       }
       // 2. the faint dot texture on top
       ctx.fillStyle = LAND_DOT;
-      const half = dotSize / 2;
       for (let j = 0; j < count; j++) {
         ctx.globalAlpha = 0.38 * visible[j * 4 + 2];
         ctx.fillRect(visible[j * 4] - half, visible[j * 4 + 1] - half, dotSize, dotSize);

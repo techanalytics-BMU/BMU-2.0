@@ -73,6 +73,7 @@ export type DashboardBlogsContent = {
   deleteConfirm: string; // {title} is replaced
   deleting: string;
   cancel: string;
+  deleted: { title: string; message: string; ok: string }; // the ✓ popup after deleting
   previewBar: string;
   backToEditor: string;
 };
@@ -114,6 +115,13 @@ export type DashboardBlogEditorContent = {
     | 'viewOnSite',
     string
   >;
+  done: {
+    ok: string;
+    messages: Record<
+      'published' | 'scheduled' | 'updated' | 'updatedScheduled' | 'unpublished' | 'deleted',
+      { title: string; message: string } // {title} and {date} are replaced
+    >;
+  };
   fields: Record<
     'title' | 'excerpt' | 'faqs' | 'faqsHint' | 'question' | 'answer' | 'addFaq',
     string

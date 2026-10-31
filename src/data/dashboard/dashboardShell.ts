@@ -4,7 +4,7 @@ import type { DashboardShellContent } from '@/types/dashboard';
 export const dashboardShell: DashboardShellContent = {
   nav: [
     { label: 'Leads', href: '/dashboard/leads', icon: 'leads', roles: ['admin', 'manager'] },
-    { label: 'Blogs', href: '/dashboard/blogs', icon: 'blogs', roles: ['admin', 'manager', 'seo'] },
+    { label: 'Blogs', href: '/dashboard/blogs', icon: 'blogs', roles: ['seo'] }, // the SEO writer only
     { label: 'Clients', icon: 'clients', roles: ['admin', 'manager'] },
     { label: 'Users', icon: 'users', roles: ['admin', 'manager'] },
     { label: 'Settings', icon: 'settings', roles: ['admin', 'manager'] },

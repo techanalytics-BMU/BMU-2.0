@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { services } from '@/data/pseo/services';
 import { canWriteBlog, getProfile } from '@/lib/auth/session';
 import { createClient } from '@/lib/supabase/server';
@@ -10,10 +10,11 @@ export const metadata: Metadata = { title: 'Edit Post' };
 
 type Props = { params: Promise<{ id: string }> };
 
-// The blog editor (/dashboard/blogs/<post id>) – SEO writers edit; admins and managers view
+// The blog editor (/dashboard/blogs/<post id>) – the SEO writer only
 export default async function BlogEditorPage({ params }: Props) {
   const { id } = await params;
   const profile = (await getProfile())!;
+  if (!canWriteBlog(profile.role)) redirect('/dashboard');
   const supabase = await createClient();
   const { data } = await supabase.from('blog_posts').select('*').eq('id', id).maybeSingle();
   if (!data) notFound();

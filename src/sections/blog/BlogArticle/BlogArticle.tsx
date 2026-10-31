@@ -210,8 +210,8 @@ function Enquiry({ post }: { post: BlogPost }) {
   );
 }
 
-// One article (/blog/<slug>), as a full page: the cover edge to edge with the category, title,
-// intro, author line (with "Updated …" once edited) and tags on it over a dark fade (no cover: black
+// One article (/blog/<slug>), as a full page: the cover edge to edge with the title, intro,
+// author line (with "Updated …" once edited) and tags on it over a dark fade (no cover: black
 // and lime with the category's chrome object). Below: the table of contents (3+ H2s), the article
 // with its FAQs and share buttons, and a sticky enquiry card – three columns on wide screens, one
 // on phones. Then "Keep reading" and a call to action.
@@ -253,25 +253,6 @@ export default function BlogArticle({ post, all }: Props) {
 
         <div className={styles.heroInner}>
           <header className={styles.header}>
-            <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-              <ol>
-                <li>
-                  <Link href="/">{t.breadcrumb.home}</Link>
-                </li>
-                <li>
-                  <Link href="/blog">{t.breadcrumb.blog}</Link>
-                </li>
-                <li aria-current="page">{post.title}</li>
-              </ol>
-            </nav>
-            {post.category && (
-              <Link
-                href={`/blog?category=${encodeURIComponent(post.category)}#articles`}
-                className={styles.category}
-              >
-                {post.category}
-              </Link>
-            )}
             <h1 className={styles.title}>{post.title}</h1>
             {post.excerpt && <p className={styles.excerpt}>{post.excerpt}</p>}
             <p className={styles.meta}>

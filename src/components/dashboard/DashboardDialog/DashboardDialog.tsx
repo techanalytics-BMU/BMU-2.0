@@ -13,7 +13,8 @@ export type DashboardDialogProps = {
   tone?: DialogTone; // the action button: lime (default), amber (warning) or red (danger)
   confirmLabel: string;
   busyLabel?: string; // on the button while the action runs ("Deleting…")
-  cancelLabel?: string;
+  cancelLabel?: string | null; // null: no Cancel button – a "done" notice with one button
+  link?: { href: string; label: string }; // a second button that opens a page in a new tab
   confirmDisabled?: boolean;
   onConfirm: () => unknown | Promise<unknown>; // the popup waits for it, then closes
   onCancel: () => void;
@@ -24,6 +25,7 @@ export type DashboardDialogProps = {
 // over a dimmed, blurred page: icon, title, message (and any fields), then Cancel and the action.
 // Escape or a click outside cancels; for risky actions the cursor starts on Cancel, so an
 // accidental Enter never deletes anything. While the action runs, its button shows `busyLabel`.
+// With `cancelLabel: null` it's a "done" notice instead: a ✓, the message and one button.
 export default function DashboardDialog({
   title,
   message,
@@ -32,6 +34,7 @@ export default function DashboardDialog({
   confirmLabel,
   busyLabel,
   cancelLabel = 'Cancel',
+  link,
   confirmDisabled = false,
   onConfirm,
   onCancel,
@@ -102,7 +105,13 @@ export default function DashboardDialog({
         aria-describedby={message ? 'dashboard-dialog-message' : undefined}
         data-tone={tone}
       >
-        <button type="button" className={styles.close} aria-label={cancelLabel} disabled={busy} onClick={onCancel}>
+        <button
+          type="button"
+          className={styles.close}
+          aria-label={cancelLabel ?? confirmLabel}
+          disabled={busy}
+          onClick={onCancel}
+        >
           <DashboardIcon name="close" size={15} />
         </button>
 
@@ -131,9 +140,16 @@ export default function DashboardDialog({
         >
           {children && <div className={styles.fields}>{children}</div>}
           <div className={styles.actions}>
-            <button ref={cancelRef} type="button" className={styles.cancel} disabled={busy} onClick={onCancel}>
-              {cancelLabel}
-            </button>
+            {cancelLabel !== null && (
+              <button ref={cancelRef} type="button" className={styles.cancel} disabled={busy} onClick={onCancel}>
+                {cancelLabel}
+              </button>
+            )}
+            {link && (
+              <a href={link.href} target="_blank" rel="noopener noreferrer" className={styles.cancel}>
+                {link.label}
+              </a>
+            )}
             <button ref={confirmRef} type="submit" className={styles.confirm} disabled={busy || confirmDisabled}>
               {busy && busyLabel ? busyLabel : confirmLabel}
             </button>

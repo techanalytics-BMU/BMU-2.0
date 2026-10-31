@@ -179,7 +179,8 @@ export default function DashboardBlogs({ posts, canWrite }: Props) {
                             className={`${styles.action} ${styles.delete}`}
                             title={t.delete}
                             aria-label={`${t.delete}: ${post.title}`}
-                            onClick={() =>
+                            onClick={() => {
+                              let deleted = false;
                               void confirm({
                                 title: t.deleteTitle,
                                 message: t.deleteConfirm.replace('{title}', post.title),
@@ -188,9 +189,20 @@ export default function DashboardBlogs({ posts, canWrite }: Props) {
                                 confirmLabel: t.delete,
                                 busyLabel: t.deleting,
                                 cancelLabel: t.cancel,
-                                onConfirm: () => deletePost(post.id), // the list refreshes itself
-                              })
-                            }
+                                onConfirm: async () => {
+                                  deleted = (await deletePost(post.id)).ok; // the list refreshes itself
+                                },
+                              }).then(() => {
+                                if (!deleted) return;
+                                void confirm({
+                                  title: t.deleted.title,
+                                  message: t.deleted.message.replace('{title}', post.title),
+                                  icon: 'check',
+                                  confirmLabel: t.deleted.ok,
+                                  cancelLabel: null,
+                                });
+                              });
+                            }}
                           >
                             <DashboardIcon name="trash" size={16} />
                           </button>

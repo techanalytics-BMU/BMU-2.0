@@ -2,7 +2,6 @@ import type { BlogArticleContent } from '@/types/blog';
 
 // Text around every article page (/blog/<slug>)
 export const blogArticle: BlogArticleContent = {
-  breadcrumb: { home: 'Home', blog: 'Blog' },
   minRead: '{count} min read',
   updated: 'Updated {date}',
   contents: 'In this article',

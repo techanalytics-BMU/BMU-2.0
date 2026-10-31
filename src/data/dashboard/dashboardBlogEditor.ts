@@ -36,6 +36,36 @@ export const dashboardBlogEditor: DashboardBlogEditorContent = {
     reload: 'Reload',
     viewOnSite: 'View on site',
   },
+  // The ✓ popup once an action has worked – {title} is the post's title, {date} when it goes live
+  done: {
+    ok: 'Done',
+    messages: {
+      published: {
+        title: 'Your blog is live 🎉',
+        message: '“{title}” is now published on the website for everyone to read.',
+      },
+      scheduled: {
+        title: 'Your post is scheduled',
+        message: '“{title}” will go live on {date}. Until then it stays hidden from the website.',
+      },
+      updated: {
+        title: 'Your blog is updated',
+        message: 'Your changes to “{title}” are now live on the website.',
+      },
+      updatedScheduled: {
+        title: 'Changes saved',
+        message: 'Your changes to “{title}” are saved. It’s still scheduled to go live on {date}.',
+      },
+      unpublished: {
+        title: 'Moved back to draft',
+        message: '“{title}” has been taken off the website. You can publish it again any time.',
+      },
+      deleted: {
+        title: 'Blog deleted',
+        message: '“{title}” has been deleted successfully.',
+      },
+    },
+  },
   fields: {
     title: 'Post title',
     excerpt: 'Excerpt – 1–2 sentences for the blog list and under the title',

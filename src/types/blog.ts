@@ -83,7 +83,6 @@ export type BlogListingContent = {
 
 // An article page (/blog/<slug>)
 export type BlogArticleContent = {
-  breadcrumb: { home: string; blog: string };
   minRead: string; // '{count} min read'
   updated: string; // 'Updated {date}' – shown when edited a day or more after publishing
   contents: string; // the table of contents' label

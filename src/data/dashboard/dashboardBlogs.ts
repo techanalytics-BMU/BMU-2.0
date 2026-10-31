@@ -30,6 +30,7 @@ export const dashboardBlogs: DashboardBlogsContent = {
   deleteConfirm: '“{title}” will be deleted for good. This can’t be undone.',
   deleting: 'Deleting…',
   cancel: 'Cancel',
+  deleted: { title: 'Blog deleted', message: '“{title}” has been deleted successfully.', ok: 'Done' },
   previewBar: 'Preview – this is how the post will look on the website.',
   backToEditor: 'Back to the editor',
 };
