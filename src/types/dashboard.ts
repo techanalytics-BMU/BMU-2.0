@@ -60,14 +60,19 @@ export type DashboardBlogsContent = {
   empty: string;
   emptyWriter: string;
   noMatch: string;
-  columns: { title: string; status: string; date: string; updated: string };
+  columns: { title: string; status: string; date: string; updated: string; actions: string };
+  notYet: string; // "Published" column for drafts
+  scheduledOn: string; // 'Scheduled · {date}'
   statuses: { draft: string; published: string; scheduled: string };
   edit: string; // SEO writer
   view: string; // admins and managers
   preview: string;
   viewOnSite: string;
   delete: string; // drafts, SEO writer
+  deleteTitle: string;
   deleteConfirm: string; // {title} is replaced
+  deleting: string;
+  cancel: string;
   previewBar: string;
   backToEditor: string;
 };
@@ -93,8 +98,17 @@ export type DashboardBlogEditorContent = {
     | 'unpublish'
     | 'delete'
     | 'deleteDraft'
+    | 'deleteDraftTitle'
+    | 'deletePostTitle'
     | 'deleteConfirm'
+    | 'deletePublishedConfirm'
+    | 'deleteButton'
+    | 'deleting'
+    | 'unpublishTitle'
     | 'unpublishConfirm'
+    | 'unpublishButton'
+    | 'unpublishing'
+    | 'cancel'
     | 'import'
     | 'reload'
     | 'viewOnSite',
@@ -106,6 +120,9 @@ export type DashboardBlogEditorContent = {
   >;
   blocks: {
     names: Record<BlogBlock['type'], string>;
+    short: Record<BlogBlock['type'], string>; // block toolbar
+    toolbar: string;
+    toolbarHint: string;
     hints: Partial<Record<BlogBlock['type'], string>>;
   } & Record<
     | 'add'
@@ -115,7 +132,15 @@ export type DashboardBlogEditorContent = {
     | 'remove'
     | 'bold'
     | 'link'
-    | 'linkPrompt'
+    | 'linkTitle'
+    | 'linkText'
+    | 'linkTextPlaceholder'
+    | 'linkAddress'
+    | 'linkAddressPlaceholder'
+    | 'linkHint'
+    | 'linkQuick'
+    | 'linkAdd'
+    | 'linkInvalid'
     | 'numbered'
     | 'addRow'
     | 'addColumn'
@@ -253,7 +278,10 @@ export type DashboardLeadsContent = {
       restored: string;
     };
     archive: string;
-    archiveConfirm: string;
+    archiveTitle: string;
+    archiveConfirm: string; // {name} is replaced
+    archiving: string;
+    cancel: string;
     restore: string;
     loading: string;
     failed: string;

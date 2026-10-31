@@ -77,6 +77,12 @@
   min-width: 200px;
 }
 
+/* Near the bottom of the screen the menu opens above the pill */
+.panel.panelUp {
+  top: auto;
+  bottom: calc(100% + 8px);
+}
+
 .current {
   margin-left: auto;
   color: var(--color-accent);

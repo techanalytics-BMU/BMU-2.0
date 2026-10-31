@@ -3,6 +3,7 @@
 import DashboardIcon from '@/components/dashboard/DashboardIcon/DashboardIcon';
 import { dashboardBlogEditor } from '@/data/dashboard/dashboardBlogEditor';
 import type { BlogBlock } from '@/types/blog';
+import DashboardLeadsSelect from '../DashboardLeads/DashboardLeadsSelect';
 import BlogImageField from './BlogImageField';
 import BlogTextArea from './BlogTextArea';
 import styles from './DashboardBlogEditor.module.css';
@@ -192,27 +193,24 @@ function BlockFields({ block, postId, services, onChange }: Props) {
         <div className={styles.fieldStack}>
           {block.items.map((item, i) => (
             <div key={i} className={styles.serviceRow}>
-              <select
-                className={styles.input}
+              <DashboardLeadsSelect
+                label={t.pickService}
                 value={item.slug}
-                aria-label={t.pickService}
-                onChange={(event) => {
-                  const picked = services.find((service) => service.slug === event.target.value);
+                fullWidth
+                options={[
+                  { value: '', label: t.pickService },
+                  ...services.map((service) => ({ value: service.slug, label: service.name })),
+                ]}
+                onChange={(slug) => {
+                  const picked = services.find((service) => service.slug === slug);
                   onChange({
                     ...block,
                     items: block.items.map((it, k) =>
-                      k === i ? { ...it, slug: event.target.value, name: picked?.name ?? it.name } : it
+                      k === i ? { ...it, slug, name: picked?.name ?? it.name } : it
                     ),
                   });
                 }}
-              >
-                <option value="">{t.pickService}</option>
-                {services.map((service) => (
-                  <option key={service.slug} value={service.slug}>
-                    {service.name}
-                  </option>
-                ))}
-              </select>
+              />
               <input
                 className={styles.input}
                 value={item.reason}

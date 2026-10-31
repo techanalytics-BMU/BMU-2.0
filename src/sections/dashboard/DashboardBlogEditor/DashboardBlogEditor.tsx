@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
+import { useConfirm } from '@/components/dashboard/DashboardDialog/useConfirm';
 import DashboardIcon from '@/components/dashboard/DashboardIcon/DashboardIcon';
 import menu from '@/components/dashboard/DashboardPopover/DashboardPopover.module.css';
 import { dashboardBlogEditor } from '@/data/dashboard/dashboardBlogEditor';
@@ -108,6 +109,28 @@ export default function DashboardBlogEditor({ post: initial, services, canWrite 
   const setBlocks = (update: (blocks: BlogBlock[]) => BlogBlock[]) =>
     change({ content: update(post.content) });
 
+  // ---------- Adding blocks ----------
+  // The block being worked on (last one with the cursor in it) – the toolbar adds after it
+  const [activeBlock, setActiveBlock] = useState<number | null>(null);
+  const [focusBlock, setFocusBlock] = useState<number | null>(null);
+
+  /** Add a block – at `at`, or after the block being worked on, or at the end */
+  const addBlock = (type: BlogBlock['type'], at?: number) => {
+    const index = at ?? (activeBlock !== null ? activeBlock + 1 : post.content.length);
+    setBlocks((blocks) => insert(blocks, Math.min(index, blocks.length), type));
+    setActiveBlock(index);
+    setFocusBlock(index);
+  };
+
+  // …then bring the new block into view and put the cursor in it
+  useEffect(() => {
+    if (focusBlock === null) return;
+    const card = document.querySelector<HTMLElement>(`[data-block-index="${focusBlock}"]`);
+    card?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    card?.querySelector<HTMLElement>('input:not([type="checkbox"]), textarea')?.focus({ preventScroll: true });
+    setFocusBlock(null);
+  }, [focusBlock]);
+
   // ---------- Saving ----------
   const save = useCallback(
     async (publish?: { at: string | null }) => {
@@ -155,6 +178,53 @@ export default function DashboardBlogEditor({ post: initial, services, canWrite 
     closeMenu();
     startTransition(async () => {
       await action();
+    });
+  };
+
+  // ---------- "Are you sure?" popups ----------
+  const [confirm, confirmDialog] = useConfirm();
+  const postTitle = post.title.trim() || initial.title;
+
+  const askDelete = () => {
+    closeMenu();
+    void confirm({
+      title: isLive ? t.actions.deletePostTitle : t.actions.deleteDraftTitle,
+      message: (isLive ? t.actions.deletePublishedConfirm : t.actions.deleteConfirm).replace('{title}', postTitle),
+      icon: 'trash',
+      tone: 'danger',
+      confirmLabel: t.actions.deleteButton,
+      busyLabel: t.actions.deleting,
+      cancelLabel: t.actions.cancel,
+      onConfirm: async () => {
+        const result = await deletePost(initial.id);
+        if (!result.ok) {
+          setError(result.error);
+          return;
+        }
+        setDirty(false); // no "unsaved changes" warning on the way out
+        router.push('/dashboard/blogs');
+      },
+    });
+  };
+
+  const askUnpublish = () => {
+    closeMenu();
+    void confirm({
+      title: t.actions.unpublishTitle,
+      message: t.actions.unpublishConfirm.replace('{title}', postTitle),
+      icon: 'external',
+      tone: 'warning',
+      confirmLabel: t.actions.unpublishButton,
+      busyLabel: t.actions.unpublishing,
+      cancelLabel: t.actions.cancel,
+      onConfirm: async () => {
+        const result = await unpublishPost(initial.id);
+        if (result.ok) {
+          setStatus('draft');
+          setPublishedAt(null);
+          setUpdatedAt(result.updatedAt);
+        } else setError(result.error);
+      },
     });
   };
 
@@ -221,11 +291,7 @@ export default function DashboardBlogEditor({ post: initial, services, canWrite 
                     type="button"
                     className={`${styles.ghostButton} ${styles.danger}`}
                     disabled={pending}
-                    onClick={() => {
-                      if (!window.confirm(t.actions.deleteConfirm)) return;
-                      setDirty(false); // no "unsaved changes" warning on the way out
-                      run(() => deletePost(initial.id));
-                    }}
+                    onClick={askDelete}
                   >
                     {t.actions.deleteDraft}
                   </button>
@@ -292,17 +358,7 @@ export default function DashboardBlogEditor({ post: initial, services, canWrite 
                           <button
                             type="button"
                             className={menu.item}
-                            onClick={() => {
-                              if (!window.confirm(t.actions.unpublishConfirm)) return;
-                              run(async () => {
-                                const result = await unpublishPost(initial.id);
-                                if (result.ok) {
-                                  setStatus('draft');
-                                  setPublishedAt(null);
-                                  setUpdatedAt(result.updatedAt);
-                                } else setError(result.error);
-                              });
-                            }}
+                            onClick={askUnpublish}
                           >
                             {t.actions.unpublish}
                           </button>
@@ -311,11 +367,7 @@ export default function DashboardBlogEditor({ post: initial, services, canWrite 
                         <button
                           type="button"
                           className={`${menu.item} ${styles.danger}`}
-                          onClick={() => {
-                            if (!window.confirm(t.actions.deleteConfirm)) return;
-                            setDirty(false); // no "unsaved changes" warning on the way out
-                            run(() => deletePost(initial.id));
-                          }}
+                          onClick={askDelete}
                         >
                           {t.actions.delete}
                         </button>
@@ -327,6 +379,26 @@ export default function DashboardBlogEditor({ post: initial, services, canWrite 
             </>
           )}
         </div>
+
+        {/* Block toolbar – always in view, so adding a block never needs scrolling */}
+        {canWrite && (
+          <div className={styles.blockBar} role="toolbar" aria-label={t.blocks.add}>
+            <span className={styles.blockBarLabel} title={t.blocks.toolbarHint}>
+              ＋ {t.blocks.toolbar}
+            </span>
+            {BLOCK_TYPES.map((type) => (
+              <button
+                key={type}
+                type="button"
+                className={styles.blockBarButton}
+                title={`${t.blocks.names[type]} – ${t.blocks.toolbarHint.toLowerCase()}`}
+                onClick={() => addBlock(type)}
+              >
+                {t.blocks.short[type]}
+              </button>
+            ))}
+          </div>
+        )}
       </header>
 
       {!canWrite && <p className={styles.notice}>{t.viewOnly}</p>}
@@ -365,9 +437,15 @@ export default function DashboardBlogEditor({ post: initial, services, canWrite 
 
           <div className={styles.blocks}>
             {post.content.length === 0 && <p className={styles.muted}>{t.blocks.empty}</p>}
-            <BlockInserter at={0} onInsert={(at, type) => setBlocks((blocks) => insert(blocks, at, type))} />
+            <BlockInserter at={0} onInsert={addBlock} />
             {post.content.map((block, i) => (
-              <div key={i}>
+              <div
+                key={i}
+                data-block-index={i}
+                data-active={activeBlock === i}
+                className={styles.blockSlot}
+                onFocus={() => setActiveBlock(i)}
+              >
                 <BlogBlockCard
                   block={block}
                   postId={initial.id}
@@ -375,11 +453,17 @@ export default function DashboardBlogEditor({ post: initial, services, canWrite 
                   isFirst={i === 0}
                   isLast={i === post.content.length - 1}
                   onChange={(next) => setBlocks((blocks) => blocks.map((b, k) => (k === i ? next : b)))}
-                  onMove={(by) => setBlocks((blocks) => move(blocks, i, i + by))}
+                  onMove={(by) => {
+                    setBlocks((blocks) => move(blocks, i, i + by));
+                    setActiveBlock(i + by);
+                  }}
                   onDuplicate={() => setBlocks((blocks) => [...blocks.slice(0, i + 1), structuredClone(block), ...blocks.slice(i + 1)])}
-                  onRemove={() => setBlocks((blocks) => blocks.filter((_, k) => k !== i))}
+                  onRemove={() => {
+                    setBlocks((blocks) => blocks.filter((_, k) => k !== i));
+                    setActiveBlock(null);
+                  }}
                 />
-                <BlockInserter at={i + 1} onInsert={(at, type) => setBlocks((blocks) => insert(blocks, at, type))} />
+                <BlockInserter at={i + 1} onInsert={addBlock} />
               </div>
             ))}
           </div>
@@ -491,6 +575,8 @@ export default function DashboardBlogEditor({ post: initial, services, canWrite 
           </div>
         </div>
       )}
+
+      {confirmDialog}
     </div>
   );
 }
@@ -507,28 +593,38 @@ function move(blocks: BlogBlock[], from: number, to: number) {
   return next;
 }
 
-// "＋" between blocks: opens the list of block types
-function BlockInserter({ at, onInsert }: { at: number; onInsert: (at: number, type: BlogBlock['type']) => void }) {
+const INSERT_MENU_HEIGHT = 280; // px – the two-column list of block types
+
+// "＋" between blocks: opens the list of block types – in two columns, and upwards near the
+// bottom of the screen, so it always fits without scrolling
+function BlockInserter({ at, onInsert }: { at: number; onInsert: (type: BlogBlock['type'], at: number) => void }) {
   const t = dashboardBlogEditor.blocks;
   const ref = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
+  const [upwards, setUpwards] = useState(false);
   const close = useCallback(() => setOpen(false), []);
   useDismiss(ref, open, close);
 
+  const toggle = () => {
+    const box = ref.current?.getBoundingClientRect();
+    if (box) setUpwards(window.innerHeight - box.bottom < INSERT_MENU_HEIGHT && box.top > INSERT_MENU_HEIGHT);
+    setOpen((value) => !value);
+  };
+
   return (
     <div ref={ref} className={`${menu.anchor} ${styles.inserter}`}>
-      <button type="button" className={styles.insertButton} aria-expanded={open} onClick={() => setOpen((v) => !v)}>
+      <button type="button" className={styles.insertButton} aria-expanded={open} onClick={toggle}>
         ＋ {t.add}
       </button>
       {open && (
-        <div className={`${menu.panel} ${menu.panelLeft} ${styles.blockMenu}`}>
+        <div className={`${menu.panel} ${menu.panelLeft} ${styles.blockMenu} ${upwards ? styles.blockMenuUp : ''}`}>
           {BLOCK_TYPES.map((type) => (
             <button
               key={type}
               type="button"
               className={menu.item}
               onClick={() => {
-                onInsert(at, type);
+                onInsert(type, at);
                 setOpen(false);
               }}
             >

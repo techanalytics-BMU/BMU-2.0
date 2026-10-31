@@ -7,6 +7,7 @@ import { formatDate } from '@/lib/blog/posts';
 import { seoChecklist } from '@/lib/blog/seo';
 import { slugify, wordCount } from '@/lib/blog/text';
 import type { PostInput } from '@/lib/blog/manage';
+import DashboardLeadsSelect from '../DashboardLeads/DashboardLeadsSelect';
 import BlogImageField from './BlogImageField';
 import styles from './DashboardBlogEditor.module.css';
 
@@ -158,21 +159,19 @@ export default function BlogSeoPanel({ postId, post, slugLocked, publishedAt, on
         </div>
       </div>
 
-      <label className={styles.field}>
+      <div className={styles.field}>
         <span className={styles.label}>{t.category}</span>
-        <select
-          className={styles.input}
+        <DashboardLeadsSelect
+          label={t.category}
           value={post.category ?? ''}
-          onChange={(event) => onChange({ category: event.target.value || null })}
-        >
-          <option value="">{t.chooseCategory}</option>
-          {servicesMenu.items.map((item) => (
-            <option key={item.title} value={item.title}>
-              {item.title}
-            </option>
-          ))}
-        </select>
-      </label>
+          fullWidth
+          options={[
+            { value: '', label: t.chooseCategory },
+            ...servicesMenu.items.map((item) => ({ value: item.title, label: item.title })),
+          ]}
+          onChange={(value) => onChange({ category: value || null })}
+        />
+      </div>
 
       <label className={styles.check}>
         <input type="checkbox" checked={post.featured} onChange={(event) => onChange({ featured: event.target.checked })} />

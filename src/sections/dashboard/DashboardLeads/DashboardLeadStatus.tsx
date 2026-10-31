@@ -17,12 +17,16 @@ type Props = {
   onChanged?: () => void; // after a change is saved (the side panel reloads its history)
 };
 
-// The coloured status pill. Opens to the four statuses; picking Follow-up asks for a follow-up
-// date first (optional). The list refreshes itself once the change is saved.
+const MENU_HEIGHT = 230; // px – the menu's height, to decide whether it opens up or down
+
+// The coloured status pill. Opens to the four statuses (upwards near the bottom of the screen);
+// picking Follow-up asks for a follow-up date first (optional). The list refreshes itself once
+// the change is saved.
 export default function DashboardLeadStatus({ leadId, status, followUpOn, onChanged }: Props) {
   const t = dashboardLeads;
   const ref = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
+  const [upwards, setUpwards] = useState(false); // not enough room below on screen
   const [askDate, setAskDate] = useState(false);
   const [date, setDate] = useState(followUpOn ?? addDays(todayIST(), 1));
   const [error, setError] = useState('');
@@ -52,7 +56,12 @@ export default function DashboardLeadStatus({ leadId, status, followUpOn, onChan
         data-pending={pending}
         aria-haspopup="menu"
         aria-expanded={open}
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => {
+          // Open upwards when the four statuses (or the date step) wouldn't fit below
+          const box = ref.current?.getBoundingClientRect();
+          if (box) setUpwards(window.innerHeight - box.bottom < MENU_HEIGHT && box.top > MENU_HEIGHT);
+          setOpen((value) => !value);
+        }}
       >
         <span className={styles.dot} aria-hidden="true" />
         {t.statuses[status]}
@@ -60,7 +69,7 @@ export default function DashboardLeadStatus({ leadId, status, followUpOn, onChan
       </button>
 
       {open && (
-        <div className={`${menu.panel} ${styles.panel}`} role="menu">
+        <div className={`${menu.panel} ${styles.panel} ${upwards ? styles.panelUp : ''}`} role="menu">
           {askDate ? (
             <div className={styles.ask}>
               <label className={styles.askLabel} htmlFor={`follow-up-${leadId}`}>

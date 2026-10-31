@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import Button from '@/components/ui/Button/Button';
-import { navCta, navLinks, navLogin, servicesMenu } from '@/data/navigation';
+import { navAccount, navCta, navDashboard, navLinks, navLogin, servicesMenu } from '@/data/navigation';
+import { useSignedIn } from '@/hooks/useSignedIn';
 import type { ServicesMenuItem } from '@/types/navigation';
 import styles from './Navbar.module.css';
 import NavbarServicesMenu from './NavbarServicesMenu';
@@ -55,6 +56,15 @@ export default function Navbar() {
   const [phoneServicesOpen, setPhoneServicesOpen] = useState(false);
   const servicesOpen = servicesOpenOn === pathname;
   const menuOpen = menuOpenOn === pathname;
+
+  // Login, or – while someone is logged in – Dashboard (staff, SEO writers) / My account (clients)
+  const signedIn = useSignedIn();
+  const account =
+    signedIn === 'checking' || signedIn === 'out'
+      ? navLogin
+      : signedIn === 'client'
+        ? navAccount
+        : navDashboard;
 
   const closeServices = () => {
     openedByHover.current = false;
@@ -233,7 +243,8 @@ export default function Navbar() {
               ))}
             </ul>
 
-            {/* Call Us (phone icon only, to the contact page) and Login – their glow moves only on hover */}
+            {/* Call Us (phone icon only, to the contact page) and Login – their glow moves only on hover.
+                Login becomes Dashboard / My account while someone is logged in. */}
             <div className={styles.actions}>
               <Button
                 href={navCta.href}
@@ -245,13 +256,13 @@ export default function Navbar() {
                 <Image src="/icons/common/navbar-call-icon.svg" alt="" width={24} height={24} />
               </Button>
               <Button
-                href={navLogin.href}
+                href={account.href}
                 variant="secondary"
                 size="sm"
-                className={styles.login}
+                className={`${styles.login} ${signedIn === 'checking' ? styles.loginChecking : ''}`}
                 onClick={closeMenu}
               >
-                {navLogin.label}
+                {account.label}
               </Button>
             </div>
           </nav>

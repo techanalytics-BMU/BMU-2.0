@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
 import DashboardIcon from '@/components/dashboard/DashboardIcon/DashboardIcon';
 import menu from '@/components/dashboard/DashboardPopover/DashboardPopover.module.css';
 import { useDismiss } from '@/hooks/useDismiss';
@@ -18,17 +18,57 @@ type Props = {
   value: string;
   options: Option[];
   onChange: (value: string) => void;
+  fullWidth?: boolean; // as wide as its column (forms) instead of as wide as its text (filter bars)
 };
 
-// A filter dropdown in the dashboard's own look (the same glass panel as the status pills), in place
-// of the browser's – which drew white text on a white list. Arrow keys move, Enter picks, Escape
-// or a click outside closes.
-export default function DashboardLeadsSelect({ label, value, options, onChange }: Props) {
+const GAP = 8; // px between the button and the list
+const EDGE = 12; // px kept free at the screen's edge
+
+// A dropdown in the dashboard's own look (the same glass panel as the status pills), in place of the
+// browser's – which drew white text on a white list. The list floats over everything (it can't be
+// cut off by a scrolling panel), opens upwards when there's more room above, and scrolls when long.
+// Arrow keys move, Enter picks, Escape, a click outside or scrolling the page closes it.
+export default function DashboardLeadsSelect({ label, value, options, onChange, fullWidth = false }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
+  const [place, setPlace] = useState<CSSProperties>({});
   const close = useCallback(() => setOpen(false), []);
   useDismiss(ref, open, close);
+
+  // Where the list goes: under the button, or above it when there's more room there
+  const openList = () => {
+    const box = buttonRef.current?.getBoundingClientRect();
+    if (box) {
+      const below = window.innerHeight - box.bottom - GAP - EDGE;
+      const above = box.top - GAP - EDGE;
+      const upwards = below < 240 && above > below;
+      setPlace({
+        position: 'fixed',
+        left: box.left,
+        right: 'auto',
+        ...(upwards ? { top: 'auto', bottom: window.innerHeight - box.top + GAP } : { top: box.bottom + GAP }),
+        ...(fullWidth ? { width: box.width } : {}),
+        maxHeight: Math.max(upwards ? above : below, 160),
+        overflowY: 'auto',
+      });
+    }
+    setOpen(true);
+  };
+
+  // The list is pinned to the screen – scrolling or resizing would leave it behind, so it closes
+  useEffect(() => {
+    if (!open) return;
+    const onMove = (event: Event) => {
+      if (!(event.target instanceof Node) || !ref.current?.contains(event.target)) close();
+    };
+    window.addEventListener('scroll', onMove, true);
+    window.addEventListener('resize', close);
+    return () => {
+      window.removeEventListener('scroll', onMove, true);
+      window.removeEventListener('resize', close);
+    };
+  }, [open, close]);
 
   const current = options.find((option) => option.value === value) ?? options[0];
 
@@ -53,7 +93,7 @@ export default function DashboardLeadsSelect({ label, value, options, onChange }
   };
 
   return (
-    <div ref={ref} className={menu.anchor}>
+    <div ref={ref} className={`${menu.anchor} ${fullWidth ? styles.selectFull : ''}`}>
       <button
         ref={buttonRef}
         type="button"
@@ -61,11 +101,11 @@ export default function DashboardLeadsSelect({ label, value, options, onChange }
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`${label}: ${current.label}`}
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => (open ? close() : openList())}
         onKeyDown={(event) => {
           if (event.key === 'ArrowDown' && !open) {
             event.preventDefault();
-            setOpen(true);
+            openList();
           }
         }}
       >
@@ -76,7 +116,7 @@ export default function DashboardLeadsSelect({ label, value, options, onChange }
             aria-hidden="true"
           />
         )}
-        {current.label}
+        <span className={styles.selectLabel}>{current.label}</span>
         <DashboardIcon name="chevronDown" size={14} className={styles.selectChevron} />
       </button>
 
@@ -84,6 +124,7 @@ export default function DashboardLeadsSelect({ label, value, options, onChange }
         <div
           ref={focusOnOpen}
           className={`${menu.panel} ${menu.panelLeft} ${styles.selectPanel}`}
+          style={place}
           role="listbox"
           aria-label={label}
           onKeyDown={onListKeyDown}

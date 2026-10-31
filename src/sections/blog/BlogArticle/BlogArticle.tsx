@@ -3,10 +3,9 @@ import Link from 'next/link';
 import Button from '@/components/ui/Button/Button';
 import { blogArticle } from '@/data/blog/blogArticle';
 import { site } from '@/data/site';
-import { formatDate, relatedPosts, toneOf, visualOf } from '@/lib/blog/posts';
+import { formatDate, relatedPosts, visualOf } from '@/lib/blog/posts';
 import { slugify } from '@/lib/blog/text';
 import type { BlogBlock, BlogPost, BlogPostSummary } from '@/types/blog';
-import cardStyles from '../BlogCard/BlogCard.module.css';
 import BlogCard from '../BlogCard/BlogCard';
 import styles from './BlogArticle.module.css';
 import BlogContents from './BlogContents';
@@ -153,10 +152,69 @@ type Props = {
   all: BlogPostSummary[]; // every published post – for "Keep reading" and the card colours
 };
 
-// One article (/blog/<slug>): breadcrumb, category, title, intro, author line (with "Updated …"
-// once edited) and tags; a large tinted cover with the post's image (or its category's chrome
-// object); the body – with a table of contents beside it when there are 3+ H2s; the FAQs and share
-// buttons; then "Keep reading" and a call to action.
+/** The card beside the article: free audit, Call / WhatsApp, and the services the post links to */
+function Enquiry({ post }: { post: BlogPost }) {
+  const t = blogArticle.enquiry;
+  const services = [
+    ...new Map(
+      post.content
+        .flatMap((block) => (block.type === 'services' ? block.items : []))
+        .filter((item) => item.slug)
+        .map((item) => [item.slug, item.name] as const)
+    ),
+  ];
+
+  return (
+    <div className={styles.enquiry}>
+      <p className={styles.enquiryEyebrow}>{t.eyebrow}</p>
+      <p className={styles.enquiryTitle}>{t.title}</p>
+      <p className={styles.enquiryText}>{t.text}</p>
+      <Button href={t.cta.href} className={styles.enquiryButton}>
+        {t.cta.label}
+      </Button>
+      <div className={styles.enquiryContacts}>
+        <a href={site.phoneHref} className={styles.enquiryContact}>
+          <Image src="/icons/common/phone.svg" alt="" width={16} height={16} />
+          {t.call}
+        </a>
+        <a href={site.whatsapp} target="_blank" rel="noopener noreferrer" className={styles.enquiryContact}>
+          <Image src="/icons/social/whatsapp.svg" alt="" width={16} height={16} />
+          {t.whatsapp}
+        </a>
+      </div>
+
+      {services.length > 0 ? (
+        <div className={styles.enquiryServices}>
+          <p className={styles.enquiryServicesLabel}>{t.servicesLabel}</p>
+          {services.map(([slug, name]) => (
+            <Link key={slug} href={`/services/${slug}`} className={styles.enquiryService}>
+              {name}
+              <span aria-hidden="true">→</span>
+            </Link>
+          ))}
+        </div>
+      ) : (
+        post.category && (
+          <div className={styles.enquiryServices}>
+            <Link
+              href={`/blog?category=${encodeURIComponent(post.category)}#articles`}
+              className={styles.enquiryService}
+            >
+              {t.categoryLabel.replace('{category}', post.category)}
+              <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+        )
+      )}
+    </div>
+  );
+}
+
+// One article (/blog/<slug>), as a full page: the cover edge to edge with the category, title,
+// intro, author line (with "Updated …" once edited) and tags on it over a dark fade (no cover: black
+// and lime with the category's chrome object). Below: the table of contents (3+ H2s), the article
+// with its FAQs and share buttons, and a sticky enquiry card – three columns on wide screens, one
+// on phones. Then "Keep reading" and a call to action.
 export default function BlogArticle({ post, all }: Props) {
   const t = blogArticle;
   const visual = visualOf(post);
@@ -174,75 +232,84 @@ export default function BlogArticle({ post, all }: Props) {
     <article className={styles.article}>
       <BlogReadingProgress targetId="article-body" />
 
-      <header className={styles.header}>
-        <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-          <ol>
-            <li>
-              <Link href="/">{t.breadcrumb.home}</Link>
-            </li>
-            <li>
-              <Link href="/blog">{t.breadcrumb.blog}</Link>
-            </li>
-            <li aria-current="page">{post.title}</li>
-          </ol>
-        </nav>
-        {post.category && (
-          <Link
-            href={`/blog?category=${encodeURIComponent(post.category)}#articles`}
-            className={styles.category}
-          >
-            {post.category}
-          </Link>
-        )}
-        <h1 className={styles.title}>{post.title}</h1>
-        {post.excerpt && <p className={styles.excerpt}>{post.excerpt}</p>}
-        <p className={styles.meta}>
-          <span className={styles.avatar} aria-hidden="true">
-            {post.author_name.charAt(0)}
-          </span>
-          {post.author_name}
-          {post.published_at && (
-            <>
-              <span aria-hidden="true">·</span>
-              <time dateTime={post.published_at}>{formatDate(post.published_at)}</time>
-            </>
-          )}
-          {updated && (
-            <>
-              <span aria-hidden="true">·</span>
-              <time dateTime={post.updated_at}>
-                {t.updated.replace('{date}', formatDate(post.updated_at))}
-              </time>
-            </>
-          )}
-          <span aria-hidden="true">·</span>
-          {t.minRead.replace('{count}', String(post.read_minutes))}
-        </p>
-        {post.tags.length > 0 && (
-          <ul className={styles.tags}>
-            {post.tags.map((tag) => (
-              <li key={tag} className={styles.tag}>
-                {tag}
-              </li>
-            ))}
-          </ul>
-        )}
-      </header>
-
-      <div className={`${styles.cover} ${cardStyles[toneOf(post, all)]}`}>
-        {visual && (
+      <div className={styles.hero}>
+        {post.cover_image_url ? (
           <Image
-            src={visual}
-            alt={post.cover_image_url ? (post.cover_image_alt ?? '') : ''}
-            width={post.cover_image_url ? 1200 : 420}
-            height={post.cover_image_url ? 630 : 420}
+            src={post.cover_image_url}
+            alt={post.cover_image_alt ?? ''}
+            fill
             priority
-            className={post.cover_image_url ? styles.coverPhoto : styles.coverObject}
+            sizes="100vw"
+            className={styles.heroPhoto}
           />
+        ) : (
+          <>
+            <div className={styles.heroPanel} aria-hidden="true" />
+            {visual && (
+              <Image src={visual} alt="" width={420} height={420} priority className={styles.heroObject} />
+            )}
+          </>
         )}
+
+        <div className={styles.heroInner}>
+          <header className={styles.header}>
+            <nav className={styles.breadcrumb} aria-label="Breadcrumb">
+              <ol>
+                <li>
+                  <Link href="/">{t.breadcrumb.home}</Link>
+                </li>
+                <li>
+                  <Link href="/blog">{t.breadcrumb.blog}</Link>
+                </li>
+                <li aria-current="page">{post.title}</li>
+              </ol>
+            </nav>
+            {post.category && (
+              <Link
+                href={`/blog?category=${encodeURIComponent(post.category)}#articles`}
+                className={styles.category}
+              >
+                {post.category}
+              </Link>
+            )}
+            <h1 className={styles.title}>{post.title}</h1>
+            {post.excerpt && <p className={styles.excerpt}>{post.excerpt}</p>}
+            <p className={styles.meta}>
+              <span className={styles.avatar} aria-hidden="true">
+                {post.author_name.charAt(0)}
+              </span>
+              {post.author_name}
+              {post.published_at && (
+                <>
+                  <span aria-hidden="true">·</span>
+                  <time dateTime={post.published_at}>{formatDate(post.published_at)}</time>
+                </>
+              )}
+              {updated && (
+                <>
+                  <span aria-hidden="true">·</span>
+                  <time dateTime={post.updated_at}>
+                    {t.updated.replace('{date}', formatDate(post.updated_at))}
+                  </time>
+                </>
+              )}
+              <span aria-hidden="true">·</span>
+              {t.minRead.replace('{count}', String(post.read_minutes))}
+            </p>
+            {post.tags.length > 0 && (
+              <ul className={styles.tags}>
+                {post.tags.map((tag) => (
+                  <li key={tag} className={styles.tag}>
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </header>
+        </div>
       </div>
 
-      <div className={styles.bodyLayout} data-contents={contents.length >= CONTENTS_FROM}>
+      <div className={styles.layout} data-contents={contents.length >= CONTENTS_FROM}>
         {contents.length >= CONTENTS_FROM && <BlogContents label={t.contents} items={contents} />}
 
         <div id="article-body" className={styles.body}>
@@ -268,6 +335,10 @@ export default function BlogArticle({ post, all }: Props) {
 
           <BlogShare url={`${site.url}/blog/${post.slug}`} title={post.title} labels={t.share} />
         </div>
+
+        <aside className={styles.aside}>
+          <Enquiry post={post} />
+        </aside>
       </div>
 
       {related.length > 0 && (

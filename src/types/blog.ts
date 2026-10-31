@@ -87,7 +87,24 @@ export type BlogArticleContent = {
   minRead: string; // '{count} min read'
   updated: string; // 'Updated {date}' – shown when edited a day or more after publishing
   contents: string; // the table of contents' label
-  share: { heading: string; whatsapp: string; linkedin: string; copy: string; copied: string };
+  share: {
+    heading: string;
+    whatsapp: string;
+    linkedin: string;
+    copy: string;
+    copied: string;
+    copyByHand: string; // shown when the browser blocks copying
+  };
+  enquiry: {
+    eyebrow: string;
+    title: string;
+    text: string;
+    cta: { label: string; href: string };
+    call: string;
+    whatsapp: string;
+    servicesLabel: string; // above the services the post links to
+    categoryLabel: string; // 'More on {category}' – when the post links to no services
+  };
   faqHeading: string;
   relatedHeading: string;
   ctaHeading: string;

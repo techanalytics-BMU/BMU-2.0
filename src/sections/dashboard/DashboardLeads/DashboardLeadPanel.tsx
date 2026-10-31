@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
+import { useConfirm } from '@/components/dashboard/DashboardDialog/useConfirm';
 import DashboardIcon from '@/components/dashboard/DashboardIcon/DashboardIcon';
 import { dashboardLeads } from '@/data/dashboard/dashboardLeads';
 import { formatDate, formatDateTime } from '@/lib/leads/format';
@@ -27,6 +28,7 @@ export default function DashboardLeadPanel({ rows, filters, isAdmin }: Props) {
   const [note, setNote] = useState('');
   const [error, setError] = useState('');
   const [pending, startTransition] = useTransition();
+  const [confirm, confirmDialog] = useConfirm();
   const panelRef = useRef<HTMLDivElement>(null);
 
   const load = useCallback(async (leadId: string) => {
@@ -50,7 +52,9 @@ export default function DashboardLeadPanel({ rows, filters, isAdmin }: Props) {
   useEffect(() => {
     if (!id) return;
     panelRef.current?.focus({ preventScroll: true });
-    const onKeyDown = (event: KeyboardEvent) => event.key === 'Escape' && closeLead();
+    // (Escape in a popup on top – e.g. "Archive this lead?" – only closes the popup)
+    const onKeyDown = (event: KeyboardEvent) =>
+      event.key === 'Escape' && !document.querySelector('[role="alertdialog"]') && closeLead();
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [id]);
@@ -275,9 +279,22 @@ export default function DashboardLeadPanel({ rows, filters, isAdmin }: Props) {
                   <button
                     type="button"
                     className={styles.archive}
-                    onClick={() => {
-                      if (window.confirm(t.panel.archiveConfirm)) run(() => archiveLead(lead.id), closeLead);
-                    }}
+                    onClick={() =>
+                      void confirm({
+                        title: t.panel.archiveTitle,
+                        message: t.panel.archiveConfirm.replace('{name}', lead.name),
+                        icon: 'archive',
+                        tone: 'warning',
+                        confirmLabel: t.panel.archive,
+                        busyLabel: t.panel.archiving,
+                        cancelLabel: t.panel.cancel,
+                        onConfirm: async () => {
+                          const result = await archiveLead(lead.id);
+                          if (result.ok) closeLead();
+                          else setError(result.error);
+                        },
+                      })
+                    }
                   >
                     <DashboardIcon name="archive" size={16} />
                     {t.panel.archive}
@@ -288,6 +305,7 @@ export default function DashboardLeadPanel({ rows, filters, isAdmin }: Props) {
           </div>
         )}
       </aside>
+      {confirmDialog}
     </>
   );
 }

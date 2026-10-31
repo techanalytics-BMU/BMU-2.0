@@ -25,6 +25,9 @@ const PATHS = {
   key: 'M14.5 9.5a4 4 0 1 0-1.4 3.1L20 19.5M17 16.5l2-2M15.5 15l1.5-1.5',
   volume: 'M4 9v6h4l5 4V5L8 9zM16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11',
   arrowLeft: 'M19 12H5M11 6l-6 6 6 6',
+  eye: 'M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
+  external: 'M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5',
+  trash: 'M4 7h16M10 11v6M14 11v6M5 7l1 13h12l1-13M9 7V4h6v3',
 } as const;
 
 export type DashboardIconName = keyof typeof PATHS;

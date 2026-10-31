@@ -83,6 +83,13 @@
   padding-inline: 1.1rem;
 }
 
+/* For the split second it takes to see whether someone is logged in, the button keeps its place
+   but stays invisible – so "Login" never flickers into "Dashboard" */
+.loginChecking {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* Their glow stays put until hovered, then travels around the edge */
 .cta,
 .login {

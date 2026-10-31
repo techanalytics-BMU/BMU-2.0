@@ -277,12 +277,12 @@ export async function unpublishPost(id: string): Promise<SaveResult> {
   return { ok: true, updatedAt: data.updated_at, slug: data.slug, status: 'draft', publishedAt: null };
 }
 
-/** Delete for good (the editor asks first) */
-export async function deletePost(id: string) {
+/** Delete for good (the dashboard asks first; the editor then goes back to the list) */
+export async function deletePost(id: string): Promise<{ ok: true } | { ok: false; error: string }> {
   if (!(await writer())) return DENIED;
   const supabase = await createClient();
   const { data, error } = await supabase.from('blog_posts').delete().eq('id', id).select('slug').single();
   if (error || !data) return FAILED;
   refreshSite(data.slug);
-  redirect('/dashboard/blogs');
+  return { ok: true };
 }
