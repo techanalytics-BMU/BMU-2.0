@@ -4,7 +4,7 @@
 // instead of the browser's own error page. Nothing else is cached: every page, image and script
 // still comes straight from the network. Bump CACHE after changing offline.html.
 
-const CACHE = 'bmu-offline-v1';
+const CACHE = 'bmu-offline-v2';
 const FALLBACK = '/offline.html';
 const TIMEOUT = 20000; // ms to wait for a page to start answering
 
