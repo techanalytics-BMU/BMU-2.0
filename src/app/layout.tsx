@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import NetworkStatus from '@/components/layout/NetworkStatus/NetworkStatus';
 import { site } from '@/data/site';
 import { albertSans, audiowide } from '@/styles/fonts';
 import './globals.css';
@@ -18,12 +19,16 @@ export const metadata: Metadata = {
     'Bengaluru’s all-in-one digital growth studio: strategic marketing, design and digital experiences built to drive growth.',
 };
 
-// Shared by every page: fonts and base styles. Each group of pages adds its own frame –
-// (site) the navbar, footer and lead popup; (auth) the login card backdrop; (dashboard) the staff area.
+// Shared by every page: fonts, base styles and the "no internet / can't be reached / slow" card.
+// Each group of pages adds its own frame – (site) the navbar, footer and lead popup; (auth) the
+// login card backdrop; (dashboard) the staff area.
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${albertSans.variable} ${audiowide.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <NetworkStatus />
+      </body>
     </html>
   );
 }
