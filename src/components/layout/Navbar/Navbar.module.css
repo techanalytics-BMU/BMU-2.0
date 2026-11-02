@@ -1,222 +1,372 @@
+/* =====================================================================================
+   Navbar: full width and transparent at the top of a page; a floating glass pill once the page
+   scrolls (data-scrolled), sliding away while scrolling down (data-hidden).
+   Its height at the top (72px) is --navbar-offset + --navbar-height, so pages that leave room
+   for the navbar line up in both states.
+   ===================================================================================== */
 .navbar {
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
   position: fixed;
-  top: var(--navbar-offset);
-  left: 50%;
   z-index: 100;
-  width: min(var(--container-width), calc(100% - 2rem));
-  transform: translateX(-50%);
+  top: 0;
+  right: 0;
+  left: 0;
+  padding: 0 clamp(12px, 3vw, 32px);
+  transition:
+    top 0.5s var(--ease),
+    transform 0.5s var(--ease);
 }
 
+/* A soft dark fade behind the full-width bar, so the links read over any hero */
+.navbar::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 120px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent);
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.navbar[data-scrolled='true'] {
+  top: var(--navbar-offset);
+}
+
+.navbar[data-scrolled='true']::before {
+  opacity: 0;
+}
+
+.navbar[data-hidden='true'] {
+  transform: translateY(calc(-100% - var(--navbar-offset) - 16px));
+}
+
+/* Logo · links (centred) · buttons */
 .bar {
   position: relative;
-  display: flex;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
-  height: var(--navbar-height);
-  padding: 0 var(--space-2) 0 var(--space-3);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-pill);
-  background: rgba(11, 18, 27, 0.85);
-  /* -webkit- line first: if it comes after, the CSS build drops both and there's no blur */
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  width: 100%;
+  max-width: 1320px;
+  height: calc(var(--navbar-offset) + var(--navbar-height));
+  margin: 0 auto;
+  padding: 0 4px;
+  border: 1px solid transparent;
+  border-radius: 30px;
+  transition:
+    max-width 0.65s var(--ease),
+    height 0.5s var(--ease),
+    padding 0.5s var(--ease),
+    border-color 0.5s ease,
+    box-shadow 0.5s ease;
 }
 
-/* Logo */
+/* The glass, on its own layer: a blur on the bar itself would trap the dropdowns inside it */
+.bar::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(ellipse 40% 120% at 50% -20%, rgba(255, 255, 255, 0.07), transparent 70%),
+    rgba(9, 11, 14, 0.74);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.navbar[data-scrolled='true'] .bar {
+  max-width: 1040px;
+  height: var(--navbar-height);
+  padding: 0 7px 0 20px;
+  border-color: rgba(255, 255, 255, 0.09);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 18px 44px -20px rgba(0, 0, 0, 0.95);
+}
+
+.navbar[data-scrolled='true'] .bar::before {
+  opacity: 1;
+}
+
+/* ---------- Logo ---------- */
 .logo {
   display: flex;
   align-items: center;
+  justify-self: start;
+  border-radius: 8px;
 }
 
 .logo img {
-  width: 75px;
+  width: 84px;
   height: auto;
+  transition: width 0.5s var(--ease);
 }
 
-/* Links */
-.nav {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: space-between;
-  margin-left: var(--space-6);
+.navbar[data-scrolled='true'] .logo img {
+  width: 70px;
+}
+
+.logo:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+/* ---------- Links, with a glass pill sliding behind them ---------- */
+.linksWrap {
+  position: relative;
 }
 
 .links {
   display: flex;
-  gap: var(--space-6);
-  margin: 0 auto;
+  gap: 2px;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .link {
-  color: var(--color-text-dim);
-  font-size: var(--font-size-xs);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 17px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: #9da2a9;
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  cursor: pointer;
   transition: color 0.2s ease;
 }
 
 .link:hover,
-.active {
+.link[data-current],
+.link[aria-expanded='true'] {
   color: var(--color-text);
 }
 
-/* Call Us + Login, the same height side by side */
+.link:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* The current page: a small lime dot under its link */
+.link[data-current]::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  transform: translateX(-50%);
+}
+
+/* Moved and sized from Navbar.tsx (--x, --w) */
+.indicator {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: var(--w, 0);
+  height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-pill);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  opacity: 0;
+  transform: translate(var(--x, 0), -50%);
+  transition:
+    transform 0.45s var(--ease),
+    width 0.45s var(--ease),
+    opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.indicator[data-visible='true'] {
+  opacity: 1;
+}
+
+/* "Services": a small chevron that turns over while its panel is open */
+.chevron {
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  opacity: 0.7;
+  transform: rotate(45deg);
+  transition:
+    transform 0.3s var(--ease),
+    margin 0.3s var(--ease);
+}
+
+.link[aria-expanded='true'] .chevron {
+  margin-top: 3px;
+  transform: rotate(-135deg);
+}
+
+/* ---------- Login and the main button ---------- */
 .actions {
   display: flex;
-  align-items: stretch;
-  gap: var(--space-2);
+  align-items: center;
+  justify-self: end;
+  gap: 4px;
 }
 
-/* Call Us: just the phone icon in a round button; Login the same height */
-.cta {
-  width: 42px;
-  height: 42px;
-  padding: 0;
-}
-
-/* Login: no icon – even padding instead of the icon button's */
 .login {
-  height: 42px;
-  padding-inline: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: var(--radius-pill);
+  color: #c4c8cd;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
 }
 
-/* For the split second it takes to see whether someone is logged in, the button keeps its place
-   but stays invisible – so "Login" never flickers into "Dashboard" */
+.login:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-text);
+}
+
+.login:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* For the split second it takes to see whether someone is logged in, Login keeps its place
+   but stays invisible – so it never flickers into "Dashboard" */
 .loginChecking {
   opacity: 0;
   pointer-events: none;
 }
 
-/* Their glow stays put until hovered, then travels around the edge */
-.cta,
-.login {
+.cta {
+  height: 42px;
+  padding: 0 20px 0 16px;
+  gap: 10px;
+}
+
+/* Its glow only travels round the edge on hover */
+.cta {
   animation-play-state: paused;
 }
 
 .cta:hover,
-.cta:focus-visible,
-.login:hover,
-.login:focus-visible {
+.cta:focus-visible {
   animation-play-state: running;
 }
 
-/* "Services" – opens the services panel (hover or click). While open it turns bold lime. */
-.menuButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0;
-  border: 0;
-  background: none;
-  font-family: inherit;
-  cursor: pointer;
+/* "We're around": a small lime dot with a slow pulse */
+.liveDot {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-accent);
 }
 
-/* Phone-only list of services inside the menu sheet */
-.subMenu {
-  display: none;
+.liveDot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 1px solid rgba(140, 198, 63, 0.55);
+  border-radius: 50%;
+  animation: ping 2.4s ease-out infinite;
 }
 
-.menuButton:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 4px;
-  border-radius: 4px;
-}
+@keyframes ping {
+  from {
+    opacity: 1;
+    transform: scale(0.5);
+  }
 
-.chevron {
-  width: 5px;
-  height: 5px;
-  margin-top: -3px;
-  border-right: 1.5px solid currentColor;
-  border-bottom: 1.5px solid currentColor;
-  transform: rotate(45deg);
-  transition:
-    transform 0.25s ease,
-    margin 0.25s ease;
-}
-
-.menuButton[aria-expanded='true'] .chevron {
-  margin-top: 2px;
-  transform: rotate(-135deg);
-}
-
-.menuButton[aria-expanded='true'] {
-  color: var(--color-accent);
-  font-weight: 700;
-}
-
-/* The label is always as wide as its bold version (a hidden bold copy sets the width),
-   so turning bold doesn't nudge the other links sideways */
-.menuLabel {
-  display: inline-grid;
-}
-
-.menuLabel::after {
-  content: attr(data-label);
-  height: 0;
-  overflow: hidden;
-  font-weight: 700;
-  visibility: hidden;
-}
-
-/* Desktop: no arrow – the bold lime label shows the panel is open
-   (phones keep it, as the only sign that "Services" expands in the menu) */
-@media (min-width: 901px) {
-  .chevron {
-    display: none;
+  to {
+    opacity: 0;
+    transform: scale(1.6);
   }
 }
 
-/* Dims the page behind the services panel or the phone menu (sits just under the navbar).
-   It lets the pointer through, except behind the phone menu, where a tap closes the menu. */
+/* ---------- How far down the page: a thin lime line along the pill's bottom ---------- */
+.progress {
+  position: absolute;
+  right: 28px;
+  bottom: -1px;
+  left: 28px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(140, 198, 63, 0.35), #8cc63f 55%, #a6dc58);
+  opacity: 0;
+  transform: scaleX(var(--scroll, 0));
+  transform-origin: left;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.navbar[data-scrolled='true'] .progress {
+  opacity: 1;
+}
+
+/* ---------- Dims the page behind the services panel (just under the navbar) ---------- */
 .backdrop {
   position: fixed;
+  z-index: 98;
   inset: 0;
-  z-index: 99;
   background: rgba(0, 0, 0, 0.55);
-  /* strong blur: the frameless services cards stand cleanly over a soft, frosted page */
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
   transition:
-    opacity 0.25s ease,
-    visibility 0s linear 0.25s;
+    opacity 0.3s ease,
+    visibility 0s linear 0.3s;
 }
 
 .backdrop[data-open='true'] {
   opacity: 1;
   visibility: visible;
   transition:
-    opacity 0.25s ease,
+    opacity 0.3s ease,
     visibility 0s;
 }
 
-.backdrop[data-sheet='true'] {
-  pointer-events: auto;
-}
-
-/* Burger: two lines that turn into a cross when open */
+/* ---------- Burger (phones): two lines that turn into a cross ---------- */
 .menuToggle {
   display: none;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  justify-self: end;
+  width: 44px;
+  height: 44px;
   padding: 0;
-  border: 0;
-  border-radius: 12px;
-  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
-.menuToggle:hover,
 .menuToggle[data-open='true'] {
-  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(140, 198, 63, 0.4);
+  background: rgba(140, 198, 63, 0.08);
 }
 
 .menuToggle:focus-visible {
@@ -235,27 +385,32 @@
 .menuIcon::after {
   content: '';
   position: absolute;
-  left: 0;
   right: 0;
+  left: 0;
   height: 1.5px;
   border-radius: 2px;
   background: var(--color-text);
   transition:
-    top 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    top 0.35s var(--ease),
+    transform 0.35s var(--ease),
+    width 0.35s var(--ease);
 }
 
 .menuIcon::before {
   top: 0;
 }
 
+/* the lower line a little shorter, until it crosses */
 .menuIcon::after {
   top: calc(100% - 1.5px);
+  left: auto;
+  width: 65%;
 }
 
 .menuToggle[data-open='true'] .menuIcon::before,
 .menuToggle[data-open='true'] .menuIcon::after {
   top: calc(50% - 0.75px);
+  width: 100%;
 }
 
 .menuToggle[data-open='true'] .menuIcon::before {
@@ -266,221 +421,45 @@
   transform: rotate(-45deg);
 }
 
-/* ---------- Phones and tablets: the links move into a frosted sheet under the bar ---------- */
+/* ---------- Laptops: a little tighter ---------- */
+@media (max-width: 1100px) {
+  .link {
+    padding: 0 13px;
+  }
+}
+
+/* ---------- Phones and tablets: logo and burger; the menu is a full screen of its own ---------- */
 @media (max-width: 900px) {
+  .bar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .nav,
+  .actions {
+    display: none;
+  }
+
   .menuToggle {
     display: grid;
   }
 
-  .nav {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--space-4);
-    max-height: calc(100svh - var(--navbar-offset) - var(--navbar-height) - 24px);
-    margin: 0;
-    padding: 6px 18px 18px;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 22px;
-    /* Fully opaque – the bar's own blur stops a blur working here, so a see-through
-       sheet would show sharp page text behind it */
-    background: linear-gradient(to bottom, #141518, #0b0c0e);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.05),
-      0 30px 60px -20px rgba(0, 0, 0, 0.85);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-8px) scale(0.98);
-    transform-origin: top center;
-    transition:
-      opacity 0.2s ease,
-      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-      visibility 0s linear 0.35s;
-  }
-
-  .navOpen {
-    opacity: 1;
-    visibility: visible;
-    transform: none;
-    transition:
-      opacity 0.2s ease,
-      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-      visibility 0s;
-  }
-
-  .links {
-    flex-direction: column;
-    gap: 0;
-    margin: 0;
-  }
-
-  /* Big, easy-to-tap rows separated by hairlines; they rise in one after another */
-  .links > li {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  }
-
-  .navOpen .links > li,
-  .navOpen .actions {
-    animation: item-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-    animation-delay: calc(60ms + var(--i, 5) * 45ms);
-  }
-
-  .link {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 18px 4px;
-    color: #e6e7e9;
-    font-size: 1.25rem;
-    font-weight: 500;
-    letter-spacing: -0.015em;
-    text-transform: none;
-  }
-
-  /* Current page: a small green dot on the right */
-  .link.active::after {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--color-accent);
-    box-shadow: 0 0 8px var(--color-accent);
-  }
-
-  .menuButton.active::after {
-    display: none;
-  }
-
-  .chevron {
-    width: 8px;
-    height: 8px;
-    margin-right: 6px;
-    opacity: 0.7;
-  }
-
-  /* Services list: height animates by switching the grid row from 0fr to 1fr */
-  .subMenu {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .subMenu[data-open='true'] {
-    grid-template-rows: 1fr;
-  }
-
-  .subList {
-    display: grid;
-    gap: 4px;
-    min-height: 0;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    list-style: none;
-  }
-
-  /* Space under the list as a margin (clipped when collapsed – padding would stay visible) */
-  .subList > li:last-child {
-    margin-bottom: 14px;
-  }
-
-  .subMenu[data-open='true'] .subList > li {
-    animation: item-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-    animation-delay: calc(var(--j) * 40ms);
-  }
-
-  .subItem {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 8px;
-    border-radius: 14px;
-    transition: background-color 0.2s ease;
-  }
-
-  a.subItem:active {
-    background: rgba(255, 255, 255, 0.05);
-  }
-
-  /* Chrome icon in a small dark tile */
-  .subIcon {
-    display: grid;
-    flex-shrink: 0;
-    place-items: center;
-    width: 52px;
-    height: 52px;
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 14px;
-    background: linear-gradient(145deg, #1d1d1f, #121213);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  }
-
-  .subIcon img {
-    width: 42px;
-    height: 42px;
-  }
-
-  .subText {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-  }
-
-  .subTitle {
-    color: #ececec;
-    font-size: 0.9375rem;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-  }
-
-  .subDescription {
-    overflow: hidden;
-    color: #7c7c7c;
-    font-size: 0.8125rem;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  /* Equal halves */
-  .actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    margin-top: var(--space-2);
-  }
-
-  .cta,
-  .login {
-    justify-content: center;
-    width: auto;
-    height: 50px;
-  }
-}
-
-@keyframes item-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+  .navbar[data-scrolled='true'] .bar {
+    padding: 0 6px 0 18px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .navOpen .links > li,
-  .navOpen .actions,
-  .subMenu[data-open='true'] .subList > li {
-    animation: none;
-  }
-
-  .nav,
-  .subMenu,
+  .navbar,
+  .bar,
+  .bar::before,
+  .logo img,
+  .indicator,
   .menuIcon::before,
   .menuIcon::after {
     transition: none;
+  }
+
+  .liveDot::after {
+    animation: none;
   }
 }

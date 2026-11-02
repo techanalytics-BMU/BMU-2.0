@@ -5,47 +5,36 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import Button from '@/components/ui/Button/Button';
-import { navAccount, navCta, navDashboard, navLinks, navLogin, servicesMenu } from '@/data/navigation';
+import { navAccount, navCta, navDashboard, navLinks, navLogin } from '@/data/navigation';
 import { useSignedIn } from '@/hooks/useSignedIn';
-import type { ServicesMenuItem } from '@/types/navigation';
 import styles from './Navbar.module.css';
+import NavbarMobileMenu from './NavbarMobileMenu';
 import NavbarServicesMenu from './NavbarServicesMenu';
 
 const SERVICES_PANEL_ID = 'services-panel';
-const SERVICES_LIST_ID = 'services-list';
-const PHONE_MENU = '(max-width: 900px)'; // same breakpoint as the menu sheet in the CSS
+const MOBILE_MENU_ID = 'mobile-menu';
+const PHONE_MENU = '(max-width: 900px)'; // same breakpoint as the CSS
 const OPEN_DELAY = 90; // ms the pointer rests on "Services" before the panel opens
 const CLOSE_DELAY = 220; // ms to move between "Services" and the panel before it closes
+const SCROLLED_AT = 24; // px scrolled before the full-width bar turns into the floating pill
+const HIDE_AFTER = 480; // px – above this the bar never hides
 
-// One service in the phone menu: chrome icon in a tile, title, one-line description
-function ServiceRow({ item, onClick }: { item: ServicesMenuItem; onClick: () => void }) {
-  const content = (
-    <>
-      <span className={styles.subIcon}>
-        <Image src={item.icon} alt="" width={40} height={40} />
-      </span>
-      <span className={styles.subText}>
-        <span className={styles.subTitle}>{item.title}</span>
-        <span className={styles.subDescription}>{item.description}</span>
-      </span>
-    </>
-  );
+// A link stands for its page and everything under it (/services/seo → Services)
+const isCurrent = (pathname: string, href: string) =>
+  pathname === href || pathname.startsWith(`${href}/`);
 
-  return item.href ? (
-    <Link href={item.href} className={styles.subItem} onClick={onClick}>
-      {content}
-    </Link>
-  ) : (
-    <div className={styles.subItem}>{content}</div>
-  );
-}
-
-// Desktop: "Services" opens a panel on hover (a click pins it open; Escape, an outside click or
-// moving focus away closes it). Phones: the burger opens a menu sheet, where "Services" expands
-// into a list. Both remember the page they were opened on, so going to another page closes them.
+// At the top of a page the navbar spans the width, transparent over the hero. Once the page
+// scrolls it draws in to a floating glass pill with a thin lime line showing how far down the
+// page you are, slips away while you scroll down and comes back as soon as you scroll up.
+// A soft glass pill slides behind the links to the one under the pointer (and rests on the
+// current page). "Services" opens a panel on hover (a click pins it; Escape, an outside click or
+// moving focus away closes it). Phones get a full-screen menu instead (NavbarMobileMenu).
+// Both remember the page they were opened on, so going to another page closes them.
 export default function Navbar() {
   const pathname = usePathname();
   const headerRef = useRef<HTMLElement>(null);
+  const linksRef = useRef<HTMLUListElement>(null);
+  const indicatorRef = useRef<HTMLSpanElement>(null);
   const servicesButtonRef = useRef<HTMLButtonElement>(null);
   const menuToggleRef = useRef<HTMLButtonElement>(null);
   const hoverTimer = useRef<number | undefined>(undefined);
@@ -53,7 +42,9 @@ export default function Navbar() {
 
   const [servicesOpenOn, setServicesOpenOn] = useState<string | null>(null);
   const [menuOpenOn, setMenuOpenOn] = useState<string | null>(null);
-  const [phoneServicesOpen, setPhoneServicesOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [hovered, setHovered] = useState<number | null>(null);
   const servicesOpen = servicesOpenOn === pathname;
   const menuOpen = menuOpenOn === pathname;
 
@@ -72,7 +63,6 @@ export default function Navbar() {
   };
   const closeMenu = () => {
     setMenuOpenOn(null);
-    setPhoneServicesOpen(false);
     closeServices();
   };
 
@@ -96,10 +86,6 @@ export default function Navbar() {
   };
 
   const onServicesClick = () => {
-    if (window.matchMedia(PHONE_MENU).matches) {
-      setPhoneServicesOpen(!phoneServicesOpen);
-      return;
-    }
     window.clearTimeout(hoverTimer.current);
     if (openedByHover.current) {
       openedByHover.current = false; // already open from hovering – the click pins it
@@ -109,6 +95,57 @@ export default function Navbar() {
       setServicesOpenOn(pathname);
     }
   };
+
+  // Scrolling: pill or full width, hidden or shown, and how far down the page (--scroll, 0 → 1)
+  useEffect(() => {
+    let lastY = window.scrollY;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const y = window.scrollY;
+      setScrolled(y > SCROLLED_AT);
+      if (Math.abs(y - lastY) > 6) {
+        setHidden(y > lastY && y > HIDE_AFTER);
+        lastY = y;
+      }
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      headerRef.current?.style.setProperty('--scroll', max > 0 ? (y / max).toFixed(4) : '0');
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+
+  // The sliding pill behind the links: under the pointer, else on "Services" while its panel is
+  // open, else on the current page's link – or out of sight. It appears in place (no slide in
+  // from the side) and only slides between links.
+  const activeIndex = navLinks.findIndex((link) => isCurrent(pathname, link.href));
+  const servicesIndex = navLinks.findIndex((link) => link.menu);
+  const target = hovered ?? (servicesOpen ? servicesIndex : activeIndex);
+  useEffect(() => {
+    const indicator = indicatorRef.current;
+    const link = target >= 0 ? linksRef.current?.children[target]?.firstElementChild : null;
+    if (!indicator) return;
+    if (!(link instanceof HTMLElement)) {
+      indicator.dataset.visible = 'false';
+      return;
+    }
+    const appearing = indicator.dataset.visible !== 'true';
+    if (appearing) indicator.style.transition = 'opacity 0.25s ease';
+    indicator.style.setProperty('--x', `${link.offsetLeft}px`);
+    indicator.style.setProperty('--w', `${link.offsetWidth}px`);
+    indicator.dataset.visible = 'true';
+    if (appearing) {
+      void indicator.offsetWidth; // apply the new place before the slide comes back on
+      indicator.style.transition = '';
+    }
+  }, [target]);
 
   // Services panel: close on Escape (focus back on "Services") or a click outside the navbar
   useEffect(() => {
@@ -133,14 +170,11 @@ export default function Navbar() {
     };
   }, [servicesOpen]);
 
-  // Phone menu sheet: lock the page behind it, close on Escape, and close if the screen
-  // grows past the phone breakpoint (e.g. a tablet turned sideways)
+  // Phone menu: lock the page behind it, close on Escape, and close if the screen grows past
+  // the phone breakpoint (e.g. a tablet turned sideways)
   useEffect(() => {
     if (!menuOpen) return;
-    const close = () => {
-      setMenuOpenOn(null);
-      setPhoneServicesOpen(false);
-    };
+    const close = () => setMenuOpenOn(null);
     const root = document.documentElement;
     const phoneMenu = window.matchMedia(PHONE_MENU);
     const onKeyDown = (event: KeyboardEvent) => {
@@ -166,6 +200,9 @@ export default function Navbar() {
       <header
         ref={headerRef}
         className={styles.navbar}
+        data-scrolled={scrolled}
+        data-hidden={hidden && !servicesOpen && !menuOpen}
+        onFocus={() => setHidden(false)} // a keyboard user tabbing in always sees it
         onBlur={(event) => {
           // Keyboard: tabbing out of the navbar closes the services panel
           if (servicesOpen && !event.currentTarget.contains(event.relatedTarget as Node)) {
@@ -178,96 +215,69 @@ export default function Navbar() {
             <Image
               src="/images/common/bmu-logo-light.webp"
               alt="BMU Marketing"
-              width={75}
-              height={36}
+              width={84}
+              height={40}
               priority
             />
           </Link>
 
-          <nav
-            aria-label="Main"
-            className={`${styles.nav} ${menuOpen ? styles.navOpen : ''}`}
-            data-lenis-prevent // the sheet scrolls on its own on phones
-          >
-            <ul className={styles.links}>
-              {navLinks.map((link, i) => (
-                <li
-                  key={link.href}
-                  style={{ '--i': i } as React.CSSProperties}
-                  onPointerEnter={link.menu ? hoverIn : undefined}
-                  onPointerLeave={link.menu ? hoverOut : undefined}
-                >
-                  {link.menu ? (
-                    <>
+          <nav aria-label="Main" className={styles.nav}>
+            <div className={styles.linksWrap} onPointerLeave={() => setHovered(null)}>
+              <span ref={indicatorRef} className={styles.indicator} aria-hidden="true" />
+              <ul ref={linksRef} className={styles.links}>
+                {navLinks.map((link, i) => (
+                  <li
+                    key={link.href}
+                    onPointerEnter={(event) => {
+                      if (event.pointerType === 'mouse') setHovered(i);
+                      if (link.menu) hoverIn(event);
+                    }}
+                    onPointerLeave={link.menu ? hoverOut : undefined}
+                  >
+                    {link.menu ? (
                       <button
                         ref={servicesButtonRef}
                         type="button"
-                        className={`${styles.link} ${styles.menuButton} ${servicesOpen ? styles.active : ''}`}
-                        aria-expanded={servicesOpen || phoneServicesOpen}
-                        aria-controls={`${SERVICES_PANEL_ID} ${SERVICES_LIST_ID}`}
+                        className={styles.link}
+                        data-current={i === activeIndex || undefined}
+                        aria-expanded={servicesOpen}
+                        aria-controls={SERVICES_PANEL_ID}
                         onClick={onServicesClick}
                       >
-                        <span className={styles.menuLabel} data-label={link.label}>
-                          {link.label}
-                        </span>
+                        {link.label}
                         <span className={styles.chevron} aria-hidden="true" />
                       </button>
-
-                      {/* Phones: the services, expanding under "Services" in the menu sheet */}
-                      <div
-                        id={SERVICES_LIST_ID}
-                        className={styles.subMenu}
-                        data-open={phoneServicesOpen}
-                        inert={!phoneServicesOpen}
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className={styles.link}
+                        aria-current={pathname === link.href ? 'page' : undefined}
+                        data-current={i === activeIndex || undefined}
                       >
-                        <ul className={styles.subList}>
-                          {servicesMenu.items.map((item, j) => (
-                            <li key={item.title} style={{ '--j': j } as React.CSSProperties}>
-                              <ServiceRow item={item} onClick={closeMenu} />
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </>
-                  ) : (
-                    <Link
-                      href={link.href}
-                      onClick={closeMenu}
-                      className={`${styles.link} ${pathname === link.href ? styles.active : ''}`}
-                      aria-current={pathname === link.href ? 'page' : undefined}
-                    >
-                      {link.label}
-                    </Link>
-                  )}
-                </li>
-              ))}
-            </ul>
-
-            {/* Call Us (phone icon only, to the contact page) and Login – their glow moves only on hover.
-                Login becomes Dashboard / My account while someone is logged in. */}
-            <div className={styles.actions}>
-              <Button
-                href={navCta.href}
-                size="sm"
-                ariaLabel={navCta.label}
-                className={styles.cta}
-                onClick={closeMenu}
-              >
-                <Image src="/icons/common/navbar-call-icon.svg" alt="" width={24} height={24} />
-              </Button>
-              <Button
-                href={account.href}
-                variant="secondary"
-                size="sm"
-                className={`${styles.login} ${signedIn === 'checking' ? styles.loginChecking : ''}`}
-                onClick={closeMenu}
-              >
-                {account.label}
-              </Button>
+                        {link.label}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
             </div>
           </nav>
 
-          {/* Burger: two lines that turn into a cross */}
+          {/* Login (Dashboard / My account while logged in), then the main button */}
+          <div className={styles.actions}>
+            <Link
+              href={account.href}
+              className={`${styles.login} ${signedIn === 'checking' ? styles.loginChecking : ''}`}
+            >
+              {account.label}
+            </Link>
+            <Button href={navCta.href} size="sm" className={styles.cta}>
+              <span className={styles.liveDot} aria-hidden="true" />
+              {navCta.label}
+            </Button>
+          </div>
+
+          {/* Phones: two lines that turn into a cross */}
           <button
             ref={menuToggleRef}
             type="button"
@@ -275,6 +285,7 @@ export default function Navbar() {
             data-open={menuOpen}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
+            aria-controls={MOBILE_MENU_ID}
             onClick={() => {
               if (menuOpen) {
                 closeMenu();
@@ -286,6 +297,9 @@ export default function Navbar() {
           >
             <span className={styles.menuIcon} aria-hidden="true" />
           </button>
+
+          {/* How far down the page – a thin lime line along the pill's bottom edge */}
+          <span className={styles.progress} aria-hidden="true" />
         </div>
 
         <NavbarServicesMenu
@@ -297,14 +311,16 @@ export default function Navbar() {
         />
       </header>
 
-      {/* Dims the page behind the services panel or the phone menu (tapping it closes the menu) */}
-      <div
-        className={styles.backdrop}
-        data-open={servicesOpen || menuOpen}
-        data-sheet={menuOpen}
-        onClick={closeMenu}
-        aria-hidden="true"
+      <NavbarMobileMenu
+        id={MOBILE_MENU_ID}
+        open={menuOpen}
+        pathname={pathname}
+        account={account}
+        onClose={closeMenu}
       />
+
+      {/* Dims the page behind the services panel */}
+      <div className={styles.backdrop} data-open={servicesOpen} aria-hidden="true" />
     </>
   );
 }

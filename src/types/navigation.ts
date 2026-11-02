@@ -12,5 +12,7 @@ export type ServicesMenuItem = {
 };
 
 export type ServicesMenuContent = {
+  // Beside the cards on desktop: a heading, a line and a few links
+  intro: { heading: string; text: string; links: NavLink[] };
   items: ServicesMenuItem[]; // fill the bento grid in order: tall, wide, small, small, wide, small
 };

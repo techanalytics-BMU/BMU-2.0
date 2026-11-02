@@ -44,7 +44,7 @@ function Card({
 }
 
 // Cursor spotlight: every card gets the pointer position relative to itself (--mx / --my),
-// so the light and the glowing border edge follow the cursor across the whole grid
+// so a soft light and a brighter edge follow the cursor across the whole grid
 function trackPointer(event: React.PointerEvent<HTMLDivElement>) {
   for (const card of event.currentTarget.children as HTMLCollectionOf<HTMLElement>) {
     const rect = card.getBoundingClientRect();
@@ -53,9 +53,10 @@ function trackPointer(event: React.PointerEvent<HTMLDivElement>) {
   }
 }
 
-// Desktop panel that drops down from "Services" in the navbar: a bento grid of the service
-// groups, each with a chrome icon. Stays mounted so it can fade in and out; `inert` keeps it
-// out of the tab order while closed. (Phones list the services inside the menu sheet instead.)
+// Desktop panel that drops down from "Services": one glass frame holding a short intro (with
+// links to every service, the industries and a free call) beside a bento grid of the six service
+// groups, each with a chrome icon. Stays mounted so it can fade in and out; `inert` keeps it out
+// of the tab order while closed. (Phones list the services in the full-screen menu instead.)
 export default function NavbarServicesMenu({
   id,
   open,
@@ -63,6 +64,7 @@ export default function NavbarServicesMenu({
   onPointerEnter,
   onPointerLeave,
 }: Props) {
+  const { intro, items } = servicesMenu;
   return (
     <div
       id={id}
@@ -73,10 +75,31 @@ export default function NavbarServicesMenu({
       onPointerLeave={onPointerLeave}
       data-lenis-prevent // let the panel scroll on its own (Lenis handles the page)
     >
-      <div className={styles.grid} onPointerMove={trackPointer}>
-        {servicesMenu.items.map((item, i) => (
-          <Card key={item.title} item={item} index={i} onClose={onClose} />
-        ))}
+      <div className={styles.frame}>
+        <div className={styles.intro}>
+          <p className={styles.eyebrow}>Services</p>
+          <p className={styles.heading}>{intro.heading}</p>
+          <p className={styles.introText}>{intro.text}</p>
+          <ul className={styles.introLinks}>
+            {intro.links.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} onClick={onClose}>
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p className={styles.note}>
+            <span className={styles.noteDot} aria-hidden="true" />
+            Reply within one working day
+          </p>
+        </div>
+
+        <div className={styles.grid} onPointerMove={trackPointer}>
+          {items.map((item, i) => (
+            <Card key={item.title} item={item} index={i} onClose={onClose} />
+          ))}
+        </div>
       </div>
     </div>
   );

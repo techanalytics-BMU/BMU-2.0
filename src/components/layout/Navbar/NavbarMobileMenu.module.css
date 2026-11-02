@@ -1,0 +1,319 @@
+/* =====================================================================================
+   Full-screen menu (phones and tablets): opens as a circle growing from the burger, under the
+   navbar bar (which stays on top, its burger now a cross)
+   ===================================================================================== */
+.menu {
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /* where the burger sits – the circle grows from here */
+  --origin: calc(100% - clamp(12px, 3vw, 32px) - 28px) calc(var(--navbar-offset) + 28px);
+
+  position: fixed;
+  z-index: 99;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  padding: calc(var(--navbar-offset) + var(--navbar-height) + 28px) 22px
+    calc(22px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background:
+    radial-gradient(ellipse 90% 45% at 50% 108%, rgba(140, 198, 63, 0.16), transparent 70%),
+    radial-gradient(1px 1px at 40px 60px, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 190px 220px, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1.5px 1.5px at 310px 120px, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 120px 340px, rgba(255, 255, 255, 0.45), transparent),
+    #040506;
+  background-size:
+    100% 100%,
+    380px 380px,
+    380px 380px,
+    380px 380px,
+    380px 380px,
+    auto;
+  clip-path: circle(0 at var(--origin));
+  visibility: hidden;
+  transition:
+    clip-path 0.55s var(--ease),
+    visibility 0s linear 0.55s;
+}
+
+.menu[data-open='true'] {
+  clip-path: circle(150% at var(--origin));
+  visibility: visible;
+  transition:
+    clip-path 0.7s var(--ease),
+    visibility 0s;
+}
+
+@media (max-width: 900px) {
+  .menu {
+    display: flex;
+  }
+}
+
+/* ---------- Big numbered links, rising in one after another ---------- */
+.links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.menu[data-open='true'] .item,
+.menu[data-open='true'] .footer {
+  animation: rise 0.7s var(--ease) backwards;
+  animation-delay: calc(0.12s + var(--i) * 0.06s);
+}
+
+.link {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  width: 100%;
+  padding: 18px 2px;
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.link:focus-visible {
+  border-radius: 10px;
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.index {
+  min-width: 22px;
+  color: var(--color-text-dim);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+}
+
+.label {
+  flex: 1;
+  padding-bottom: 0.06em;
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(2rem, 9vw, 2.75rem);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+/* The current page: its number turns lime */
+.link[aria-current='page'] .index {
+  color: var(--color-accent);
+}
+
+/* "Services": a plus that turns into a cross while open */
+.plus {
+  position: relative;
+  align-self: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 50%;
+  transition:
+    transform 0.35s var(--ease),
+    border-color 0.3s ease;
+}
+
+.plus::before,
+.plus::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 1.5px;
+  border-radius: 1px;
+  background: var(--color-text);
+  transform: translate(-50%, -50%);
+}
+
+.plus::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.link[aria-expanded='true'] .plus {
+  border-color: rgba(140, 198, 63, 0.5);
+  transform: rotate(45deg);
+}
+
+/* ---------- The six service groups: height opens by switching the row from 0fr to 1fr ---------- */
+.services {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.45s var(--ease);
+}
+
+.services[data-open='true'] {
+  grid-template-rows: 1fr;
+}
+
+.serviceList {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr); /* rows never wider than the screen – long lines end in "…" */
+  gap: 4px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+}
+
+/* space under the list as a margin (clipped while folded – padding would stay visible) */
+.serviceList > li:last-child {
+  margin-bottom: 16px;
+}
+
+.services[data-open='true'] .serviceList > li {
+  animation: rise 0.5s var(--ease) backwards;
+  animation-delay: calc(var(--j) * 0.04s);
+}
+
+.service {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px;
+  border-radius: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.service:active {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.service:focus-visible,
+.allServices:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Chrome icon in a small dark tile */
+.serviceIcon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  background: linear-gradient(145deg, #1d1d1f, #121213);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.serviceIcon img {
+  width: 42px;
+  height: 42px;
+}
+
+.serviceText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.serviceTitle {
+  color: #ececec;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.serviceDescription {
+  overflow: hidden;
+  color: #7d8187;
+  font-size: 0.8125rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.allServices {
+  display: inline-block;
+  margin: 6px 0 0 8px;
+  border-radius: 6px;
+  color: var(--color-accent);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* ---------- Bottom: the two buttons, then the phone number and email ---------- */
+.footer {
+  margin-top: auto;
+  padding-top: 32px;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.buttons > * {
+  min-width: 0;
+  height: 52px;
+}
+
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.contact a {
+  border-radius: 4px;
+  color: #a9adb3;
+  font-size: 0.875rem;
+  transition: color 0.2s ease;
+}
+
+.contact a:hover {
+  color: var(--color-text);
+}
+
+.contact a:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu,
+  .menu[data-open='true'] {
+    clip-path: none;
+    transition: visibility 0s;
+  }
+
+  .menu[data-open='true'] .item,
+  .menu[data-open='true'] .footer,
+  .services[data-open='true'] .serviceList > li {
+    animation: none;
+  }
+
+  .services,
+  .plus {
+    transition: none;
+  }
+}

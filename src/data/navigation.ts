@@ -8,16 +8,26 @@ export const navLinks: NavLink[] = [
   { label: 'Team', href: '/team' },
 ];
 
-// Buttons on the right: the main one (with the phone icon), then Login – which becomes Dashboard
-// (admins, managers, SEO writers) or My account (clients) while someone is logged in
-export const navCta: NavLink = { label: 'Call Us', href: '/contact' };
+// On the right: Login – which becomes Dashboard (admins, managers, SEO writers) or My account
+// (clients) while someone is logged in – then the main button, to the contact page
+export const navCta: NavLink = { label: 'Let’s talk', href: '/contact' };
 export const navLogin: NavLink = { label: 'Login', href: '/login' };
 export const navDashboard: NavLink = { label: 'Dashboard', href: '/dashboard' };
 export const navAccount: NavLink = { label: 'My account', href: '/account' };
 
-// "Services" in the navbar: a hover panel on desktop, a list inside the menu sheet on phones.
-// The six service groups, each opening its overview page (src/data/pseo/groups.ts).
+// "Services" in the navbar: a hover panel on desktop (a short intro beside the six cards), a list
+// in the full-screen menu on phones. The six service groups each open their overview page
+// (src/data/pseo/groups.ts).
 export const servicesMenu: ServicesMenuContent = {
+  intro: {
+    heading: 'One team for every channel',
+    text: 'Six service groups working to one plan. Pick one to see what’s included and where prices start.',
+    links: [
+      { label: 'All services', href: '/services' },
+      { label: 'Industries we serve', href: '/industries' },
+      { label: 'Book a free call', href: '/contact' },
+    ],
+  },
   items: [
     {
       title: 'Brand & Design',
