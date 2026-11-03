@@ -1,6 +1,7 @@
 export type NavLink = {
   label: string;
   href: string;
+  description?: string; // one short line under the link in the phone menu
   menu?: 'services'; // opens the services panel instead of going to href
 };
 

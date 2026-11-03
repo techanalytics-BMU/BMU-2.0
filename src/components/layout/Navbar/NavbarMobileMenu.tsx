@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
 import Button from '@/components/ui/Button/Button';
 import { navCta, navLinks, servicesMenu } from '@/data/navigation';
 import { site } from '@/data/site';
@@ -17,108 +16,133 @@ type Props = {
   onClose: () => void;
 };
 
-const pad = (n: number) => String(n).padStart(2, '0');
+// Line icons for the page links (by href); any other page gets a small dot
+const PAGE_ICONS: Record<string, React.ReactNode> = {
+  '/about': (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M12 11v5M12 7.6h.01" />
+    </>
+  ),
+  '/work': (
+    <>
+      <rect x="3.5" y="7" width="17" height="12.5" rx="2.5" />
+      <path d="M9 7V5.6A1.6 1.6 0 0 1 10.6 4h2.8A1.6 1.6 0 0 1 15 5.6V7M3.5 12.5h17" />
+    </>
+  ),
+  '/team': (
+    <>
+      <circle cx="9.5" cy="8.5" r="3" />
+      <path d="M4 19a5.5 5.5 0 0 1 11 0M16 5.8a3 3 0 0 1 0 5.4M17.6 14.4A5.5 5.5 0 0 1 20.5 19" />
+    </>
+  ),
+};
+
+const isCurrent = (pathname: string, href: string) =>
+  pathname === href || pathname.startsWith(`${href}/`);
 
 // Phones and tablets: the menu fills the screen, opening as a circle that grows from the burger.
-// Big numbered links rise in one after another; "Services" opens the six service groups in place.
-// The buttons and the phone number and email sit at the bottom. Stays mounted so it can animate;
-// `inert` keeps it out of reach while closed. (Desktop never shows it – see the CSS.)
+// Everything is in view at once, nothing folded away: the pages as one glass list (an icon, the
+// name and a line on what's there), the six service groups as a grid of tiles with their chrome
+// icons, and a dock at the bottom – "Let's talk", one-tap call / WhatsApp / email, and Login.
+// Stays mounted so it can animate; `inert` keeps it out of reach while closed.
 export default function NavbarMobileMenu({ id, open, pathname, account, onClose }: Props) {
-  const [servicesOpen, setServicesOpen] = useState(false);
-  // However the menu closes (a link, the burger, Escape), it opens next time with Services folded
-  const [wasOpen, setWasOpen] = useState(open);
-  if (open !== wasOpen) {
-    setWasOpen(open);
-    if (!open) setServicesOpen(false);
-  }
-  const close = () => {
-    setServicesOpen(false);
-    onClose();
-  };
+  const pages = navLinks.filter((link) => !link.menu);
+  const services = navLinks.find((link) => link.menu);
+  let step = 0; // entrance order
 
   return (
-    <div
-      id={id}
-      className={styles.menu}
-      data-open={open}
-      inert={!open}
-      data-lenis-prevent // the menu scrolls on its own
-    >
-      <nav aria-label="Menu" className={styles.nav}>
-        <ul className={styles.links}>
-          {navLinks.map((link, i) => (
-            <li key={link.href} className={styles.item} style={{ '--i': i } as React.CSSProperties}>
-              {link.menu ? (
-                <>
-                  <button
-                    type="button"
-                    className={styles.link}
-                    aria-expanded={servicesOpen}
-                    aria-controls={`${id}-services`}
-                    onClick={() => setServicesOpen(!servicesOpen)}
-                  >
-                    <span className={styles.index}>{pad(i + 1)}</span>
-                    <span className={styles.label}>{link.label}</span>
-                    <span className={styles.plus} aria-hidden="true" />
-                  </button>
+    <div id={id} className={styles.menu} data-open={open} inert={!open}>
+      <div className={styles.scroll} data-lenis-prevent>
+        <p className={styles.status} style={{ '--i': step++ } as React.CSSProperties}>
+          <span className={styles.statusDot} aria-hidden="true" />
+          Reply within one working day
+        </p>
 
-                  {/* The six service groups, opening in place */}
-                  <div
-                    id={`${id}-services`}
-                    className={styles.services}
-                    data-open={servicesOpen}
-                    inert={!servicesOpen}
+        <nav aria-label="Menu">
+          <ul className={styles.pages}>
+            {pages.map((link) => {
+              const current = isCurrent(pathname, link.href);
+              return (
+                <li key={link.href} style={{ '--i': step++ } as React.CSSProperties}>
+                  <Link
+                    href={link.href}
+                    className={styles.page}
+                    aria-current={pathname === link.href ? 'page' : undefined}
+                    data-current={current || undefined}
+                    onClick={onClose}
                   >
-                    <ul className={styles.serviceList}>
-                      {servicesMenu.items.map((item, j) => (
-                        <li key={item.title} style={{ '--j': j } as React.CSSProperties}>
-                          <Link href={item.href ?? link.href} className={styles.service} onClick={close}>
-                            <span className={styles.serviceIcon}>
-                              <Image src={item.icon} alt="" width={40} height={40} />
-                            </span>
-                            <span className={styles.serviceText}>
-                              <span className={styles.serviceTitle}>{item.title}</span>
-                              <span className={styles.serviceDescription}>{item.description}</span>
-                            </span>
-                          </Link>
-                        </li>
-                      ))}
-                      <li style={{ '--j': servicesMenu.items.length } as React.CSSProperties}>
-                        <Link href={link.href} className={styles.allServices} onClick={close}>
-                          All services
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
-                </>
-              ) : (
-                <Link
-                  href={link.href}
-                  className={styles.link}
-                  aria-current={pathname === link.href ? 'page' : undefined}
-                  onClick={close}
-                >
-                  <span className={styles.index}>{pad(i + 1)}</span>
-                  <span className={styles.label}>{link.label}</span>
+                    <span className={styles.pageIcon}>
+                      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                        {PAGE_ICONS[link.href] ?? <circle cx="12" cy="12" r="2.5" />}
+                      </svg>
+                    </span>
+                    <span className={styles.pageText}>
+                      <span className={styles.pageTitle}>{link.label}</span>
+                      {link.description && (
+                        <span className={styles.pageHint}>{link.description}</span>
+                      )}
+                    </span>
+                    {current && <span className={styles.currentDot} aria-hidden="true" />}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+
+          {services && (
+            <>
+              <div className={styles.sectionHead} style={{ '--i': step++ } as React.CSSProperties}>
+                <p className={styles.sectionLabel}>{services.label}</p>
+                <Link href={services.href} className={styles.sectionLink} onClick={onClose}>
+                  All services
                 </Link>
-              )}
-            </li>
-          ))}
-        </ul>
-      </nav>
+              </div>
+              <ul className={styles.services}>
+                {servicesMenu.items.map((item, j) => (
+                  <li key={item.title} style={{ '--i': step + j * 0.5 } as React.CSSProperties}>
+                    <Link
+                      href={item.href ?? services.href}
+                      className={styles.service}
+                      data-current={(item.href && isCurrent(pathname, item.href)) || undefined}
+                      onClick={onClose}
+                    >
+                      <Image src={item.icon} alt="" width={56} height={56} className={styles.serviceIcon} />
+                      <span className={styles.serviceTitle}>{item.title}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </nav>
+      </div>
 
-      <div className={styles.footer} style={{ '--i': navLinks.length } as React.CSSProperties}>
-        <div className={styles.buttons}>
-          <Button href={navCta.href} onClick={close}>
-            {navCta.label}
-          </Button>
-          <Button href={account.href} variant="secondary" onClick={close}>
+      {/* The dock: always at the bottom, the page scrolling under it */}
+      <div className={styles.dock}>
+        <Button href={navCta.href} className={styles.cta} onClick={onClose}>
+          <span className={styles.statusDot} aria-hidden="true" />
+          {navCta.label}
+        </Button>
+        <div className={styles.quick}>
+          <a href={site.phoneHref} className={styles.quickButton} aria-label={`Call ${site.phone}`}>
+            <Image src="/icons/common/phone.svg" alt="" width={18} height={18} />
+          </a>
+          <a
+            href={site.whatsapp}
+            className={styles.quickButton}
+            aria-label="WhatsApp us"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image src="/icons/social/whatsapp.svg" alt="" width={18} height={18} />
+          </a>
+          <a href={`mailto:${site.email}`} className={styles.quickButton} aria-label={`Email ${site.email}`}>
+            <Image src="/icons/common/mail.svg" alt="" width={18} height={18} />
+          </a>
+          <Link href={account.href} className={styles.account} onClick={onClose}>
             {account.label}
-          </Button>
-        </div>
-        <div className={styles.contact}>
-          <a href={site.phoneHref}>{site.phone}</a>
-          <a href={`mailto:${site.email}`}>{site.email}</a>
+          </Link>
         </div>
       </div>
     </div>

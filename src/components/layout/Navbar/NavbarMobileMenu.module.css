@@ -1,9 +1,11 @@
 /* =====================================================================================
    Full-screen menu (phones and tablets): opens as a circle growing from the burger, under the
-   navbar bar (which stays on top, its burger now a cross)
+   navbar (which stays on top, its burger now a cross). A scrolling area – status, the pages,
+   the service tiles – above a dock that stays at the bottom.
    ===================================================================================== */
 .menu {
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --edge: 18px; /* side padding */
   /* where the burger sits – the circle grows from here */
   --origin: calc(100% - clamp(12px, 3vw, 32px) - 28px) 40px;
 
@@ -12,20 +14,16 @@
   inset: 0;
   display: none;
   flex-direction: column;
-  padding: calc(var(--navbar-offset) + var(--navbar-height) + 28px) 22px
-    calc(22px + env(safe-area-inset-bottom));
-  overflow-y: auto;
-  overscroll-behavior: contain;
   background:
-    radial-gradient(ellipse 90% 45% at 50% 108%, rgba(140, 198, 63, 0.16), transparent 70%),
-    radial-gradient(1px 1px at 40px 60px, rgba(255, 255, 255, 0.6), transparent),
-    radial-gradient(1px 1px at 190px 220px, rgba(255, 255, 255, 0.4), transparent),
-    radial-gradient(1.5px 1.5px at 310px 120px, rgba(255, 255, 255, 0.7), transparent),
-    radial-gradient(1px 1px at 120px 340px, rgba(255, 255, 255, 0.45), transparent),
+    radial-gradient(ellipse 80% 40% at 100% 0%, rgba(140, 198, 63, 0.1), transparent 70%),
+    radial-gradient(ellipse 90% 35% at 50% 105%, rgba(140, 198, 63, 0.12), transparent 70%),
+    radial-gradient(1px 1px at 40px 60px, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1px 1px at 190px 220px, rgba(255, 255, 255, 0.35), transparent),
+    radial-gradient(1.5px 1.5px at 310px 120px, rgba(255, 255, 255, 0.6), transparent),
     #040506;
   background-size:
     100% 100%,
-    380px 380px,
+    100% 100%,
     380px 380px,
     380px 380px,
     380px 380px,
@@ -51,251 +49,329 @@
   }
 }
 
-/* ---------- Big numbered links, rising in one after another ---------- */
-.links {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.item {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-}
-
-.menu[data-open='true'] .item,
-.menu[data-open='true'] .footer {
-  animation: rise 0.7s var(--ease) backwards;
-  animation-delay: calc(0.12s + var(--i) * 0.06s);
-}
-
-.link {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  width: 100%;
-  padding: 18px 2px;
-  border: 0;
-  background: none;
-  color: var(--color-text);
-  font-family: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.link:focus-visible {
-  border-radius: 10px;
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-}
-
-.index {
-  min-width: 22px;
-  color: var(--color-text-dim);
-  font-size: 0.75rem;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.06em;
-}
-
-.label {
+/* Everything above the dock; scrolls on its own if the screen is short */
+.scroll {
   flex: 1;
-  padding-bottom: 0.06em;
-  background: var(--heading-fill);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  font-size: clamp(2rem, 9vw, 2.75rem);
-  font-weight: 400;
-  letter-spacing: -0.035em;
-  line-height: 1.05;
+  min-height: 0;
+  padding: calc(var(--navbar-offset) + var(--navbar-height) + 12px) var(--edge) 20px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
-/* The current page: its number turns lime */
-.link[aria-current='page'] .index {
-  color: var(--color-accent);
+/* Each block rises in, in order (--i) */
+.menu[data-open='true'] :is(.status, .pages > li, .sectionHead, .services > li, .dock) {
+  animation: rise 0.65s var(--ease) backwards;
+  animation-delay: calc(0.12s + var(--i, 0) * 0.055s);
 }
 
-/* "Services": a plus that turns into a cross while open */
-.plus {
+/* ---------- Status ---------- */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 13px 7px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.03);
+  color: #a9adb3;
+  font-size: 0.75rem;
+}
+
+.statusDot {
   position: relative;
-  align-self: center;
-  width: 34px;
-  height: 34px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  transition:
-    transform 0.35s var(--ease),
-    border-color 0.3s ease;
+  background: var(--color-accent);
 }
 
-.plus::before,
-.plus::after {
+.statusDot::after {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 12px;
-  height: 1.5px;
-  border-radius: 1px;
-  background: var(--color-text);
-  transform: translate(-50%, -50%);
+  inset: -4px;
+  border: 1px solid rgba(140, 198, 63, 0.55);
+  border-radius: 50%;
+  animation: ping 2.4s ease-out infinite;
 }
 
-.plus::after {
-  transform: translate(-50%, -50%) rotate(90deg);
-}
-
-.link[aria-expanded='true'] .plus {
-  border-color: rgba(140, 198, 63, 0.5);
-  transform: rotate(45deg);
-}
-
-/* ---------- The six service groups: height opens by switching the row from 0fr to 1fr ---------- */
-.services {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.45s var(--ease);
-}
-
-.services[data-open='true'] {
-  grid-template-rows: 1fr;
-}
-
-.serviceList {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr); /* rows never wider than the screen – long lines end in "…" */
-  gap: 4px;
-  min-height: 0;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
+/* ---------- Pages: one glass list ---------- */
+.pages {
+  margin: 16px 0 0;
+  padding: 6px;
+  border: 1px solid transparent;
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(24, 26, 29, 0.92), rgba(12, 13, 15, 0.92)) padding-box,
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04)) border-box;
   list-style: none;
 }
 
-/* space under the list as a margin (clipped while folded – padding would stay visible) */
-.serviceList > li:last-child {
-  margin-bottom: 16px;
+.pages > li + li {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.services[data-open='true'] .serviceList > li {
-  animation: rise 0.5s var(--ease) backwards;
-  animation-delay: calc(var(--j) * 0.04s);
-}
-
-.service {
+.page {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 8px;
-  border-radius: 16px;
+  padding: 12px 12px 12px 10px;
+  border-radius: 18px;
   transition: background-color 0.2s ease;
 }
 
-.service:active {
+.page:active {
   background: rgba(255, 255, 255, 0.05);
 }
 
-.service:focus-visible,
-.allServices:focus-visible {
+.page:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
-/* Chrome icon in a small dark tile */
-.serviceIcon {
+.pageIcon {
   display: grid;
   flex-shrink: 0;
   place-items: center;
-  width: 52px;
-  height: 52px;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 14px;
-  background: linear-gradient(145deg, #1d1d1f, #121213);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
-
-.serviceIcon img {
   width: 42px;
   height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 13px;
+  background: linear-gradient(145deg, #1d1f22, #111214);
+  color: #c9cdd2;
 }
 
-.serviceText {
+.pageIcon svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.page[data-current] .pageIcon {
+  border-color: rgba(140, 198, 63, 0.35);
+  color: var(--color-accent);
+}
+
+.pageText {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 2px;
   min-width: 0;
 }
 
-.serviceTitle {
-  color: #ececec;
-  font-size: 0.9375rem;
+.pageTitle {
+  color: var(--color-text);
+  font-size: 1.125rem;
   font-weight: 500;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
 }
 
-.serviceDescription {
+.pageHint {
   overflow: hidden;
-  color: #7d8187;
+  color: #7f838a;
   font-size: 0.8125rem;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.allServices {
-  display: inline-block;
-  margin: 6px 0 0 8px;
-  border-radius: 6px;
+.currentDot {
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  margin-right: 4px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 4px rgba(140, 198, 63, 0.15);
+}
+
+/* ---------- Services: six tiles, three a row, so all of them sit above the dock ---------- */
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 26px 4px 12px;
+}
+
+.sectionLabel {
+  color: var(--color-text-dim);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.sectionLink {
+  border-radius: 4px;
   color: var(--color-accent);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.sectionLink:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.services {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.service {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  height: 100%;
+  min-height: 112px;
+  padding: 11px 11px 12px;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse 70% 60% at 100% 0%, rgba(255, 255, 255, 0.05), transparent 70%) padding-box,
+    linear-gradient(160deg, #1b1c1f, #101113) padding-box,
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.04)) border-box;
+  transition: transform 0.2s ease;
+}
+
+.service:active {
+  transform: scale(0.97);
+}
+
+.service:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* The group this page belongs to */
+.service[data-current] {
+  background:
+    radial-gradient(ellipse 80% 70% at 100% 0%, rgba(140, 198, 63, 0.12), transparent 70%) padding-box,
+    linear-gradient(160deg, #1b1c1f, #101113) padding-box,
+    linear-gradient(to bottom, rgba(140, 198, 63, 0.55), rgba(140, 198, 63, 0.1)) border-box;
+}
+
+.serviceIcon {
+  width: 44px;
+  height: 44px;
+  margin: -3px 0 0 -3px;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.6));
+}
+
+.serviceTitle {
+  color: #ececec;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+/* ---------- Dock: "Let's talk", quick contact, Login ---------- */
+.dock {
+  --i: 12;
+
+  position: relative;
+  display: grid;
+  gap: 12px;
+  padding: 14px var(--edge) calc(14px + env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(6, 7, 8, 0.9);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+/* the page fades out as it scrolls under the dock */
+.dock::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  left: 0;
+  height: 32px;
+  background: linear-gradient(to top, rgba(4, 5, 6, 0.9), transparent);
+  pointer-events: none;
+}
+
+.cta {
+  width: 100%;
+  height: 52px;
+  gap: 10px;
+}
+
+.quick {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quickButton {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.quickButton:active {
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.quickButton:focus-visible,
+.account:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.account {
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  margin-left: auto;
+  padding: 0 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-pill);
+  color: var(--color-text);
   font-size: 0.875rem;
   font-weight: 600;
 }
 
-/* ---------- Bottom: the two buttons, then the phone number and email ---------- */
-.footer {
-  margin-top: auto;
-  padding-top: 32px;
-}
-
-.buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.buttons > * {
-  min-width: 0;
-  height: 52px;
-}
-
-.contact {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 8px 16px;
-  margin-top: 20px;
-  padding-top: 18px;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
-}
-
-.contact a {
-  border-radius: 4px;
-  color: #a9adb3;
-  font-size: 0.875rem;
-  transition: color 0.2s ease;
-}
-
-.contact a:hover {
-  color: var(--color-text);
-}
-
-.contact a:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
+/* Very narrow phones: two a row */
+@media (max-width: 350px) {
+  .services {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(16px);
+  }
+}
+
+@keyframes ping {
+  from {
+    opacity: 1;
+    transform: scale(0.5);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(1.6);
   }
 }
 
@@ -306,14 +382,11 @@
     transition: visibility 0s;
   }
 
-  .menu[data-open='true'] .item,
-  .menu[data-open='true'] .footer,
-  .services[data-open='true'] .serviceList > li {
+  .menu[data-open='true'] :is(.status, .pages > li, .sectionHead, .services > li, .dock) {
     animation: none;
   }
 
-  .services,
-  .plus {
-    transition: none;
+  .statusDot::after {
+    animation: none;
   }
 }

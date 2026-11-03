@@ -1,11 +1,11 @@
 import type { NavLink, ServicesMenuContent } from '@/types/navigation';
 
-// Home is the logo
+// Home is the logo. The descriptions show under the links in the phone menu.
 export const navLinks: NavLink[] = [
-  { label: 'About', href: '/about' },
+  { label: 'About', href: '/about', description: 'Our story and how we work' },
   { label: 'Services', href: '/services', menu: 'services' },
-  { label: 'Work', href: '/work' },
-  { label: 'Team', href: '/team' },
+  { label: 'Work', href: '/work', description: 'Brands and campaigns we’ve built' },
+  { label: 'Team', href: '/team', description: 'The people behind BMU' },
 ];
 
 // On the right: Login – which becomes Dashboard (admins, managers, SEO writers) or My account
@@ -15,8 +15,8 @@ export const navLogin: NavLink = { label: 'Login', href: '/login' };
 export const navDashboard: NavLink = { label: 'Dashboard', href: '/dashboard' };
 export const navAccount: NavLink = { label: 'My account', href: '/account' };
 
-// "Services" in the navbar: a hover panel on desktop (a short intro beside the six cards), a list
-// in the full-screen menu on phones. The six service groups each open their overview page
+// "Services" in the navbar: a hover panel on desktop (a short intro beside the six cards), a grid
+// of tiles in the full-screen menu on phones. The six service groups each open their overview page
 // (src/data/pseo/groups.ts).
 export const servicesMenu: ServicesMenuContent = {
   intro: {
