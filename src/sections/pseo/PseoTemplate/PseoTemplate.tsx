@@ -4,7 +4,7 @@ import Button from '@/components/ui/Button/Button';
 import type { PageSection, PseoPage, SectionItem } from '@/types/pseo';
 import PseoMobileBar from './PseoMobileBar';
 import PseoMore from './PseoMore';
-import PseoOrbitField from './PseoOrbitField';
+import PseoGridLight from './PseoGridLight';
 import PseoProgress from './PseoProgress';
 import PseoReveal from './PseoReveal';
 import styles from './PseoTemplate.module.css';
@@ -15,8 +15,9 @@ import styles from './PseoTemplate.module.css';
 // Server-rendered, so every word – FAQ answers included – is in the HTML crawlers read.
 // To restyle all of them at once, change this file and its stylesheet.
 //
-// Layout, landing-page style: a full-screen hero (the heading over a glowing beacon with radar
-// pings and orbiting particles) → "At a glance" facts → a band of big words drifting sideways →
+// Layout, landing-page style: a full-screen hero (the heading in silver, on a grid under light
+// from above, a planet's lit horizon across the bottom) →
+// "At a glance" facts → a band of big words drifting sideways →
 // the sections, each with its own entrance (the first text section lights up word by word as you
 // scroll, cards tip up into place, the timeline fills in, searches type themselves) → FAQ → a
 // full-width closing call to action over a planet horizon with light running along arcs.
@@ -442,6 +443,23 @@ function marqueeWords(page: PseoPage) {
   return (checks ?? cards ?? []).map((item) => item.title);
 }
 
+// The hero grid's squares that light up in turn: [columns from the centre, rows from the top].
+// Phones only show the middle five columns, so some sit near the centre; none go below row 5,
+// where the horizon starts on a laptop.
+const CELLS: [number, number][] = [
+  [-4, 1],
+  [2, 0],
+  [-2, 4],
+  [5, 2],
+  [1, 2],
+  [-6, 3],
+  [3, 4],
+  [-1, 5],
+  [6, 0],
+  [-3, 2],
+  [4, 5],
+];
+
 // Light running along arcs over the closing planet (viewBox 1440 × 600, stretched to fit)
 const ARCS = [
   'M 120 600 Q 420 180 760 560',
@@ -459,32 +477,25 @@ export default function PseoTemplate({ page }: { page: PseoPage }) {
       <JsonLd schema={page.schema} />
 
       <header className={styles.hero}>
-        <div className={styles.sky} aria-hidden="true" />
-        <PseoOrbitField className={styles.field} />
-        {/* The beacon: orbit rings, a turning light sweep, radar pings, a beam and the core */}
-        <div className={styles.system} aria-hidden="true">
-          <span className={styles.ring} />
-          <span className={styles.ring} />
-          <span className={styles.ring} />
-          <span className={styles.ring} />
-          <span className={styles.sweep} />
-          {[0, 1, 2].map((i) => (
-            <span key={i} className={styles.ping} style={vars({ '--i': i })} />
+        {/* The backdrop: a grid (a few squares lighting up in turn, brighter lines round the
+            mouse) under light from above, and a planet's lit horizon across the bottom */}
+        <div className={styles.grid} aria-hidden="true">
+          {CELLS.map(([x, y], i) => (
+            <span key={`${x},${y}`} className={styles.cell} style={vars({ '--x': x, '--y': y, '--i': i })} />
           ))}
-          <span className={styles.beam} />
-          <span className={styles.core} />
         </div>
+        <PseoGridLight className={styles.gridLight} />
+        <div className={styles.horizon} aria-hidden="true" />
 
         <div className={styles.heroInner}>
           <h1 className={styles.h1}>
             <span className={styles.lineMask}>
-              <span className={`${styles.line} ${styles.lineFill}`}>{page.h1}</span>
+              <span className={styles.line}>{page.h1}</span>
             </span>
             {page.h1Accent && (
               <span className={styles.lineMask}>
-                {/* inner span: the line's slide-up would otherwise replace the accent's sheen */}
-                <span className={styles.line} style={vars({ '--delay': '0.32s' })}>
-                  <span className="text-accent">{page.h1Accent}</span>
+                <span className={styles.line} style={vars({ '--delay': '0.5s' })}>
+                  {page.h1Accent}
                 </span>
               </span>
             )}

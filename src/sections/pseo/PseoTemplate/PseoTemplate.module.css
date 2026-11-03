@@ -25,16 +25,11 @@
     rgba(255, 255, 255, 0.05) 45%,
     rgba(255, 255, 255, 0.03)
   );
-  /* The hero's orbits: how flat they look, and the beacon's height above the hero's bottom.
-     PseoOrbitField's tilt (0.28) and centerY (0.84 of a screen-tall canvas) match these. */
-  --flat: 0.28;
-  --beacon: 16svh;
 
   overflow-x: clip;
 }
 
-/* Stars, shared by the hero and the closing section */
-.sky,
+/* Stars, behind the closing section */
 .finaleSky {
   position: absolute;
   z-index: -3;
@@ -52,179 +47,130 @@
 }
 
 /* =====================================================================================
-   Hero: the heading over a glowing beacon – orbit rings, a turning sweep, radar pings
+   Hero: the heading in silver and one button, on a grid under light from above, with a
+   planet's lit horizon curving across the bottom
    ===================================================================================== */
 .hero {
+  --cell: clamp(72px, 8vw, 120px); /* the grid's squares */
+  --horizon: clamp(120px, 20svh, 220px); /* how much of the planet shows, at its top */
+
   position: relative;
   isolation: isolate;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: max(100svh, 640px);
-  /* the bottom stays clear for the beacon and its rings */
-  padding: calc(var(--navbar-height) + var(--navbar-offset) + clamp(36px, 8svh, 96px)) var(--space-4)
-    calc(var(--beacon) + clamp(104px, 15svh, 160px));
+  justify-content: center;
+  min-height: max(100svh, 680px);
+  padding: calc(var(--navbar-height) + var(--navbar-offset) + clamp(24px, 5svh, 64px)) var(--space-4)
+    calc(var(--horizon) + clamp(64px, 11svh, 128px));
   overflow: clip;
-  /* fades softly to black at the bottom, like the landing hero */
-  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 140px), transparent);
-  mask-image: linear-gradient(to bottom, #000 calc(100% - 140px), transparent);
+  /* where the rim runs off the sides near the bottom, its glow fades out instead of being cut */
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 56px), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 56px), transparent);
 }
 
-/* A soft lime haze rising from the beacon */
+/* Light falling from above the top edge */
 .hero::before {
+  content: '';
+  position: absolute;
+  z-index: -4;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 40% 56% at 50% -8%, rgba(176, 190, 210, 0.28), transparent 70%),
+    radial-gradient(ellipse 82% 78% at 50% -12%, rgba(120, 134, 156, 0.15), transparent 72%);
+  animation: fade-in 1.6s ease both;
+  pointer-events: none;
+}
+
+/* Light rising off the horizon (the planet covers its lower half) */
+.hero::after {
   content: '';
   position: absolute;
   z-index: -3;
   left: 50%;
-  bottom: calc(var(--beacon) - 30vw * var(--flat));
-  width: 120vw;
-  height: 60vw;
+  bottom: calc(var(--horizon) - 180px);
+  width: min(1500px, 150vw);
+  height: 360px;
   transform: translateX(-50%);
   background: radial-gradient(
     ellipse 50% 50% at 50% 50%,
-    rgba(140, 198, 63, 0.13),
-    rgba(140, 198, 63, 0.04) 45%,
-    transparent 70%
+    rgba(166, 220, 88, 0.26),
+    rgba(140, 198, 63, 0.08) 45%,
+    transparent 72%
   );
+  animation:
+    fade-in 2s ease 0.7s both,
+    glow 7s ease-in-out 2.7s infinite;
   pointer-events: none;
 }
 
-/* Orbiting particles (PseoOrbitField) – one screen tall, standing on the hero's bottom edge */
-.field {
+/* The grid: faint lines, fading out towards the corners. Squares are --cell wide, one of them
+   centred, starting at the top. */
+.grid,
+.gridLight {
   position: absolute;
   z-index: -2;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100svh;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-position: 50% 0;
+  background-size: var(--cell) var(--cell);
   pointer-events: none;
-  animation: fade-in 2s ease 0.4s both;
 }
 
-/* A zero-size point at the beacon; everything in it is centred on that point */
-.system {
+.grid {
+  --line: rgba(255, 255, 255, 0.06);
+
+  -webkit-mask-image: radial-gradient(ellipse 80% 95% at 50% 55%, #000 45%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 95% at 50% 55%, #000 45%, transparent 100%);
+  animation: fade-in 1.4s ease 0.1s both;
+}
+
+/* A square that lights up now and then (--x columns from the centre, --y rows down) */
+.cell {
+  position: absolute;
+  top: calc(var(--y) * var(--cell) + 1px);
+  left: calc(50% + (var(--x) - 0.5) * var(--cell) + 1px);
+  width: calc(var(--cell) - 1px);
+  height: calc(var(--cell) - 1px);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
+  opacity: 0;
+  animation: twinkle 12s ease-in-out calc(var(--i) * -1.1s) infinite;
+}
+
+/* Brighter lines round the mouse (PseoGridLight) */
+.gridLight {
+  --line: rgba(255, 255, 255, 0.2);
+
+  opacity: 0;
+  -webkit-mask-image: radial-gradient(circle 240px at var(--mx, 50%) var(--my, 50%), #000, transparent);
+  mask-image: radial-gradient(circle 240px at var(--mx, 50%) var(--my, 50%), #000, transparent);
+  transition: opacity 0.5s ease;
+}
+
+.gridLight[data-on='true'] {
+  opacity: 1;
+}
+
+/* The planet: a huge black sphere rising out of the bottom, a white line of light on its rim */
+.horizon {
   position: absolute;
   z-index: -1;
+  top: calc(100% - var(--horizon));
   left: 50%;
-  bottom: var(--beacon);
-  width: 0;
-  height: 0;
-  pointer-events: none;
-}
-
-.ring,
-.ping,
-.sweep,
-.core {
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* Orbits: flat ovals, fainter further out */
-.ring {
-  width: var(--size);
-  height: calc(var(--size) * var(--flat));
-  border: 1px solid rgba(255, 255, 255, var(--alpha));
-  animation: ring-in 1.6s var(--ease) calc(0.5s + var(--n) * 0.14s) both;
-}
-
-.ring:nth-child(1) {
-  --size: max(260px, 22vw);
-  --alpha: 0.16;
-  --n: 0;
-}
-
-.ring:nth-child(2) {
-  --size: max(420px, 40vw);
-  --alpha: 0.11;
-  --n: 1;
-}
-
-.ring:nth-child(3) {
-  --size: max(600px, 62vw);
-  --alpha: 0.08;
-  --n: 2;
-}
-
-.ring:nth-child(4) {
-  --size: max(820px, 92vw);
-  --alpha: 0.05;
-  --n: 3;
-}
-
-/* A bright arc running round the third orbit, with a faint radar wedge behind it. Drawn on a
-   circle that turns, then squashed to the orbit's shape. */
-.sweep {
-  width: max(600px, 62vw);
+  width: max(240vw, 1600px);
   aspect-ratio: 1;
-  transform: translate(-50%, -50%) scaleY(var(--flat));
-  animation: fade-in 1.4s ease 1.2s both;
-}
-
-.sweep::before,
-.sweep::after {
-  content: '';
-  position: absolute;
-  inset: 0;
   border-radius: 50%;
-  animation: spin 16s linear infinite;
-}
-
-.sweep::before {
-  background: conic-gradient(
-    from 0deg,
-    transparent 0 72%,
-    rgba(140, 198, 63, 0.05) 80%,
-    rgba(214, 245, 161, 0.9) 99.6%,
-    transparent 100%
-  );
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 1px));
-  mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 1px));
-}
-
-.sweep::after {
-  background: conic-gradient(from 0deg, transparent 0 80%, rgba(140, 198, 63, 0.08) 100%);
-  -webkit-mask: radial-gradient(farthest-side, #000 30%, transparent 100%);
-  mask: radial-gradient(farthest-side, #000 30%, transparent 100%);
-}
-
-/* Radar pings spreading out across the orbit plane, one after another */
-.ping {
-  width: max(420px, 40vw);
-  height: calc(max(420px, 40vw) * var(--flat));
-  border: 1px solid rgba(166, 220, 88, 0.55);
-  opacity: 0;
-  animation: ping 4.8s cubic-bezier(0.2, 0.6, 0.35, 1) calc(1.4s + var(--i) * 1.6s) infinite;
-}
-
-/* A short beam of light standing up from the beacon */
-.beam {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 1px;
-  height: clamp(56px, 10svh, 110px);
-  background: linear-gradient(to top, rgba(214, 245, 161, 0.95), transparent);
-  box-shadow: 0 0 10px rgba(140, 198, 63, 0.7);
-  transform: translateX(-50%);
-  transform-origin: bottom;
-  animation: beam-in 1.1s var(--ease) 1.1s both;
-}
-
-.core {
-  width: 12px;
-  height: 12px;
-  background: #e2f8bd;
+  background: var(--color-bg);
   box-shadow:
-    0 0 0 4px rgba(140, 198, 63, 0.2),
-    0 0 18px 4px rgba(140, 198, 63, 0.6),
-    0 0 70px 22px rgba(140, 198, 63, 0.2);
-  animation:
-    core-in 0.9s var(--ease) 0.9s both,
-    breathe 3.4s ease-in-out 2s infinite;
+    inset 0 2px 0 rgba(255, 255, 255, 0.95),
+    inset 0 18px 40px -18px rgba(214, 245, 161, 0.4),
+    0 -1px 6px rgba(240, 252, 220, 0.85),
+    0 -6px 24px rgba(166, 220, 88, 0.42),
+    0 -24px 90px rgba(140, 198, 63, 0.2);
+  transform: translateX(-50%);
+  animation: planet-rise 1.8s var(--ease) 0.15s both;
 }
 
 /* ---------- Hero text ---------- */
@@ -257,17 +203,14 @@
   padding: 0 0.04em 0.12em;
 }
 
+/* Silver: white in the middle of each line, greying towards its ends */
 .line {
   display: block;
-  animation: line-up 1.15s var(--ease) var(--delay, 0.12s) both;
-}
-
-/* White fading softly to silver */
-.lineFill {
-  background: var(--heading-fill);
+  background: linear-gradient(90deg, #858a92, #e9ebee 28%, #fff 50%, #e9ebee 72%, #858a92);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  animation: line-up 1.15s var(--ease) var(--delay, 0.32s) both;
 }
 
 .intro {
@@ -277,14 +220,14 @@
   font-size: var(--font-size-subheading);
   line-height: 1.7;
   text-wrap: balance;
-  animation: rise-in 1s var(--ease) 0.6s both;
+  animation: rise-in 1s var(--ease) 0.8s both;
 }
 
 .actions {
   display: flex;
   justify-content: center;
   margin-top: var(--space-6);
-  animation: rise-in 1s var(--ease) 0.75s both;
+  animation: rise-in 1s var(--ease) 0.95s both;
 }
 
 /* =====================================================================================
@@ -1533,55 +1476,31 @@ a.cardInner:focus-visible {
   }
 }
 
-@keyframes ring-in {
+@keyframes planet-rise {
   from {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.55);
+    transform: translateX(-50%) translateY(80px);
   }
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(1turn);
+/* The horizon's glow, breathing */
+@keyframes glow {
+  50% {
+    opacity: 0.7;
   }
 }
 
-@keyframes ping {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.04);
-  }
-
-  12% {
-    opacity: 0.9;
-  }
-
+/* A grid square lighting up and fading, then resting dark for most of the loop */
+@keyframes twinkle {
+  0%,
+  45%,
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(1);
   }
-}
 
-@keyframes beam-in {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) scaleY(0);
-  }
-}
-
-@keyframes core-in {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0);
-  }
-}
-
-@keyframes breathe {
-  50% {
-    box-shadow:
-      0 0 0 7px rgba(140, 198, 63, 0.12),
-      0 0 26px 6px rgba(140, 198, 63, 0.7),
-      0 0 90px 30px rgba(140, 198, 63, 0.24);
+  15%,
+  25% {
+    opacity: 1;
   }
 }
 
@@ -1782,13 +1701,10 @@ a.cardInner:focus-visible {
    Reduce motion: everything in its final place, nothing looping
    ===================================================================================== */
 @media (prefers-reduced-motion: reduce) {
-  .field,
-  .ring,
-  .sweep,
-  .sweep::before,
-  .sweep::after,
-  .beam,
-  .core,
+  .hero::before,
+  .hero::after,
+  .grid,
+  .horizon,
   .line,
   .intro,
   .actions,
@@ -1798,8 +1714,10 @@ a.cardInner:focus-visible {
     animation: none;
   }
 
-  .ping {
-    display: none;
+  /* the squares stay softly lit instead of lighting up in turn */
+  .cell {
+    opacity: 0.6;
+    animation: none;
   }
 
   .rise,

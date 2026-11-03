@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import NetworkStatus from '@/components/layout/NetworkStatus/NetworkStatus';
 import { site } from '@/data/site';
-import { albertSans, audiowide } from '@/styles/fonts';
+import { albertSans } from '@/styles/fonts';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 // login card backdrop; (dashboard) the staff area.
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${albertSans.variable} ${audiowide.variable}`}>
+    <html lang="en" className={albertSans.variable}>
       <body>
         {children}
         <NetworkStatus />

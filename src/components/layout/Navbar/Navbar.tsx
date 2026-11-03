@@ -243,7 +243,6 @@ export default function Navbar() {
                         onClick={onServicesClick}
                       >
                         {link.label}
-                        <span className={styles.chevron} aria-hidden="true" />
                       </button>
                     ) : (
                       <Link

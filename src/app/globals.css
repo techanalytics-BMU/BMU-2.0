@@ -38,6 +38,13 @@ button {
   font: inherit;
 }
 
+/* Form fields use the browser's own font unless told otherwise */
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
 /* Fields the browser fills in from saved details: keep the site's dark field and white text
    instead of the browser's light-blue box. The background change is delayed so long it never
    shows; the text colour and caret are set directly. */

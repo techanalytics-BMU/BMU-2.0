@@ -14,7 +14,6 @@
   /* Fonts (font files are set up in src/styles/fonts.ts) */
   --font-family-body: var(--font-albert-sans), system-ui, -apple-system, 'Segoe UI', Roboto,
     sans-serif;
-  --font-family-display: var(--font-audiowide), var(--font-family-body); /* big faded brand words only */
 
   /* Font sizes */
   --font-size-xs: 0.75rem;

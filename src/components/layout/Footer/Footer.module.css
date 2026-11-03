@@ -297,8 +297,7 @@ a.link:focus-visible {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  font-family: var(--font-family-display);
-  font-size: 9.2cqw;
+  font-size: 11.6cqw;
   letter-spacing: 0.02em;
   line-height: 1;
   text-transform: uppercase;
@@ -470,7 +469,7 @@ a.link:focus-visible {
 
   /* The wordmark stacks on two lines so it stays big */
   .wordmark {
-    font-size: 12.8cqw;
+    font-size: 16.5cqw;
     line-height: 0.98;
     white-space: normal;
   }
