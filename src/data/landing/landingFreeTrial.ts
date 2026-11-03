@@ -6,7 +6,7 @@ export const landingFreeTrial: LandingFreeTrialContent = {
   headingLine2: 'website trial today',
   note: 'No credit card required. Cancel anytime.',
   cta: { label: 'Get Started', href: '/contact' },
-  chip: { label: 'Get Funded', href: '/contact' },
+  chip: { label: 'Have questions?', href: '/contact#faq' },
   // Website-builder mock-up (labels are shown in capitals where the design uses them)
   editor: {
     back: 'Pages',

@@ -1,8 +1,8 @@
 /* =====================================================================================
-   Navbar: full width and transparent at the top of a page; a floating glass pill once the page
-   scrolls (data-scrolled), sliding away while scrolling down (data-hidden).
-   Its height at the top (72px) is --navbar-offset + --navbar-height, so pages that leave room
-   for the navbar line up in both states.
+   Navbar: one size all the time – transparent at the top of a page, its glass fading in once the
+   page scrolls (data-scrolled); it slides away while scrolling down (data-hidden).
+   It ends 72px down (8px gap + 64px bar) – --navbar-offset + --navbar-height – so pages that
+   leave room for the navbar line up.
    ===================================================================================== */
 .navbar {
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -12,10 +12,8 @@
   top: 0;
   right: 0;
   left: 0;
-  padding: 0 clamp(12px, 3vw, 32px);
-  transition:
-    top 0.5s var(--ease),
-    transform 0.5s var(--ease);
+  padding: 8px clamp(12px, 3vw, 32px) 0;
+  transition: transform 0.5s var(--ease);
 }
 
 /* A soft dark fade behind the full-width bar, so the links read over any hero */
@@ -30,10 +28,6 @@
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent);
   transition: opacity 0.5s ease;
   pointer-events: none;
-}
-
-.navbar[data-scrolled='true'] {
-  top: var(--navbar-offset);
 }
 
 .navbar[data-scrolled='true']::before {
@@ -53,15 +47,12 @@
   align-items: center;
   width: 100%;
   max-width: 1320px;
-  height: calc(var(--navbar-offset) + var(--navbar-height));
+  height: calc(var(--navbar-offset) + var(--navbar-height) - 8px);
   margin: 0 auto;
-  padding: 0 4px;
+  padding: 0 8px 0 20px;
   border: 1px solid transparent;
-  border-radius: 30px;
+  border-radius: 32px;
   transition:
-    max-width 0.65s var(--ease),
-    height 0.5s var(--ease),
-    padding 0.5s var(--ease),
     border-color 0.5s ease,
     box-shadow 0.5s ease;
 }
@@ -83,9 +74,6 @@
 }
 
 .navbar[data-scrolled='true'] .bar {
-  max-width: 1040px;
-  height: var(--navbar-height);
-  padding: 0 7px 0 20px;
   border-color: rgba(255, 255, 255, 0.09);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.06),
@@ -105,13 +93,8 @@
 }
 
 .logo img {
-  width: 84px;
+  width: 80px;
   height: auto;
-  transition: width 0.5s var(--ease);
-}
-
-.navbar[data-scrolled='true'] .logo img {
-  width: 70px;
 }
 
 .logo:focus-visible {
@@ -304,25 +287,6 @@
   }
 }
 
-/* ---------- How far down the page: a thin lime line along the pill's bottom ---------- */
-.progress {
-  position: absolute;
-  right: 28px;
-  bottom: -1px;
-  left: 28px;
-  height: 1px;
-  background: linear-gradient(90deg, rgba(140, 198, 63, 0.35), #8cc63f 55%, #a6dc58);
-  opacity: 0;
-  transform: scaleX(var(--scroll, 0));
-  transform-origin: left;
-  transition: opacity 0.5s ease;
-  pointer-events: none;
-}
-
-.navbar[data-scrolled='true'] .progress {
-  opacity: 1;
-}
-
 /* ---------- Dims the page behind the services panel (just under the navbar) ---------- */
 .backdrop {
   position: fixed;
@@ -443,7 +407,7 @@
     display: grid;
   }
 
-  .navbar[data-scrolled='true'] .bar {
+  .bar {
     padding: 0 6px 0 18px;
   }
 }
@@ -452,7 +416,6 @@
   .navbar,
   .bar,
   .bar::before,
-  .logo img,
   .indicator,
   .menuIcon::before,
   .menuIcon::after {

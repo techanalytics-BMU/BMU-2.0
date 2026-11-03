@@ -5,7 +5,7 @@
 .menu {
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   /* where the burger sits – the circle grows from here */
-  --origin: calc(100% - clamp(12px, 3vw, 32px) - 28px) calc(var(--navbar-offset) + 28px);
+  --origin: calc(100% - clamp(12px, 3vw, 32px) - 28px) 40px;
 
   position: fixed;
   z-index: 99;

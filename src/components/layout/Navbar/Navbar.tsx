@@ -16,16 +16,16 @@ const MOBILE_MENU_ID = 'mobile-menu';
 const PHONE_MENU = '(max-width: 900px)'; // same breakpoint as the CSS
 const OPEN_DELAY = 90; // ms the pointer rests on "Services" before the panel opens
 const CLOSE_DELAY = 220; // ms to move between "Services" and the panel before it closes
-const SCROLLED_AT = 24; // px scrolled before the full-width bar turns into the floating pill
+const SCROLLED_AT = 24; // px scrolled before the bar's glass fades in
 const HIDE_AFTER = 480; // px – above this the bar never hides
 
 // A link stands for its page and everything under it (/services/seo → Services)
 const isCurrent = (pathname: string, href: string) =>
   pathname === href || pathname.startsWith(`${href}/`);
 
-// At the top of a page the navbar spans the width, transparent over the hero. Once the page
-// scrolls it draws in to a floating glass pill with a thin lime line showing how far down the
-// page you are, slips away while you scroll down and comes back as soon as you scroll up.
+// The navbar keeps one size: transparent over the hero at the top of a page, with its glass
+// fading in once the page scrolls. It slips away while you scroll down and comes back as soon as
+// you scroll up.
 // A soft glass pill slides behind the links to the one under the pointer (and rests on the
 // current page). "Services" opens a panel on hover (a click pins it; Escape, an outside click or
 // moving focus away closes it). Phones get a full-screen menu instead (NavbarMobileMenu).
@@ -96,7 +96,7 @@ export default function Navbar() {
     }
   };
 
-  // Scrolling: pill or full width, hidden or shown, and how far down the page (--scroll, 0 → 1)
+  // Scrolling: glass or not, hidden or shown
   useEffect(() => {
     let lastY = window.scrollY;
     let frame = 0;
@@ -108,8 +108,6 @@ export default function Navbar() {
         setHidden(y > lastY && y > HIDE_AFTER);
         lastY = y;
       }
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      headerRef.current?.style.setProperty('--scroll', max > 0 ? (y / max).toFixed(4) : '0');
     };
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update);
@@ -298,8 +296,6 @@ export default function Navbar() {
             <span className={styles.menuIcon} aria-hidden="true" />
           </button>
 
-          {/* How far down the page – a thin lime line along the pill's bottom edge */}
-          <span className={styles.progress} aria-hidden="true" />
         </div>
 
         <NavbarServicesMenu
