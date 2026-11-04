@@ -3,6 +3,7 @@ import { PrivacyPolicy } from '@/sections/privacy';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
+  alternates: { canonical: '/privacy-policy' },
   description:
     'How BMU Marketing collects, uses, stores and protects your personal information – and your rights over it.',
 };

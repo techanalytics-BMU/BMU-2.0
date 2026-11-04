@@ -18,7 +18,7 @@ const publisher = () => ({
   '@id': `${site.url}/#organization`,
   name: site.name,
   url: site.url,
-  logo: { '@type': 'ImageObject', url: absolute('/images/common/bmu-logo-light.webp') },
+  logo: { '@type': 'ImageObject', url: absolute(site.logo) },
 });
 
 /** Everything Google needs about one article: the post, its FAQs and its breadcrumb */

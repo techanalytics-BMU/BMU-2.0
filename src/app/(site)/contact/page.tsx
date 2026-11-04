@@ -3,6 +3,7 @@ import { ContactFaq, ContactHero } from '@/sections/contact';
 
 export const metadata: Metadata = {
   title: 'Contact',
+  alternates: { canonical: '/contact' },
   description:
     'Tell us about your business. We reply within one working day, or drop by the studio in Bengaluru.',
 };

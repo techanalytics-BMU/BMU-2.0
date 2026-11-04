@@ -5,6 +5,7 @@ import { WorkHero } from '@/sections/work';
 
 export const metadata: Metadata = {
   title: 'Our Work',
+  alternates: { canonical: '/work' },
   description:
     'Brands, websites, campaigns and films BMU Marketing has built for businesses across Bengaluru and India.',
 };

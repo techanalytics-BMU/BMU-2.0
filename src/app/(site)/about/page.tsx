@@ -12,6 +12,7 @@ import {
 
 export const metadata: Metadata = {
   title: 'About',
+  alternates: { canonical: '/about' },
   description:
     'From a Bengaluru real estate agency to one team for every digital service – the story, principles and people behind BMU Marketing.',
 };

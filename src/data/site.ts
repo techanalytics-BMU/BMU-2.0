@@ -3,7 +3,9 @@
 
 export const site = {
   name: 'BMU Marketing',
-  url: 'https://bmumarketing.in', // the live domain – canonical URLs and the sitemap are built from it
+  url: 'https://www.bmumarketing.in', // the live domain – canonical URLs and the sitemap are built from it
+  // For Google and other sites: solid, so it reads on any background (the tab icon is src/app/icon.svg)
+  logo: '/images/common/bmu-logo-tile.png',
   phone: '+91 81054 91414',
   phoneHref: 'tel:+918105491414',
   whatsapp: 'https://wa.me/918105491414',

@@ -11,6 +11,7 @@ export const businessSchema = () => ({
   '@id': `${site.url}/#business`,
   name: site.name,
   url: site.url,
+  logo: absolute(site.logo),
   telephone: site.phone,
   email: site.email,
   address: {
@@ -23,6 +24,17 @@ export const businessSchema = () => ({
   },
   geo: { '@type': 'GeoCoordinates', latitude: site.coords[0], longitude: site.coords[1] },
   ...(site.sameAs.length ? { sameAs: site.sameAs } : {}),
+});
+
+// The site itself, on the home page – how Google learns to show "BMU Marketing" above our results
+// instead of the domain
+export const websiteSchema = () => ({
+  '@type': 'WebSite',
+  '@id': `${site.url}/#website`,
+  name: site.name,
+  alternateName: 'BMU',
+  url: site.url,
+  publisher: { '@id': `${site.url}/#business` },
 });
 
 export const serviceSchema = ({

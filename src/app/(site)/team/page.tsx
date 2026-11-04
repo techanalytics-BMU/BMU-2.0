@@ -3,6 +3,7 @@ import { TeamFounders, TeamHero, TeamMembers } from '@/sections/team';
 
 export const metadata: Metadata = {
   title: 'Our Team',
+  alternates: { canonical: '/team' },
   description:
     'Meet the founders and the team behind BMU Marketing – strategists, designers, editors and engineers in Bengaluru.',
 };

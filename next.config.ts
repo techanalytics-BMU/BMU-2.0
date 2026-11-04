@@ -29,6 +29,13 @@ const nextConfig: NextConfig = {
   // Locality aliases from the pSEO sheet (LOCALITY_ALIASES): one place, one set of pages
   async redirects() {
     return [
+      // One address for the whole site, the one Google lists (site.url in src/data/site.ts)
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'bmumarketing.in' }],
+        destination: 'https://www.bmumarketing.in/:path*',
+        permanent: true,
+      },
       // Articles moved from /work/<slug> to /blog/<slug> – old links keep working
       { source: '/work/:slug', destination: '/blog/:slug', permanent: true },
       {
