@@ -50,7 +50,6 @@ async function writer() {
 function refreshSite(slug: string) {
   revalidatePath('/blog');
   revalidatePath(`/blog/${slug}`);
-  revalidatePath('/work');
   revalidatePath('/blog/rss.xml');
   revalidatePath('/sitemap/pages.xml');
   revalidatePath('/dashboard/blogs');

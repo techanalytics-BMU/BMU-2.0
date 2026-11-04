@@ -10,4 +10,51 @@ export type WorkHeroContent = {
   clients: WorkClientLogo[];
 };
 
+export type WorkCategoryId = 'graphic-design' | 'websites' | 'ui-ux' | 'ugc' | 'insta-videos';
+
+export type WorkCategory = {
+  id: WorkCategoryId;
+  label: string;
+  ratio: number; // width ÷ height of its pieces
+};
+
+export type WorkMedia = {
+  image: string; // the picture – for a video, the frame shown before it plays
+  video?: string; // .mp4 file or link
+  alt: string; // what it shows, for people who can't see it
+};
+
+export type WorkReview = {
+  quote: string; // the client's real words
+  name: string;
+  role: string; // "Founder, Company"
+  photo?: string;
+};
+
+export type WorkProject = {
+  id: string;
+  category: WorkCategoryId;
+  client: string;
+  title: string;
+  ratio?: number; // only when this piece isn't the shape of its category
+  media: WorkMedia[]; // each one gets its own thumbnail
+  review?: WorkReview;
+  services: string[];
+  link?: string; // the live site or post
+  sample?: boolean; // placeholder – shown while developing, never on the live site
+};
+
+export type WorkShowcaseContent = {
+  heading: string;
+  subheading: string;
+  stage: {
+    servicesLabel: string;
+    cta: { label: string; href: string };
+    visitLabel: string;
+    previousLabel: string;
+    nextLabel: string;
+    soundLabel: string;
+  };
+};
+
 // The blog itself (posts, listing and article text) is in ./blog.ts

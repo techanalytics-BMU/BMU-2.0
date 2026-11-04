@@ -61,7 +61,7 @@ export type BlogPostSummary = Pick<
 
 // ---------- Text around the blog (src/data/blog) ----------
 
-// The listing on /blog (and /work)
+// The listing on /blog
 export type BlogListingContent = {
   heading: string;
   description: string;

@@ -19,7 +19,7 @@ type Props = {
   asPage?: boolean; // on /blog it's the whole page: the heading is the page's h1, with room for the navbar
 };
 
-// The blog's articles (on /blog, and under the hero on /work): the featured article large at the
+// The blog's articles on /blog: the featured article large at the
 // top, then a toolbar (category chips with counts, search, sort) and a grid of cards with
 // "Load more". The category and search are kept in the address (?category=…&q=…) so a filtered
 // view can be shared or bookmarked.

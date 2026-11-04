@@ -1,3 +1,3 @@
-// Work page sections, in display order (the article list below the hero is the blog's –
-// src/sections/blog)
+// Work page sections, in display order
 export { default as WorkHero } from './WorkHero/WorkHero';
+export { default as WorkShowcase } from './WorkShowcase/WorkShowcase';

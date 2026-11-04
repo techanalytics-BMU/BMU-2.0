@@ -1,0 +1,266 @@
+.section {
+  padding: var(--space-6) var(--space-4) var(--space-8);
+  background: var(--color-bg);
+}
+
+.inner {
+  max-width: 1560px;
+  margin: 0 auto;
+}
+
+/* ---------- Heading ---------- */
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-6);
+}
+
+.heading {
+  padding-bottom: 0.08em;
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(1.875rem, 3.2vw, 3.25rem);
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: var(--heading-line-height);
+  text-wrap: balance;
+}
+
+.subheading {
+  max-width: 42ch;
+  padding-bottom: 0.3em;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
+/* ---------- Panels ----------
+   --open is the width left once the shut panels have theirs. Its contents are always that wide,
+   so they don't reflow while the panel slides open: the panel just uncovers them. */
+.panels {
+  --shut: clamp(58px, 4.8vw, 76px);
+  --gap: 8px;
+  container-type: inline-size;
+  display: flex;
+  gap: var(--gap);
+  height: clamp(580px, calc(100svh - 150px), 780px);
+  margin-top: var(--space-4);
+}
+
+.panel {
+  --open: calc(100cqw - (var(--count) - 1) * (var(--shut) + var(--gap)));
+  position: relative;
+  display: flex;
+  flex: 0 0 var(--shut);
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  background: var(--color-surface);
+  scroll-margin-top: calc(var(--navbar-height) + var(--navbar-offset) + 12px);
+  transition: flex-basis 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.panel[data-open] {
+  flex-basis: var(--open);
+}
+
+.section:not([data-in-view='true']) .panel {
+  opacity: 0;
+}
+
+.section[data-in-view='true'] .panel {
+  animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(var(--i) * 70ms);
+}
+
+.panelHeading {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  font: inherit;
+}
+
+/* Shut: the whole strip is the button, its name running up the side */
+.tab {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  padding: 18px 0;
+  overflow: hidden;
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+/* A soft shade at both ends, so the name and number read over any artwork */
+.tab::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.78), transparent 42%),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent 16%);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: -4px;
+  border-radius: 18px;
+}
+
+.cover {
+  object-fit: cover;
+  filter: saturate(0.85) brightness(0.48);
+  transition:
+    filter 0.4s ease,
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tab:hover .cover {
+  filter: saturate(1) brightness(0.8);
+  transform: scale(1.06);
+}
+
+.label,
+.count {
+  position: relative;
+  z-index: 1;
+  white-space: nowrap;
+}
+
+.label {
+  font-size: 1.125rem;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  transform: rotate(180deg);
+  writing-mode: vertical-rl;
+}
+
+.count {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: var(--font-size-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Open: the name turns into a small title in the corner, above the work */
+.panel[data-open] .panelHeading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.panel[data-open] .tab {
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: var(--space-2);
+  padding: 18px var(--space-4);
+  cursor: default;
+}
+
+.panel[data-open] .cover,
+.panel[data-open] .tab::after {
+  display: none;
+}
+
+.panel[data-open] .label {
+  font-size: var(--font-size-md);
+  transform: none;
+  writing-mode: horizontal-tb;
+}
+
+.content {
+  flex: 1;
+  width: var(--open);
+  min-height: 0;
+  animation: reveal 0.55s ease 0.25s backwards;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Tablets and phones: the panels stack into rows, and the open one grows downwards */
+@media (max-width: 1024px) {
+  .panels {
+    container-type: normal;
+    flex-direction: column;
+    height: auto;
+  }
+
+  .panel,
+  .panel[data-open] {
+    flex: none;
+    transition: none;
+  }
+
+  .panelHeading {
+    flex: none;
+  }
+
+  .panel[data-open] .panelHeading {
+    position: relative;
+  }
+
+  .tab,
+  .panel[data-open] .tab {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+    padding: 0 var(--space-3);
+  }
+
+  .label,
+  .panel[data-open] .label {
+    font-size: var(--font-size-lg);
+    transform: none;
+    writing-mode: horizontal-tb;
+  }
+
+  .content {
+    width: auto;
+    animation-delay: 0s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section:not([data-in-view='true']) .panel {
+    opacity: 1;
+  }
+
+  .section[data-in-view='true'] .panel,
+  .content {
+    animation: none;
+  }
+
+  .panel,
+  .cover {
+    transition: none;
+  }
+
+  .tab:hover .cover {
+    transform: none;
+  }
+}

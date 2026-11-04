@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000"><defs></defs>
+  <rect width="800" height="1000" fill="#f1ece2"/>
+  <circle cx="400" cy="400" r="290" fill="#111111"/>
+  <path d="M110 400a290 290 0 0 0 580 0z" fill="#ff5a1f"/>
+  <rect x="70" y="760" width="660" height="26" fill="#111111"/><rect x="70" y="810" width="430" height="26" fill="#111111"/><rect x="70" y="860" width="250" height="26" fill="#ff5a1f"/>
+  <text x="620" y="60" font-family="Arial,sans-serif" font-size="15" letter-spacing="4" fill="#111111" opacity=".55">SAMPLE</text></svg>

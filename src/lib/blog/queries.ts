@@ -9,7 +9,7 @@ import type { BlogPost, BlogPostSummary } from '@/types/blog';
 const SUMMARY =
   'slug, title, excerpt, category, featured, author_name, cover_image_url, read_minutes, published_at';
 
-/** Every published post, newest first – for /blog, /work, related posts and the sitemap */
+/** Every published post, newest first – for /blog, related posts and the sitemap */
 export async function getPublishedPosts(): Promise<BlogPostSummary[]> {
   const supabase = createPublicClient();
   if (!supabase) return []; // no Supabase keys – the blog shows "no posts yet"

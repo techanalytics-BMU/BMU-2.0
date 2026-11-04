@@ -13,7 +13,7 @@ type Props = {
 
 // Compact tinted card for an article: category and title on the left, date · read time and an
 // arrow at the bottom, the cover (or the category's chrome object) large on the right, cropped
-// by the edge. Used on /blog, /work and under each article ("Keep reading").
+// by the edge. Used on /blog and under each article ("Keep reading").
 export default function BlogCard({ post, all, index = 0, minRead }: Props) {
   const visual = visualOf(post);
 

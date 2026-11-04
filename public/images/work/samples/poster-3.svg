@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000"><defs></defs>
+  <rect width="800" height="1000" fill="#ee4b2b"/>
+  <circle cx="0" cy="1000" r="800" fill="none" stroke="#f6e8d2" stroke-width="44"/><circle cx="0" cy="1000" r="670" fill="none" stroke="#f6e8d2" stroke-width="44"/><circle cx="0" cy="1000" r="540" fill="none" stroke="#f6e8d2" stroke-width="44"/><circle cx="0" cy="1000" r="410" fill="none" stroke="#f6e8d2" stroke-width="44"/><circle cx="0" cy="1000" r="280" fill="none" stroke="#f6e8d2" stroke-width="44"/>
+  <circle cx="640" cy="170" r="90" fill="#111111"/>
+  <text x="70" y="70" font-family="Arial,sans-serif" font-size="15" letter-spacing="4" fill="#f6e8d2" opacity=".55">SAMPLE</text></svg>

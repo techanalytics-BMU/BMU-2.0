@@ -1,6 +1,6 @@
 import type { BlogListingContent } from '@/types/blog';
 
-// Text for the article list on /blog (and under the hero on /work). The posts themselves are
+// Text for the article list on /blog. The posts themselves are
 // written in the dashboard (/dashboard/blogs) and stored in Supabase.
 export const blogListing: BlogListingContent = {
   heading: 'From the studio',
