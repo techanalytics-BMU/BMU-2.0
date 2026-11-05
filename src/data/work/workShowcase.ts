@@ -46,13 +46,12 @@ const sampleVideo = (id: string, clip: string, category: WorkCategoryId, title: 
   media: [
     {
       image: `${SAMPLES}/${clip}.webp`,
-      video: `${SAMPLE_VIDEOS}/${clip}.webm`,
+      video: `${SAMPLE_VIDEOS}/${clip}.mp4`,
       alt: `Sample video standing in for a ${title.toLowerCase()}`,
     },
   ],
   review: sampleReview,
   services: ['Script', 'Shoot', 'Edit'],
-  sample: true,
 });
 
 const sampleImage = (
@@ -72,11 +71,11 @@ const sampleImage = (
   })),
   review: sampleReview,
   services,
-  sample: true,
 });
 
-// The work, in the order it appears in each panel. Add real work at the top and delete a sample each time
-// (their files are in public/images/work/samples and public/videos/work/samples):
+// The work, in the order it appears in each panel. These samples show on the live site until real
+// work replaces them: add it at the top and delete a sample each time (their files are in
+// public/images/work/samples and public/videos/work/samples).
 // {
 //   id: 'client-launch-reel',
 //   category: 'insta-videos',
@@ -86,7 +85,7 @@ const sampleImage = (
 //   review: { quote: '…', name: '…', role: 'Founder, Client' },
 //   services: ['Script', 'Shoot', 'Edit'],
 // },
-const projects: WorkProject[] = [
+export const workProjects: WorkProject[] = [
   sampleImage('sample-website-1', ['website-1'], 'websites', 'Website', ['Design', 'Development']),
   sampleVideo('sample-reel-1', 'clip-1', 'insta-videos', 'Instagram reel'),
   sampleVideo('sample-ugc-1', 'clip-2', 'ugc', 'UGC video'),
@@ -99,8 +98,3 @@ const projects: WorkProject[] = [
   sampleImage('sample-poster-3', ['poster-3'], 'graphic-design', 'Social artwork', ['Concept', 'Design']),
 ];
 
-// Samples stay on your computer: the live site only ever shows real work, and the whole section
-// stays hidden until there is some
-export const workProjects = projects.filter(
-  (project) => !project.sample || process.env.NODE_ENV === 'development'
-);

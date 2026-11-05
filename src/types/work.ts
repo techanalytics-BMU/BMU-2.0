@@ -41,7 +41,6 @@ export type WorkProject = {
   review?: WorkReview;
   services: string[];
   link?: string; // the live site or post
-  sample?: boolean; // placeholder – shown while developing, never on the live site
 };
 
 export type WorkShowcaseContent = {

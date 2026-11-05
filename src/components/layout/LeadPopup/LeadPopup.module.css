@@ -132,7 +132,11 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
     0 2.5em 5.5em -1.5em rgba(0, 0, 0, 0.95);
   text-align: center;
-  scrollbar-width: thin;
+  scrollbar-width: none; /* very short screens can still scroll it, with no bar showing */
+}
+
+.card::-webkit-scrollbar {
+  display: none;
 }
 
 .card:focus {
@@ -505,6 +509,61 @@
 .successCta img {
   width: 1.15em;
   height: 1.15em;
+}
+
+/* ---------- Short screens (laptops with display scaling): tighter spacing, so the whole form fits
+   with no scrolling, even with an error under every field ---------- */
+@media (max-height: 720px) and (min-width: 521px) {
+  .card {
+    padding: 1.35em 1.75em 1.15em;
+  }
+
+  .logo {
+    width: 4.5em;
+  }
+
+  .heading {
+    margin-top: 0.55em;
+  }
+
+  .description {
+    margin-top: 0.35em;
+  }
+
+  .explore {
+    margin-top: 0.7em;
+  }
+
+  .form {
+    margin-top: 1em;
+  }
+
+  .fields {
+    gap: 0.65em 0.875em;
+  }
+
+  .field {
+    gap: 0.25em;
+  }
+
+  .input {
+    height: 2.6em;
+  }
+
+  .submit {
+    height: 3.1em;
+    margin-top: 1em;
+  }
+
+  .submitArrow {
+    width: 2.4em;
+    height: 2.4em;
+  }
+
+  .consent,
+  .failed {
+    margin-top: 0.5em;
+  }
 }
 
 /* ---------- Phones: a smaller card in the middle of the screen (everything scales from the frame's
