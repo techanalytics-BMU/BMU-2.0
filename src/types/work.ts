@@ -4,9 +4,10 @@ export type WorkClientLogo = {
 };
 
 export type WorkHeroContent = {
-  badge: string;
   heading: string;
-  clientsLabel: string; // small line above the logo strip
+  subheading: string;
+  cta: { label: string; href: string };
+  clientsLabel: string; // small line beside the logo strip
   clients: WorkClientLogo[];
 };
 

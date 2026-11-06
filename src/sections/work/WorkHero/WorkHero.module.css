@@ -1,48 +1,66 @@
+/* One screen tall: the words, then the planet with the client names along it */
 .section {
+  --cell: clamp(72px, 8vw, 120px); /* the grid's squares */
+  --show: clamp(64px, 14svh, 130px); /* how much of the planet shows above the client names */
+
   position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: calc(var(--navbar-height) + var(--navbar-offset) + clamp(48px, 9svh, 96px))
-    var(--space-4) var(--space-7);
-  overflow: hidden;
+  min-height: 100svh;
+  padding: calc(var(--navbar-height) + var(--navbar-offset)) var(--space-4) 0;
+  overflow: clip;
   background: var(--color-bg);
 }
 
-/* The dot wave fills the upper part of the hero, fading out at the edges and bottom */
-.wave {
+/* Light falling from above the top edge */
+.section::before {
+  content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: min(78svh, 680px);
-  -webkit-mask-image:
-    linear-gradient(to bottom, transparent 2%, #000000 25%, #000000 60%, transparent 98%),
-    linear-gradient(to right, transparent, #000000 18%, #000000 82%, transparent);
-  -webkit-mask-composite: source-in;
-  mask-image:
-    linear-gradient(to bottom, transparent 2%, #000000 25%, #000000 60%, transparent 98%),
-    linear-gradient(to right, transparent, #000000 18%, #000000 82%, transparent);
-  mask-composite: intersect;
+  z-index: -2;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 40% 56% at 50% -8%, rgba(176, 190, 210, 0.28), transparent 70%),
+    radial-gradient(ellipse 82% 78% at 50% -12%, rgba(120, 134, 156, 0.15), transparent 72%);
+  animation: fade 1.6s ease both;
   pointer-events: none;
 }
 
-/* ---------- Badge + heading ---------- */
-.content {
+/* Faint lines, fading out towards the corners */
+.grid {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-position: 50% 0;
+  background-size: var(--cell) var(--cell);
+  -webkit-mask-image: radial-gradient(ellipse 80% 95% at 50% 45%, #000 45%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 95% at 50% 45%, #000 45%, transparent 100%);
+  animation: fade 1.4s ease 0.1s both;
+  pointer-events: none;
+}
+
+/* ---------- Heading ---------- */
+.inner {
   position: relative;
   z-index: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: var(--space-4);
-  max-width: 1040px;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: var(--space-4) 0;
   text-align: center;
 }
 
-/* White fading softly to silver; a soft dark halo keeps it readable over the dots */
 .heading {
   padding-bottom: 0.08em;
-  background: var(--heading-fill);
+  background: linear-gradient(90deg, #858a92, #e9ebee 28%, #fff 50%, #e9ebee 72%, #858a92);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -52,33 +70,121 @@
   letter-spacing: var(--heading-letter-spacing);
   line-height: var(--heading-line-height);
   text-wrap: balance;
-  filter: drop-shadow(0 4px 30px rgba(0, 0, 0, 0.9));
 }
 
-/* ---------- Client logos ---------- */
+.subheading {
+  max-width: 44ch;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-subheading);
+  line-height: 1.5;
+}
+
+/* ---------- The planet ---------- */
+.space {
+  position: relative;
+  flex: none;
+  height: var(--show);
+  margin: 0 calc(var(--space-4) * -1);
+  pointer-events: none; /* its glow reaches up past the button on short screens */
+}
+
+/* Light rising off the horizon */
+.space::before {
+  content: '';
+  position: absolute;
+  top: -150px;
+  left: 50%;
+  width: min(1300px, 130vw);
+  height: 300px;
+  background: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    rgba(166, 220, 88, 0.2),
+    rgba(140, 198, 63, 0.06) 45%,
+    transparent 72%
+  );
+  transform: translateX(-50%);
+  animation:
+    fade 2s ease 0.7s both,
+    glow 7s ease-in-out 2.7s infinite;
+}
+
+/* A huge black sphere, a white line of light on its rim */
+.planet {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: max(240vw, 1600px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--color-bg);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.95),
+    inset 0 18px 40px -18px rgba(214, 245, 161, 0.4),
+    0 -1px 6px rgba(240, 252, 220, 0.85),
+    0 -6px 24px rgba(166, 220, 88, 0.42),
+    0 -24px 90px rgba(140, 198, 63, 0.2);
+  transform: translateX(-50%);
+  animation: planet-rise 1.8s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+}
+
+@keyframes planet-rise {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(80px);
+  }
+}
+
+@keyframes glow {
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---------- Client names: along the planet's surface ---------- */
 .clients {
   position: relative;
   z-index: 1;
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-6);
   width: 100%;
-  max-width: 1100px;
-  margin-top: clamp(var(--space-7), 14svh, 8.5rem);
-  text-align: center;
+  max-width: 1560px;
+  margin: 0 auto;
+  padding: 14px 0 18px;
+}
+
+/* The planet's rim fades into the black here instead of being cut in a straight line */
+.clients::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -40px -100vw 0;
+  background: linear-gradient(to bottom, transparent, var(--color-bg) 40px);
 }
 
 .clientsLabel {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
+  flex: none;
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
 }
 
 /* Fades out at both ends */
 .marquee {
-  margin-top: var(--space-4);
+  flex: 1;
+  min-width: 0;
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(to right, transparent, #000000 15%, #000000 85%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000000 15%, #000000 85%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000000 8%, #000000 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000000 8%, #000000 92%, transparent);
 }
 
-.track {
+.names {
   display: flex;
   width: max-content;
   margin: 0;
@@ -87,14 +193,14 @@
   animation: marquee 43s linear infinite; /* ~5.4s per name – lengthen it when adding names */
 }
 
-.marquee:hover .track {
+.marquee:hover .names {
   animation-play-state: paused;
 }
 
-.track li {
+.names li {
   display: flex;
   align-items: center;
-  padding: 0 clamp(24px, 4vw, 48px);
+  padding: 0 clamp(20px, 3vw, 40px);
 }
 
 /* Every logo in one quiet grey; full white on hover */
@@ -119,7 +225,7 @@
 
 .logo {
   width: auto;
-  height: 28px;
+  height: 24px;
   filter: grayscale(1) brightness(1.6);
 }
 
@@ -143,8 +249,21 @@
   }
 }
 
+/* Phones and upright tablets: the client names stacked under their label */
+@media (max-width: 900px) {
+  .clients {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+  }
+}
+
 /* The client strip keeps rolling even with reduced motion (to be revisited) */
 @media (prefers-reduced-motion: reduce) {
+  .section::before,
+  .grid,
+  .space::before,
+  .planet,
   .rise {
     animation: none;
   }

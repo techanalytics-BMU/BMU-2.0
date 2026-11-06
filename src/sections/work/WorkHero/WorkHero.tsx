@@ -1,9 +1,6 @@
-'use client';
-
 import Image from 'next/image';
-import Badge from '@/components/ui/Badge/Badge';
+import Button from '@/components/ui/Button/Button';
 import { workHero } from '@/data/work/workHero';
-import { useDotWave } from '@/hooks/useDotWave';
 import type { WorkClientLogo } from '@/types/work';
 import styles from './WorkHero.module.css';
 
@@ -17,36 +14,47 @@ function ClientLogo({ client }: { client: WorkClientLogo }) {
   return <span className={styles.wordmark}>{client.name}</span>;
 }
 
-// Work hero: a 3D field of dots rolling like a slow swell (canvas, src/hooks/useDotWave.ts) behind
-// the badge and heading, then a strip of client logos that scrolls endlessly.
+// Work hero: the heading under a light from above, over the site's planet (as on the landing and
+// service pages). The client names run along the planet's surface.
 export default function WorkHero() {
-  const { badge, heading, clientsLabel, clients } = workHero;
-  const waveRef = useDotWave<HTMLCanvasElement>();
+  const { heading, subheading, cta, clientsLabel, clients } = workHero;
 
   return (
     <section id="work-hero" className={styles.section}>
-      <canvas ref={waveRef} className={styles.wave} aria-hidden="true" />
+      <div className={styles.grid} aria-hidden="true" />
 
-      <div className={styles.content}>
-        <div className={styles.rise} style={{ '--delay': '0.1s' } as React.CSSProperties}>
-          <Badge>{badge}</Badge>
-        </div>
+      <div className={styles.inner}>
         <h1
           className={`${styles.heading} ${styles.rise}`}
-          style={{ '--delay': '0.25s' } as React.CSSProperties}
+          style={{ '--delay': '0.1s' } as React.CSSProperties}
         >
           {heading}
         </h1>
+        <p
+          className={`${styles.subheading} ${styles.rise}`}
+          style={{ '--delay': '0.25s' } as React.CSSProperties}
+        >
+          {subheading}
+        </p>
+        <div className={styles.rise} style={{ '--delay': '0.4s' } as React.CSSProperties}>
+          <Button href={cta.href} variant="accent">
+            {cta.label}
+          </Button>
+        </div>
+      </div>
+
+      <div className={styles.space} aria-hidden="true">
+        <div className={styles.planet} />
       </div>
 
       <div
         className={`${styles.clients} ${styles.rise}`}
-        style={{ '--delay': '0.5s' } as React.CSSProperties}
+        style={{ '--delay': '0.55s' } as React.CSSProperties}
       >
         <p className={styles.clientsLabel}>{clientsLabel}</p>
         {/* Two copies side by side; the track slides left by one copy, then loops seamlessly */}
         <div className={styles.marquee}>
-          <ul className={styles.track}>
+          <ul className={styles.names}>
             {[0, 1].map((copy) =>
               clients.map((client, i) => (
                 <li key={`${copy}-${i}`} aria-hidden={copy === 1 || undefined}>

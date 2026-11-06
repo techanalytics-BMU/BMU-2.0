@@ -47,7 +47,7 @@
   container-type: inline-size;
   display: flex;
   gap: var(--gap);
-  height: clamp(580px, calc(100svh - 150px), 780px);
+  height: clamp(520px, calc(100svh - 150px), 780px);
   margin-top: var(--space-4);
 }
 
