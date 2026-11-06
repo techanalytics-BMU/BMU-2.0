@@ -96,6 +96,11 @@ select:autofill {
   animation: text-accent-sheen 6s ease-in-out 1.2s infinite;
 }
 
+/* Out of view (see TextAccentPause): the sheen rests */
+.text-accent[data-offscreen='true'] {
+  animation-play-state: paused;
+}
+
 @keyframes text-accent-sheen {
   0% {
     background-position:

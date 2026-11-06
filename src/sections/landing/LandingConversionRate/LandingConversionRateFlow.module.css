@@ -55,6 +55,7 @@
   z-index: -1;
   inset: 0 -22% -10%;
   opacity: 0.25; /* much softer than behind the Pricing cards, so the diagram stands out */
+  will-change: transform; /* its own GPU layer: this masked pattern is costly, so draw it just once */
   background:
     radial-gradient(circle, rgba(205, 240, 150, 0.8) 0.9px, transparent 1.6px) 0 0 / 21px 21px,
     radial-gradient(circle, rgba(190, 210, 165, 0.45) 0.8px, transparent 1.5px) 0 0 / 7px 7px;
@@ -219,8 +220,8 @@
     -10px 50%,
     left center;
   background-repeat: no-repeat;
-  filter: drop-shadow(0 0 4px rgba(140, 198, 63, 0.7));
-  animation: link-flow 1.6s linear infinite;
+  box-shadow: 0 0 6px rgba(140, 198, 63, calc(0.5 * var(--draw)));
+  animation: link-flow 1.6s linear infinite paused;
 }
 
 /* Dots on both label edges */
@@ -276,6 +277,7 @@
 .browser {
   --show: clamp(0, calc((var(--p) - 0.62 - var(--i) * 0.05) / 0.07), 1);
 
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 8%;
@@ -351,7 +353,7 @@
   height: 100%;
   margin-inline: var(--pad);
   overflow: visible;
-  filter: drop-shadow(0 0 4px rgba(140, 198, 63, 0.7));
+  will-change: transform; /* its own GPU layer: the travelling dots repaint only the curves */
 }
 
 .in {
@@ -370,6 +372,14 @@
   stroke-dashoffset: calc(400 * (1 - var(--draw)));
 }
 
+/* The curves' glow: a wide, faint line under each one (a blur filter here would have to be
+   redrawn on every frame while the dots travel) */
+.glow {
+  stroke: rgba(140, 198, 63, 0.2);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
 /* Small bright dash travelling along each curve once the diagram is complete */
 .pulse {
   fill: none;
@@ -379,7 +389,7 @@
   stroke-dasharray: 8 400;
   stroke-dashoffset: 8;
   opacity: var(--flowing);
-  animation: flow 2.4s linear infinite;
+  animation: flow 2.4s linear infinite paused;
 }
 
 .in .pulse {
@@ -390,10 +400,26 @@
   animation-delay: calc(var(--i) * -1.2s);
 }
 
-/* The two windows take turns lighting up once everything is shown */
-.browser {
-  animation: highlight 4s ease-in-out infinite;
+/* The two windows take turns lighting up once everything is shown: a green edge and glow that
+   fades in and out (only its opacity animates, so the GPU does it) */
+.browser::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border: 1px solid rgba(140, 198, 63, calc(0.8 * var(--flowing)));
+  border-radius: 5px;
+  box-shadow: 0 0 18px rgba(140, 198, 63, calc(0.35 * var(--flowing)));
+  opacity: 0;
+  animation: highlight 4s ease-in-out infinite paused;
   animation-delay: calc(var(--i) * 2s);
+  pointer-events: none;
+}
+
+/* The endless animations run only while the finished diagram is on screen (data-active) */
+.scroller[data-active='true'] .link,
+.scroller[data-active='true'] .pulse,
+.scroller[data-active='true'] .browser::after {
+  animation-play-state: running;
 }
 
 @keyframes flow {
@@ -409,13 +435,11 @@
   0%,
   60%,
   100% {
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: none;
+    opacity: 0;
   }
   20%,
   40% {
-    border-color: rgba(140, 198, 63, calc(0.8 * var(--flowing)));
-    box-shadow: 0 0 18px rgba(140, 198, 63, calc(0.35 * var(--flowing)));
+    opacity: 1;
   }
 }
 
@@ -558,7 +582,7 @@
   }
 
   .pulse,
-  .browser,
+  .browser::after,
   .link {
     animation: none;
   }

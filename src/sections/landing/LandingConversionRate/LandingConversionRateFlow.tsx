@@ -24,7 +24,8 @@ const curve = (y1: number, y2: number) => `M0 ${y1} C 55 ${y1}, 45 ${y2}, 100 ${
 // Business flow, drawn by the scroll like the timeline above it (see the CSS for the steps):
 // it stays pinned on screen while each service → the middle → the outcomes appear in turn.
 export default function LandingConversionRateFlow({ inputs, strategy, testLabel, variants }: Props) {
-  const ref = useScrollProgress<HTMLDivElement>({ mode: 'pinned' });
+  // data-active: the travelling dots and glows run only once the diagram is nearly done, on screen
+  const ref = useScrollProgress<HTMLDivElement>({ mode: 'pinned', activeAfter: 0.5 });
 
   const inputPaths = inputs.map((_, i) =>
     curve(INPUTS_TOP + INPUTS_HEIGHT * ((i + 0.5) / inputs.length), 50)
@@ -35,6 +36,7 @@ export default function LandingConversionRateFlow({ inputs, strategy, testLabel,
     <svg className={styles.curves} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
       {paths.map((d, i) => (
         <g key={d} style={{ '--i': i } as React.CSSProperties} className={styles[side]}>
+          <path d={d} className={`${styles.path} ${styles.glow}`} vectorEffect="non-scaling-stroke" />
           <path d={d} className={styles.path} vectorEffect="non-scaling-stroke" />
           <path d={d} className={styles.pulse} vectorEffect="non-scaling-stroke" />
         </g>

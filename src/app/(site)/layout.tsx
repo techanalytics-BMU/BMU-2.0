@@ -3,6 +3,7 @@ import Footer from '@/components/layout/Footer/Footer';
 import LeadPopup from '@/components/layout/LeadPopup/LeadPopup';
 import Navbar from '@/components/layout/Navbar/Navbar';
 import SmoothScroll from '@/components/layout/SmoothScroll/SmoothScroll';
+import TextAccentPause from '@/components/layout/TextAccentPause/TextAccentPause';
 
 // The public website: smooth scrolling, navbar, footer and the lead popup on every page, plus
 // remembering where the visit came from for the lead forms
@@ -11,6 +12,7 @@ export default function SiteLayout({ children }: Readonly<{ children: React.Reac
     <>
       <CampaignTracker />
       <SmoothScroll />
+      <TextAccentPause />
       <Navbar />
       {children}
       <Footer />

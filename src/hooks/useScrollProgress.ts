@@ -21,17 +21,20 @@ type ScrollProgressOptions = {
    *              (nothing moves until the whole element can be seen)
    */
   unpinned?: 'passing' | 'onScreen';
+  activeAfter?: number; // data-active only turns true from this --progress on
 };
 
 /**
  * Sets a `--progress` CSS variable (0 → 1) on the element as the page scrolls,
  * so CSS can tie animations directly to the scroll position. Scrolling back reverses it.
- * Updates once per frame and never re-renders React.
+ * Also sets data-active="true" while the element is on screen (and past `activeAfter`), so CSS can
+ * run endless animations inside it only then. Updates once per frame and never re-renders React.
  */
 export function useScrollProgress<T extends HTMLElement>({
   mode = 'enter',
   distance = 0.8,
   unpinned = 'passing',
+  activeAfter = 0,
 }: ScrollProgressOptions = {}) {
   const ref = useRef<T>(null);
 
@@ -43,11 +46,13 @@ export function useScrollProgress<T extends HTMLElement>({
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const clamp = (value: number) => Math.min(Math.max(value, 0), 1);
     let frame = 0;
+    let lastProgress = '';
+    let lastActive = '';
 
     const update = () => {
       frame = 0;
       const viewportHeight = window.innerHeight;
-      const { top, height } = element.getBoundingClientRect();
+      const { top, bottom, height } = element.getBoundingClientRect();
       let progress = 1;
       if (!reduceMotion && mode === 'pinned') {
         if (height > viewportHeight) {
@@ -66,7 +71,17 @@ export function useScrollProgress<T extends HTMLElement>({
         const span = Math.max(Math.min(viewportHeight * distance, reachable), 1);
         progress = clamp((viewportHeight - top) / span);
       }
-      element.style.setProperty('--progress', progress.toFixed(4));
+      // Only when something changed: every write makes the browser restyle all that's inside
+      const value = progress.toFixed(4);
+      if (value !== lastProgress) {
+        lastProgress = value;
+        element.style.setProperty('--progress', value);
+      }
+      const active = String(top < viewportHeight && bottom > 0 && progress >= activeAfter);
+      if (active !== lastActive) {
+        lastActive = active;
+        element.dataset.active = active;
+      }
     };
 
     const onScroll = () => {
@@ -82,7 +97,7 @@ export function useScrollProgress<T extends HTMLElement>({
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
     };
-  }, [mode, distance, unpinned]);
+  }, [mode, distance, unpinned, activeAfter]);
 
   return ref;
 }

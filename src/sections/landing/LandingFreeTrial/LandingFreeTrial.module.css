@@ -573,6 +573,14 @@
   }
 }
 
+/* Off screen: the endless animations rest, so they cost nothing while the page scrolls elsewhere */
+.screen[data-on-screen='false'] .queue li:first-child .queueDot,
+.screen[data-on-screen='false'] .caret,
+.screen[data-on-screen='false'] .status::before,
+.screen[data-on-screen='false'] .lines span {
+  animation-play-state: paused;
+}
+
 /* ---------- Green horizon at the foot of the window (centred on its bottom edge,
    where the window has faded out completely) ---------- */
 .horizon {

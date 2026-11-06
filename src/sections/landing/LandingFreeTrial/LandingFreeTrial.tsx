@@ -58,7 +58,7 @@ export default function LandingFreeTrial() {
 
       <div ref={stageRef} className={styles.stage}>
         <div ref={device.ref} className={styles.device}>
-          <div className={styles.screen} data-typing={!paused && !reduceMotion}>
+          <div className={styles.screen} data-typing={!paused && !reduceMotion} data-on-screen={device.inView}>
             {/* Browser bar */}
             <div className={styles.browserBar}>
               <span className={styles.dots} aria-hidden="true">
