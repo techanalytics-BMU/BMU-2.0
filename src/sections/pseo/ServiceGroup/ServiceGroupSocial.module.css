@@ -1,0 +1,168 @@
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
+  gap: var(--space-6);
+  align-items: center;
+  max-width: 1320px;
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: var(--hero-top) var(--space-4) var(--space-4);
+}
+
+/* ---------- The profile ---------- */
+.profile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* A face in a ring, the ring lit the way a new story is */
+.avatar {
+  display: block;
+  width: clamp(64px, 12svh, 96px);
+  aspect-ratio: 1;
+  padding: 3px;
+  border-radius: 50%;
+  background: conic-gradient(from 210deg, var(--color-accent), #e9ebee 40%, #6d7279 75%, var(--color-accent));
+}
+
+.face {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 3px solid var(--color-bg);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 38%, #9a9fa6 0 21%, transparent 21.5%),
+    radial-gradient(ellipse 52% 40% at 50% 92%, #6d7279 0 98%, transparent 100%), #1a1c20;
+}
+
+/* ---------- The grid of posts ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  justify-self: end;
+  width: min(100%, 470px, calc(100svh - var(--hero-top) - 40px));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.post {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(150deg, #24272c, #101215);
+  animation: post-in 0.7s var(--ease) backwards;
+  animation-delay: calc(0.3s + var(--i) * 60ms);
+}
+
+.post svg {
+  width: 34%;
+  fill: rgba(255, 255, 255, 0.42);
+}
+
+.post[data-post='quote'] {
+  background: linear-gradient(150deg, #c9ccd1, #868b92);
+}
+
+.post[data-post='quote'] svg {
+  fill: #101215;
+}
+
+.post[data-post='reel'] {
+  background: linear-gradient(170deg, #34383e, #16181b);
+}
+
+.post[data-post='reel'] svg {
+  fill: rgba(255, 255, 255, 0.85);
+}
+
+@keyframes post-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+/* ---------- The services: a conversation ---------- */
+.thread {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.exchange {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* What you'd ask for: your bubble, on the right */
+.ask {
+  align-self: flex-end;
+  max-width: 80%;
+  margin: 0;
+  padding: 10px 16px;
+  border-radius: 18px 18px 4px;
+  background: #e9ebee;
+  color: #0b0d10;
+  font-size: var(--font-size-md);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  transition: background 0.25s ease;
+}
+
+a.exchange:hover .ask {
+  background: #ffffff;
+}
+
+/* And what we'd say back, on the left */
+.reply {
+  align-self: flex-start;
+  max-width: 80%;
+  padding: 12px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 18px 18px 18px 4px;
+  background: #121417;
+}
+
+.text {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.55;
+}
+
+.meta {
+  display: block;
+  margin-top: 6px;
+  font-size: var(--font-size-xs);
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
+    padding-top: calc(var(--hero-top) + var(--space-5));
+    padding-bottom: 0;
+  }
+
+  .grid {
+    justify-self: stretch;
+    width: 100%;
+  }
+
+  .ask,
+  .reply {
+    max-width: 92%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .post {
+    animation: none;
+  }
+}

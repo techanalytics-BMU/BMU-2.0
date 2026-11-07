@@ -1,0 +1,238 @@
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: center;
+  max-width: 1320px;
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: var(--hero-top) var(--space-4) var(--space-4);
+}
+
+/* ---------- Three phones, the middle one in front ---------- */
+.phones {
+  --phone: min(232px, calc((100svh - var(--hero-top) - 70px) * 0.5));
+
+  position: relative;
+  height: calc(var(--phone) * 2);
+}
+
+.phone {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--phone);
+  aspect-ratio: 1 / 2;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 26px;
+  background: linear-gradient(170deg, #24272c, #0d0f12 70%);
+  animation: phone-in 1s var(--ease) 0.3s backwards;
+}
+
+.middle {
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7);
+}
+
+.left {
+  opacity: 0.6;
+  transform: translate(-112%, -47%) rotate(-7deg) scale(0.86);
+}
+
+.right {
+  opacity: 0.6;
+  transform: translate(12%, -47%) rotate(7deg) scale(0.86);
+}
+
+@keyframes phone-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* A head and shoulders in the dark of the screen */
+.person {
+  position: absolute;
+  inset: 22% 0 0;
+  background:
+    radial-gradient(circle at 50% 22%, #5e6369 0 18%, transparent 18.5%),
+    radial-gradient(ellipse 56% 42% at 50% 84%, #3b3f45 0 98%, transparent 100%);
+}
+
+.side {
+  position: absolute;
+  right: 10px;
+  bottom: 26%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.side i {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.side i:first-child {
+  background: var(--color-accent);
+}
+
+.caption {
+  position: absolute;
+  right: 44px;
+  bottom: 16px;
+  left: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.caption i {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.caption i:last-child {
+  width: 60%;
+  background: rgba(255, 255, 255, 0.34);
+}
+
+/* ---------- The services: tall stories in a row ---------- */
+.stories {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  gap: 12px;
+  margin-top: var(--space-5);
+}
+
+.story {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: clamp(380px, 32vw, 460px);
+  padding: 14px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  background: linear-gradient(175deg, #191b1f, #0a0b0d 62%);
+  transition: border-color 0.25s ease;
+}
+
+/* Each story is a video waiting to play: a ring and a triangle */
+.story::before,
+.story::after {
+  content: '';
+  position: absolute;
+  top: 26%;
+  left: 50%;
+}
+
+.story::before {
+  width: 64px;
+  height: 64px;
+  margin-left: -32px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 50%;
+}
+
+.story::after {
+  width: 16px;
+  height: 20px;
+  margin-top: 22px;
+  margin-left: -6px;
+  background: rgba(255, 255, 255, 0.6);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.progress,
+.title,
+.text,
+.meta {
+  position: relative;
+}
+
+a.story:hover {
+  border-color: rgba(255, 255, 255, 0.34);
+}
+
+.progress {
+  display: flex;
+  gap: 3px;
+}
+
+.progress i {
+  flex: 1;
+  height: 2px;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.progress i[data-seen] {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.title {
+  margin: auto 0 0;
+  font-size: 1.25rem;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.text {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.meta {
+  margin-top: var(--space-2);
+  font-size: var(--font-size-sm);
+}
+
+/* Touch screens: the stories run off the edge and swipe, like the real thing */
+@media (max-width: 1024px) {
+  .stories {
+    grid-auto-columns: min(62vw, 240px);
+    margin-right: calc(var(--space-4) * -1);
+    margin-left: calc(var(--space-4) * -1);
+    padding: 0 var(--space-4) var(--space-2);
+    overflow-x: auto;
+    scroll-padding: 0 var(--space-4);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .stories::-webkit-scrollbar {
+    display: none;
+  }
+
+  .story {
+    scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: calc(var(--hero-top) + var(--space-5));
+    padding-bottom: 0;
+  }
+
+  .phones {
+    --phone: min(200px, 46vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .phone {
+    animation: none;
+  }
+}

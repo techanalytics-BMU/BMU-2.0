@@ -6,10 +6,11 @@ import { isService, isServiceGroup } from '@/lib/pseo/catalog';
 import { pageMetadata } from '@/lib/pseo/metadata';
 import { serviceGroupPage, serviceHub } from '@/lib/pseo/pages';
 import PseoTemplate from '@/sections/pseo/PseoTemplate/PseoTemplate';
+import ServiceGroupPage from '@/sections/pseo/ServiceGroup/ServiceGroupPage';
 
 // /services/[service] – the main page for one service (category 1: service hubs), and the
 // overview page for each of the six service groups in the navbar's Services menu
-// (/services/marketing-and-visibility …)
+// (/services/marketing-and-visibility …), which have designs of their own
 type Props = { params: Promise<{ service: string }> };
 
 export const dynamicParams = false;
@@ -25,7 +26,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ServicePage({ params }: Props) {
-  const page = pageFor((await params).service);
+  const { service } = await params;
+  const page = pageFor(service);
   if (!page) notFound();
-  return <PseoTemplate page={page} />;
+  return isServiceGroup(service) ? (
+    <ServiceGroupPage slug={service} page={page} />
+  ) : (
+    <PseoTemplate page={page} />
+  );
 }

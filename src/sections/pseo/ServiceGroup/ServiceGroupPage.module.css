@@ -1,0 +1,335 @@
+/* What the six service group pages share. Each page's own hero and services section have their own
+   stylesheet next to this one. */
+.page {
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --hero-top: calc(var(--navbar-height) + var(--navbar-offset));
+
+  overflow: clip;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* ---------- Hero words ---------- */
+.heroText {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.h1 {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: var(--font-size-heading);
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: var(--heading-line-height);
+  text-wrap: balance;
+}
+
+.tagline {
+  padding-bottom: 0.08em;
+  color: var(--color-text-dim);
+  -webkit-text-fill-color: var(--color-text-dim);
+  font-size: 0.62em;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.intro {
+  max-width: 46ch;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-subheading);
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-1);
+}
+
+.price {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}
+
+.enter {
+  display: block;
+  animation: enter 0.9s var(--ease) backwards;
+  animation-delay: calc(0.1s + var(--i, 0) * 0.12s);
+}
+
+.actions.enter {
+  display: flex;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+/* ---------- Sections ---------- */
+.section {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: clamp(56px, 8vw, 104px) var(--space-4) 0;
+}
+
+.head {
+  max-width: 720px;
+}
+
+.eyebrow {
+  color: var(--color-accent);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.heading {
+  margin: var(--space-2) 0 0;
+  padding-bottom: 0.08em;
+  background: var(--heading-fill);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(1.875rem, 3.2vw, 3.25rem);
+  font-weight: 400;
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: var(--heading-line-height);
+  text-wrap: balance;
+}
+
+.sub {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-md);
+  line-height: 1.55;
+}
+
+/* The heading stays beside a long list while it scrolls past */
+.headBeside {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+  gap: var(--space-5) var(--space-6);
+  align-items: start;
+}
+
+.headBeside .head {
+  position: sticky;
+  top: calc(var(--hero-top) + var(--space-4));
+}
+
+/* Sections play their entrance once they scroll in; nothing hides unless scripts can show it */
+@media (scripting: enabled) {
+  [data-reveal='out'] .rise {
+    opacity: 0;
+  }
+}
+
+[data-reveal='in'] .rise {
+  animation: enter 0.8s var(--ease) backwards;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+/* ---------- Big figures ---------- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: var(--space-5) 0 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-4) var(--space-4) 0;
+}
+
+.stat + .stat {
+  padding-left: var(--space-4);
+  border-left: 1px solid var(--color-border);
+}
+
+.statValue {
+  order: -1;
+  margin: 0;
+  font-size: clamp(1.75rem, 3vw, 2.75rem);
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+}
+
+.statLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.statText {
+  margin: 0;
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
+  line-height: 1.5;
+}
+
+/* ---------- Roadmap ---------- */
+.phases {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-5);
+  margin: var(--space-5) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.phase {
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.phaseNumber {
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.phaseTitle {
+  margin: var(--space-1) 0 0;
+  font-size: var(--font-size-title);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.phasePoints {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  line-height: 1.5;
+  list-style: none;
+}
+
+/* ---------- Every service in the group ---------- */
+.links {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 var(--space-5);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--color-border);
+  transition: border-color 0.25s ease;
+}
+
+.link:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.linkLabel {
+  font-size: var(--font-size-md);
+  letter-spacing: -0.01em;
+}
+
+.linkNote {
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
+  line-height: 1.5;
+}
+
+/* ---------- Closing call to action, on the site's planet ---------- */
+.closing {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: clamp(56px, 8vw, 104px);
+  padding: clamp(64px, 9vw, 120px) var(--space-4) clamp(150px, 20vw, 240px);
+  overflow: clip;
+  text-align: center;
+}
+
+.closingText {
+  max-width: 52ch;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-md);
+  line-height: 1.55;
+}
+
+.horizon {
+  position: absolute;
+  top: calc(100% - clamp(84px, 11vw, 140px));
+  left: 50%;
+  width: max(240vw, 1600px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--color-bg);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.95),
+    inset 0 18px 40px -18px rgba(214, 245, 161, 0.4),
+    0 -1px 6px rgba(240, 252, 220, 0.85),
+    0 -6px 24px rgba(166, 220, 88, 0.42),
+    0 -24px 90px rgba(140, 198, 63, 0.2);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .headBeside {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .headBeside .head {
+    position: static;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stat:nth-child(odd) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .stat:nth-child(n + 3) {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .phases,
+  .links {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter,
+  [data-reveal='in'] .rise {
+    animation: none;
+  }
+}

@@ -1,0 +1,233 @@
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: center;
+  max-width: 1320px;
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: var(--hero-top) var(--space-4) var(--space-4);
+}
+
+/* ---------- The search ---------- */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: panel-in 1s var(--ease) 0.3s backwards;
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 56px;
+  padding: 0 var(--space-3) 0 18px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-pill);
+  background: #101215;
+  color: var(--color-text);
+  font-size: var(--font-size-md);
+}
+
+.search svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: var(--color-text-muted);
+  stroke-linecap: round;
+  stroke-width: 2;
+}
+
+.answers {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 12px;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.results li {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 12px;
+  min-height: 72px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: #0c0e11;
+}
+
+.results span:last-child {
+  flex: 1;
+  min-width: 0;
+}
+
+/* The others stay as grey lines: only one result matters */
+.results i {
+  display: block;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.results i + i {
+  width: 60%;
+  margin-top: 8px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.results .first {
+  flex: 1.25;
+  border-color: rgba(255, 255, 255, 0.4);
+  background: #15181c;
+}
+
+.first b {
+  display: block;
+  font-size: var(--font-size-md);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.first small {
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
+}
+
+.rank {
+  flex: none;
+  width: 18px;
+  color: var(--color-text-dim);
+  font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.first .rank {
+  color: var(--color-accent);
+}
+
+.map {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: #0c0e11;
+}
+
+.streets {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.09);
+  stroke-width: 7;
+}
+
+.route {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.75);
+  stroke-dasharray: 2 7;
+  stroke-linecap: round;
+  stroke-width: 2.5;
+}
+
+.start {
+  fill: rgba(255, 255, 255, 0.75);
+}
+
+.pin {
+  fill: #e9ebee;
+}
+
+.pinDot {
+  fill: var(--color-accent);
+}
+
+/* ---------- The services: a page of results ---------- */
+.serp {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.result {
+  display: block;
+}
+
+.url {
+  display: block;
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
+  line-height: 1.5;
+}
+
+.title {
+  margin: 2px 0 0;
+  font-size: var(--font-size-title);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  text-decoration: underline transparent;
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.2s ease;
+}
+
+a.result:hover .title {
+  text-decoration-color: currentColor;
+}
+
+.text {
+  margin-top: 4px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.55;
+}
+
+.meta {
+  display: block;
+  margin-top: 4px;
+  font-size: var(--font-size-sm);
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
+    padding-top: calc(var(--hero-top) + var(--space-5));
+    padding-bottom: 0;
+  }
+
+  .answers {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .map {
+    height: 180px;
+    min-height: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+}

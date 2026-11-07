@@ -24,7 +24,7 @@ import styles from './PseoTemplate.module.css';
 // Every call to action is the same single button, to the contact page. Phones get a sticky bar.
 
 // Structured data, as one JSON-LD graph ("<" escaped so the text can never close the script tag)
-function JsonLd({ schema }: { schema: PseoPage['schema'] }) {
+export function JsonLd({ schema }: { schema: PseoPage['schema'] }) {
   const json = JSON.stringify({ '@context': 'https://schema.org', '@graph': schema }).replace(
     /</g,
     '\\u003c'

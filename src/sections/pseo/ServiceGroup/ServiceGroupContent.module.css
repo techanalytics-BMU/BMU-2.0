@@ -1,0 +1,282 @@
+/* The screen is the shot: the words centred inside the viewfinder's frame */
+.hero {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  padding: calc(var(--hero-top) + var(--space-5)) clamp(40px, 8vw, 120px) var(--space-6);
+  text-align: center;
+}
+
+.words {
+  align-items: center;
+}
+
+.words h1 {
+  align-items: center;
+}
+
+.words > div {
+  justify-content: center;
+}
+
+/* ---------- The viewfinder ---------- */
+.viewfinder {
+  position: absolute;
+  inset: calc(var(--hero-top) + 4px) var(--space-4) var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  animation: focus 1.2s ease 0.1s backwards;
+}
+
+@keyframes focus {
+  from {
+    opacity: 0;
+    transform: scale(1.015);
+  }
+}
+
+.corner {
+  position: absolute;
+  width: clamp(28px, 4vw, 52px);
+  height: clamp(28px, 4vw, 52px);
+  border: 0 solid rgba(255, 255, 255, 0.7);
+}
+
+.topLeft {
+  top: 0;
+  left: 0;
+  border-width: 2px 0 0 2px;
+}
+
+.topRight {
+  top: 0;
+  right: 0;
+  border-width: 2px 2px 0 0;
+}
+
+.bottomLeft {
+  bottom: 0;
+  left: 0;
+  border-width: 0 0 2px 2px;
+}
+
+.bottomRight {
+  right: 0;
+  bottom: 0;
+  border-width: 0 2px 2px 0;
+}
+
+/* The rule of thirds, barely there */
+.thirds {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, transparent calc(33.33% - 1px), rgba(255, 255, 255, 0.07) 0 33.33%, transparent 0 calc(66.66% - 1px), rgba(255, 255, 255, 0.07) 0 66.66%, transparent 0),
+    linear-gradient(to bottom, transparent calc(33.33% - 1px), rgba(255, 255, 255, 0.07) 0 33.33%, transparent 0 calc(66.66% - 1px), rgba(255, 255, 255, 0.07) 0 66.66%, transparent 0);
+}
+
+.rec,
+.format,
+.timecode,
+.level {
+  position: absolute;
+}
+
+.rec {
+  top: 18px;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rec i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+.format {
+  top: 18px;
+  right: 24px;
+}
+
+.timecode {
+  bottom: 18px;
+  left: 24px;
+}
+
+/* A sound level meter */
+.level {
+  right: 24px;
+  bottom: 18px;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 16px;
+}
+
+.level i {
+  width: 3px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.level i:nth-child(1) {
+  height: 40%;
+}
+
+.level i:nth-child(2) {
+  height: 70%;
+}
+
+.level i:nth-child(3) {
+  height: 100%;
+}
+
+.level i:nth-child(4) {
+  height: 60%;
+}
+
+.level i:nth-child(5) {
+  height: 30%;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.level i:nth-child(6) {
+  height: 20%;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ---------- The services: frames on a film strip ---------- */
+.strip {
+  --hole: 12px;
+
+  position: relative;
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  gap: 6px;
+  margin-top: var(--space-5);
+  padding: 34px 6px;
+  border-radius: var(--radius-sm);
+  background-color: #17191c;
+}
+
+/* The sprocket holes along both edges */
+.strip::before,
+.strip::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  left: 10px;
+  height: var(--hole);
+  background: repeating-linear-gradient(
+    to right,
+    var(--color-bg) 0 16px,
+    transparent 16px 34px
+  );
+  border-radius: 2px;
+}
+
+.strip::before {
+  top: 11px;
+}
+
+.strip::after {
+  bottom: 11px;
+}
+
+.frame {
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  padding: var(--space-4);
+  border-radius: 3px;
+  background: linear-gradient(170deg, #1d2024, #08090b 70%);
+  transition: background 0.3s ease;
+}
+
+a.frame:hover {
+  background: linear-gradient(170deg, #2a2e33, #0c0d10 70%);
+}
+
+.scene {
+  display: flex;
+  justify-content: space-between;
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+}
+
+.title {
+  margin: auto 0 0;
+  padding-top: var(--space-5);
+  font-size: var(--font-size-title);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.text {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.55;
+}
+
+.meta {
+  margin-top: var(--space-3);
+  font-size: var(--font-size-sm);
+}
+
+@media (max-width: 900px) {
+  .hero {
+    padding-right: var(--space-5);
+    padding-left: var(--space-5);
+  }
+
+  .strip {
+    grid-auto-columns: auto;
+    grid-auto-flow: row;
+    padding: 12px 32px;
+  }
+
+  /* Upright, the film runs down the screen, so the holes move to its sides */
+  .strip::before,
+  .strip::after {
+    top: 10px;
+    right: auto;
+    bottom: 10px;
+    left: auto;
+    width: var(--hole);
+    height: auto;
+    background: repeating-linear-gradient(
+      to bottom,
+      var(--color-bg) 0 16px,
+      transparent 16px 34px
+    );
+  }
+
+  .strip::before {
+    left: 10px;
+  }
+
+  .strip::after {
+    right: 10px;
+  }
+
+  .frame {
+    min-height: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viewfinder {
+    animation: none;
+  }
+}
