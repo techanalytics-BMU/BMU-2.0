@@ -1,0 +1,87 @@
+/* The service drawings: thin grey lines and soft grey blocks, with lime for the one detail that
+   matters in each */
+.art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.art * {
+  vector-effect: non-scaling-stroke;
+}
+
+.line,
+.grid,
+.street,
+.dash,
+.cursor,
+.accentLine,
+.ring {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.line {
+  stroke: rgba(255, 255, 255, 0.32);
+  stroke-width: 1.5;
+}
+
+.grid {
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 1;
+}
+
+.street {
+  stroke: rgba(255, 255, 255, 0.07);
+  stroke-width: 9;
+}
+
+.dash {
+  stroke: rgba(255, 255, 255, 0.4);
+  stroke-dasharray: 2 6;
+  stroke-width: 1.5;
+}
+
+.cursor {
+  fill: #0b0d10;
+  stroke: rgba(255, 255, 255, 0.85);
+  stroke-width: 1.5;
+}
+
+.ring {
+  stroke: rgba(140, 198, 63, 0.35);
+  stroke-width: 1;
+}
+
+.panel {
+  fill: rgba(255, 255, 255, 0.035);
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 1;
+}
+
+.fill {
+  fill: rgba(255, 255, 255, 0.05);
+}
+
+.dim {
+  fill: rgba(255, 255, 255, 0.12);
+}
+
+.bright {
+  fill: rgba(255, 255, 255, 0.62);
+}
+
+.pin {
+  fill: #e9ebee;
+}
+
+.accent {
+  fill: var(--color-accent);
+}
+
+.accentLine {
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+}

@@ -194,6 +194,14 @@
   }
 }
 
+/* Phones: only as tall as the three rows of cards that show, not the whole screen – a full screen
+   left an empty band under the cards that read as the page ending before the next section */
+@media (max-width: 720px) and (orientation: portrait) {
+  .section {
+    height: calc(var(--u) * 50);
+  }
+}
+
 .subheading {
   color: var(--color-text-muted);
   font-size: var(--font-size-subheading);

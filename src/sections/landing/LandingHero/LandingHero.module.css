@@ -16,25 +16,6 @@
   -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--hero-fade)), transparent);
   mask-image: linear-gradient(to bottom, #000 calc(100% - var(--hero-fade)), transparent);
   background-color: var(--color-bg);
-  background-image:
-    /* Two faint light beams from the top centre */
-    linear-gradient(
-      to bottom right,
-      transparent calc(50% - 1px),
-      rgba(255, 255, 255, 0.12) 50%,
-      transparent calc(50% + 1px)
-    ),
-    linear-gradient(
-      to bottom left,
-      transparent calc(50% - 1px),
-      rgba(255, 255, 255, 0.12) 50%,
-      transparent calc(50% + 1px)
-    );
-  background-size: 70px 300px;
-  background-position:
-    calc(50% - 35px) 0,
-    calc(50% + 35px) 0;
-  background-repeat: no-repeat;
 }
 
 /* Stars */

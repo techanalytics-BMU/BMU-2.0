@@ -1,10 +1,10 @@
-import Link from 'next/link';
 import Button from '@/components/ui/Button/Button';
 import { serviceGroups, type ServiceGroupSlug } from '@/data/pseo/groups';
 import type { PseoPage } from '@/types/pseo';
 import { JsonLd } from '../PseoTemplate/PseoTemplate';
 import PseoMobileBar from '../PseoTemplate/PseoMobileBar';
 import PseoReveal from '../PseoTemplate/PseoReveal';
+import ServiceGroupBento from './ServiceGroupBento';
 import * as Brand from './ServiceGroupBrand';
 import * as Content from './ServiceGroupContent';
 import * as Marketing from './ServiceGroupMarketing';
@@ -105,16 +105,7 @@ export default function ServiceGroupPage({
       {everyService && everyService.links.length > 0 && (
         <PseoReveal id="all-services" className={styles.section}>
           <SectionHead eyebrow={everyService.eyebrow} heading={everyService.heading} />
-          <ul className={styles.links}>
-            {everyService.links.map((link, i) => (
-              <li key={link.href} className={styles.rise} style={vars({ '--i': Math.min(i + 2, 8) })}>
-                <Link href={link.href} className={styles.link}>
-                  <span className={styles.linkLabel}>{link.label}</span>
-                  {link.note && <span className={styles.linkNote}>{link.note}</span>}
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <ServiceGroupBento links={everyService.links} />
         </PseoReveal>
       )}
 

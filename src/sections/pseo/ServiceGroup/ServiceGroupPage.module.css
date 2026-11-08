@@ -227,40 +227,6 @@
   list-style: none;
 }
 
-/* ---------- Every service in the group ---------- */
-.links {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0 var(--space-5);
-  margin: var(--space-4) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.link {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--color-border);
-  transition: border-color 0.25s ease;
-}
-
-.link:hover {
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
-.linkLabel {
-  font-size: var(--font-size-md);
-  letter-spacing: -0.01em;
-}
-
-.linkNote {
-  color: var(--color-text-dim);
-  font-size: var(--font-size-xs);
-  line-height: 1.5;
-}
-
 /* ---------- Closing call to action, on the site's planet ---------- */
 .closing {
   position: relative;
@@ -321,8 +287,7 @@
     border-top: 1px solid var(--color-border);
   }
 
-  .phases,
-  .links {
+  .phases {
     grid-template-columns: minmax(0, 1fr);
   }
 }
