@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import NetworkStatus from '@/components/layout/NetworkStatus/NetworkStatus';
 import { site } from '@/data/site';
 import { albertSans } from '@/styles/fonts';
 import './globals.css';
@@ -21,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: { type: 'website', siteName: site.name, locale: 'en_IN' },
 };
 
-// Shared by every page: fonts, base styles and the "no internet / can't be reached / slow" card.
+// Shared by every page: fonts and base styles.
 // Each group of pages adds its own frame – (site) the navbar, footer and lead popup; (auth) the
 // login card backdrop; (dashboard) the staff area.
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -29,7 +28,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" className={albertSans.variable}>
       <body>
         {children}
-        <NetworkStatus />
       </body>
     </html>
   );

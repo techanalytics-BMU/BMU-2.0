@@ -12,8 +12,8 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: '*.supabase.co', pathname: '/storage/v1/object/public/**' },
     ],
   },
-  // The service worker (public/sw.js – the fallback page when a page can't load): never cached,
-  // so a new version reaches visitors straight away
+  // The retired service worker (public/sw.js – it removes the old offline page from visitors'
+  // browsers): never cached, so browsers pick it up on their next visit
   async headers() {
     return [
       {
