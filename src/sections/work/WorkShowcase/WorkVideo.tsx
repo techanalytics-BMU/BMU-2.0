@@ -3,68 +3,32 @@
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { workShowcase } from '@/data/work/workShowcase';
-import styles from './WorkYouTube.module.css';
+import styles from './WorkVideo.module.css';
 
 type Props = {
-  id: string; // the YouTube video's id
-  cover: string; // its first frame, shown again when it ends
+  src: string; // the .mp4 file
+  cover: string; // its first frame – shown before it plays and again when it ends
   title: string; // what it shows, for screen readers
+  youtube?: string; // the same video on YouTube, for the menu's "Watch on YouTube"
   sound: boolean; // start with sound (it was turned on for an earlier video)
   onSoundChange: (on: boolean) => void;
 };
 
-const YOUTUBE = 'https://www.youtube-nocookie.com';
 const SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 2];
 const HIDE_AFTER = 2500; // ms without moving before the controls tuck away while playing
 
-// YouTube player states (sent by the player)
-const ENDED = 0;
-const PLAYING = 1;
-const PAUSED = 2;
+// iPhones can't put a page element in full screen, only the video itself
+type IOSVideo = HTMLVideoElement & { webkitEnterFullscreen?: () => void };
 
-type PlayerInfo = {
-  playerState?: number;
-  currentTime?: number;
-  duration?: number;
-  muted?: boolean;
-  playbackRate?: number;
-};
-
-// A YouTube Short in YouTube's cookie-free player, with its own controls hidden and ours on top, like
-// a video file's: play / pause, sound, full screen, a ⋮ menu (speed, open on YouTube) and a seek bar.
-// It starts by itself, muted unless sound was turned on before. When it ends it stops on its first
-// frame with a Replay button – it doesn't start again by itself. The player is driven with messages
-// (YouTube's iframe API) and reports its time and state back the same way.
-export default function WorkYouTube({ id, cover, title, sound, onSoundChange }: Props) {
+// A video playing on its own – just the video, filling its frame – with our controls on top: play /
+// pause, time, sound, full screen, a ⋮ menu (speed, open on YouTube) and a seek bar. It starts by
+// itself, muted unless sound was turned on before (browsers only allow silent autoplay). When it
+// ends it stops on its first frame with a Replay button; it doesn't start again by itself.
+export default function WorkVideo({ src, cover, title, youtube, sound, onSoundChange }: Props) {
   const t = workShowcase.stage.player;
   const rootRef = useRef<HTMLDivElement>(null);
-  const player = useRef<HTMLIFrameElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const hideTimer = useRef(0);
-  const askTimer = useRef(0);
-  const heard = useRef(false); // the player is ready and reporting
-  // For spotting a loop: YouTube's Shorts player sometimes starts again by itself at the end
-  // without saying it ended – the time just jumps from the end back to the start
-  const lastTime = useRef(0);
-  const length = useRef(0);
-  const ourSeekUntil = useRef(0); // a jump before this moment was ours (seek bar, Replay)
-  const endedRef = useRef(false);
-
-  // The address is fixed when the video opens – changing it would reload the player
-  const [src] = useState(() => {
-    const still =
-      typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    return `${YOUTUBE}/embed/${id}?${new URLSearchParams({
-      autoplay: still ? '0' : '1',
-      mute: sound ? '0' : '1',
-      controls: '0', // ours instead
-      disablekb: '1',
-      fs: '0',
-      iv_load_policy: '3',
-      playsinline: '1',
-      rel: '0',
-      enablejsapi: '1',
-    })}`;
-  });
 
   const [playing, setPlaying] = useState(false);
   const [ended, setEnded] = useState(false);
@@ -74,97 +38,31 @@ export default function WorkYouTube({ id, cover, title, sound, onSoundChange }: 
   const [speed, setSpeed] = useState(1);
   const [scrub, setScrub] = useState<number | null>(null); // 0–1 while the seek bar is dragged
   const [menuOpen, setMenuOpen] = useState(false);
-  const [captions, setCaptions] = useState(false);
-  const captionsRef = useRef(false); // the same, for the message handler
   const [awake, setAwake] = useState(true);
   const [fullscreen, setFullscreen] = useState(false);
   const [canFullscreen, setCanFullscreen] = useState(false);
 
-  const tell = (func: string, args: unknown[] = []) =>
-    player.current?.contentWindow?.postMessage(JSON.stringify({ event: 'command', func, args }), YOUTUBE);
-
-  const markEnded = (on: boolean) => {
-    endedRef.current = on;
-    setEnded(on);
-  };
-
-  // What the player reports: state, time, length, sound, speed
+  // Start by itself (unless motion is reduced); if the browser blocks it with sound, try muted
   useEffect(() => {
-    const onMessage = (event: MessageEvent) => {
-      if (event.origin !== YOUTUBE || event.source !== player.current?.contentWindow) return;
-      let data: { event?: string; info?: number | PlayerInfo };
-      try {
-        data = JSON.parse(event.data);
-      } catch {
-        return;
-      }
-      const info: PlayerInfo =
-        typeof data.info === 'number' ? { playerState: data.info } : (data.info ?? {});
-      // Ready, or its first report of the time (it may have been ready before it heard us): stop
-      // asking, and ask for every change of state (playing, paused, ended)
-      const first =
-        !heard.current &&
-        (data.event === 'onReady' ||
-          (data.event === 'infoDelivery' && typeof info.currentTime === 'number'));
-      if (first) {
-        heard.current = true;
-        tell('addEventListener', ['onStateChange']);
-      }
-      // YouTube may switch captions on by itself (also when a video starts again); they'd sit under
-      // our controls, so they wait for the menu's Captions option
-      const started = data.event === 'onStateChange' && info.playerState === PLAYING;
-      if (!captionsRef.current && (first || started || data.event === 'onApiChange')) {
-        tell('unloadModule', ['captions']);
-      }
-      if (info.duration) {
-        length.current = info.duration;
-        setDuration(info.duration);
-      }
-
-      // Started again by itself: stop it and show Replay, as if it had ended
-      if (typeof info.currentTime === 'number') {
-        const now = info.currentTime;
-        const looped =
-          length.current > 0 &&
-          lastTime.current > length.current - 1.5 &&
-          now < lastTime.current - 2 &&
-          performance.now() > ourSeekUntil.current;
-        lastTime.current = now;
-        if (looped && !endedRef.current) {
-          tell('pauseVideo');
-          markEnded(true);
-          setPlaying(false);
-          setTime(length.current);
-          return;
-        }
-        if (!endedRef.current) setTime(now);
-      }
-
-      if (info.playerState === PLAYING) {
-        // Playing again behind the Replay screen (looped by itself): stop it
-        if (endedRef.current) tell('pauseVideo');
-        else setPlaying(true);
-      } else if (info.playerState === PAUSED) {
-        setPlaying(false);
-      } else if (info.playerState === ENDED) {
-        setPlaying(false);
-        markEnded(true);
-      }
-      if (typeof info.muted === 'boolean') setMuted(info.muted);
-      if (info.playbackRate) setSpeed(info.playbackRate);
-    };
-    window.addEventListener('message', onMessage);
-    return () => window.removeEventListener('message', onMessage);
+    const video = videoRef.current;
+    if (!video) return;
+    setCanFullscreen(
+      document.fullscreenEnabled || typeof (video as IOSVideo).webkitEnterFullscreen === 'function'
+    );
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    video.play().catch(() => {
+      video.muted = true;
+      setMuted(true);
+      video.play().catch(() => {});
+    });
   }, []);
 
   useEffect(() => {
-    setCanFullscreen(document.fullscreenEnabled);
     const onChange = () => setFullscreen(document.fullscreenElement === rootRef.current);
     document.addEventListener('fullscreenchange', onChange);
     return () => {
       document.removeEventListener('fullscreenchange', onChange);
       window.clearTimeout(hideTimer.current);
-      window.clearInterval(askTimer.current);
     };
   }, []);
 
@@ -183,23 +81,6 @@ export default function WorkYouTube({ id, cover, title, sound, onSoundChange }: 
     };
   }, [menuOpen]);
 
-  // The player only reports once told someone is listening, and only hears it when ready – so ask
-  // every half second until its time starts coming in (as YouTube's own script does)
-  const listen = () => {
-    window.clearInterval(askTimer.current);
-    let tries = 0;
-    const ask = () => {
-      // Up to a minute, for slow connections
-      if (heard.current || ++tries > 120) return window.clearInterval(askTimer.current);
-      player.current?.contentWindow?.postMessage(
-        JSON.stringify({ event: 'listening', id: 1, channel: 'widget' }),
-        YOUTUBE
-      );
-    };
-    ask();
-    askTimer.current = window.setInterval(ask, 500);
-  };
-
   // Moving over the video shows the controls; they tuck away again while it plays
   const wake = () => {
     setAwake(true);
@@ -208,49 +89,41 @@ export default function WorkYouTube({ id, cover, title, sound, onSoundChange }: 
   };
 
   const togglePlay = () => {
+    const video = videoRef.current;
+    if (!video) return;
     if (ended) return replay();
-    tell(playing ? 'pauseVideo' : 'playVideo');
-    setPlaying(!playing);
+    if (video.paused) video.play().catch(() => {});
+    else video.pause();
     wake();
   };
 
   const replay = () => {
-    ourSeekUntil.current = performance.now() + 1500;
-    lastTime.current = 0;
-    tell('seekTo', [0, true]);
-    tell('playVideo');
-    markEnded(false);
-    setTime(0);
-    setPlaying(true);
+    const video = videoRef.current;
+    if (!video) return;
+    video.currentTime = 0;
+    video.play().catch(() => {});
+    setEnded(false);
     wake();
   };
 
   const setSound = (on: boolean) => {
-    if (on) {
-      tell('unMute');
-      tell('setVolume', [100]);
-    } else {
-      tell('mute');
-    }
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = !on;
+    if (on) video.volume = 1;
     setMuted(!on);
     onSoundChange(on);
   };
 
   const toggleFullscreen = () => {
+    const video = videoRef.current as IOSVideo | null;
     if (document.fullscreenElement) document.exitFullscreen();
-    else rootRef.current?.requestFullscreen();
-  };
-
-  const toggleCaptions = () => {
-    const on = !captions;
-    tell(on ? 'loadModule' : 'unloadModule', ['captions']);
-    captionsRef.current = on;
-    setCaptions(on);
-    setMenuOpen(false);
+    else if (document.fullscreenEnabled) rootRef.current?.requestFullscreen();
+    else video?.webkitEnterFullscreen?.();
   };
 
   const chooseSpeed = (rate: number) => {
-    tell('setPlaybackRate', [rate]);
+    if (videoRef.current) videoRef.current.playbackRate = rate;
     setSpeed(rate);
     setMenuOpen(false);
   };
@@ -262,15 +135,14 @@ export default function WorkYouTube({ id, cover, title, sound, onSoundChange }: 
   };
 
   const seek = (seconds: number) => {
-    if (!duration) return;
+    const video = videoRef.current;
+    if (!video || !duration) return;
     const to = Math.min(duration, Math.max(0, seconds));
-    ourSeekUntil.current = performance.now() + 1500;
-    lastTime.current = to;
-    tell('seekTo', [to, true]);
+    video.currentTime = to;
     setTime(to);
     if (ended && to < duration) {
-      markEnded(false);
-      tell('playVideo');
+      setEnded(false);
+      video.play().catch(() => {});
     }
   };
 
@@ -301,17 +173,29 @@ export default function WorkYouTube({ id, cover, title, sound, onSoundChange }: 
       data-controls={showControls || undefined}
       onPointerMove={wake}
     >
-      <iframe
-        ref={player}
+      <video
+        ref={videoRef}
         src={src}
-        title={title}
-        allow="autoplay; encrypted-media; picture-in-picture"
-        referrerPolicy="strict-origin-when-cross-origin"
-        tabIndex={-1}
-        onLoad={listen}
+        poster={cover}
+        aria-label={title}
+        muted={!sound}
+        playsInline
+        preload="metadata"
+        onPlay={() => {
+          setPlaying(true);
+          setEnded(false);
+        }}
+        onPause={() => setPlaying(false)}
+        onEnded={() => {
+          setPlaying(false);
+          setEnded(true);
+        }}
+        onTimeUpdate={(event) => setTime(event.currentTarget.currentTime)}
+        onLoadedMetadata={(event) => setDuration(event.currentTarget.duration)}
+        onVolumeChange={(event) => setMuted(event.currentTarget.muted)}
       />
 
-      {/* Covers the player: a click plays / pauses, a double click goes full screen */}
+      {/* Covers the video: a click plays / pauses, a double click goes full screen */}
       <button
         type="button"
         className={styles.surface}
@@ -400,28 +284,21 @@ export default function WorkYouTube({ id, cover, title, sound, onSoundChange }: 
                     {rate === 1 ? t.normalSpeed : `${rate}×`}
                   </button>
                 ))}
-                <button
-                  type="button"
-                  role="menuitemcheckbox"
-                  aria-checked={captions}
-                  className={`${styles.menuItem} ${styles.menuDivided}`}
-                  onClick={toggleCaptions}
-                >
-                  {t.captions}
-                </button>
-                <a
-                  role="menuitem"
-                  className={`${styles.menuItem} ${styles.menuDivided}`}
-                  href={`https://www.youtube.com/shorts/${id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => {
-                    tell('pauseVideo');
-                    setMenuOpen(false);
-                  }}
-                >
-                  {t.watchOnYouTube}
-                </a>
+                {youtube && (
+                  <a
+                    role="menuitem"
+                    className={`${styles.menuItem} ${styles.menuDivided}`}
+                    href={`https://www.youtube.com/shorts/${youtube}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => {
+                      videoRef.current?.pause();
+                      setMenuOpen(false);
+                    }}
+                  >
+                    {t.watchOnYouTube}
+                  </a>
+                )}
               </div>
             )}
           </div>

@@ -2,7 +2,6 @@ import type {
   WorkCategory,
   WorkCategoryId,
   WorkProject,
-  WorkReview,
   WorkShowcaseContent,
   WorkTourPage,
 } from '@/types/work';
@@ -27,7 +26,6 @@ export const workShowcase: WorkShowcaseContent = {
       more: 'More options',
       speed: 'Playback speed',
       normalSpeed: 'Normal',
-      captions: 'Captions',
       watchOnYouTube: 'Watch on YouTube',
       replay: 'Replay',
       progress: 'Video progress',
@@ -43,12 +41,15 @@ export const workCategories: Record<WorkCategoryId, WorkCategory> = {
   videos: { id: 'videos', label: 'UGC & Insta Videos', ratio: 9 / 16 },
 };
 
-const VIDEOS = '/images/work/videos'; // each video's cover, the frame YouTube shows for it
+const COVERS = '/images/work/videos'; // each video's first frame (.webp)
+const VIDEOS = '/videos/work'; // the videos themselves (.mp4, H.264, 720 × 1280)
 const CHIRANVI = '/images/work/chiranvi-farm'; // full-length screenshots of chiranvifarm.com
 
-// A YouTube Short: its id and its cover in public/images/work/videos
-const short = (youtube: string, cover: string, alt: string) => ({
-  image: `${VIDEOS}/${cover}.webp`,
+// A video: the same video's YouTube id (for the player's "Watch on YouTube"), and its file name –
+// the same for the .mp4 and its cover
+const short = (youtube: string, name: string, alt: string) => ({
+  image: `${COVERS}/${name}.webp`,
+  video: `${VIDEOS}/${name}.mp4`,
   youtube,
   alt,
 });
@@ -62,25 +63,7 @@ const chiranviPages = (device: 'desktop' | 'mobile', sizes: [number, number][]):
     height: sizes[i][1],
   }));
 
-// ---------- Samples – Graphic Design only, until the real work is added ----------
-const SAMPLES = '/images/work/samples';
-
-const sampleReview: WorkReview = {
-  quote:
-    'The client’s review goes here: what they needed, what you made, and what changed once it went live.',
-  name: 'Client name',
-  role: 'Role, Company',
-};
-
-const samplePoster = (id: string, image: string, title: string) => ({
-  id,
-  category: 'graphic-design' as const,
-  client: 'Client name',
-  title,
-  media: [{ image: `${SAMPLES}/${image}.svg`, alt: `Sample artwork standing in for a ${title.toLowerCase()}` }],
-  review: sampleReview,
-  services: ['Concept', 'Design'],
-});
+const EARTHELLA = '/images/work/earthella-nuts'; // packaging posters
 
 // The work, in the order it appears in each panel. A project with no media yet (videos still to
 // come) stays off the page until its links are added.
@@ -97,7 +80,7 @@ export const workProjects: WorkProject[] = [
     ],
     review: {
       quote:
-        'The BMU team planned every shot before the shoot day and kept it relaxed throughout. The edits came out crisp and beautifully paced, and our showroom finally looks on screen the way it feels when you walk in.',
+        'Every shot was well planned and the edits are crisp. Our showroom finally looks as good on screen as in person.',
       name: 'Nanvitha VK',
       role: 'Founder, The Decor Hut',
     },
@@ -114,7 +97,7 @@ export const workProjects: WorkProject[] = [
     ],
     review: {
       quote:
-        'Rugs are hard to film – the colour, the texture, the weave. BMU captured all of it. They knew exactly which light and angles to use, and the edit tells the story behind each rug in under a minute.',
+        'Rugs are hard to film, but BMU captured every colour and weave. Each edit tells the story behind a rug in under a minute.',
       name: 'Dirish',
       role: 'Founder, House of Dirish',
     },
@@ -131,13 +114,13 @@ export const workProjects: WorkProject[] = [
     ],
     review: {
       quote:
-        'I’m not used to being on camera, but the team made it easy with clear direction and lots of patience. The final videos look polished and professional, and they explain our design work better than I could in words.',
+        'The team made being on camera easy, and the videos explain our design work better than I could in words.',
       name: 'Avinnyya',
       role: 'Founder, Avinnyya Interior Design',
     },
     services: ['Shoot', 'Edit'],
   },
-  // Videos to come – they appear once their YouTube links are added to `media`
+  // Videos to come – they appear once their videos are added to `media`
   {
     id: 'sb-wears-reels',
     category: 'videos',
@@ -146,7 +129,7 @@ export const workProjects: WorkProject[] = [
     media: [],
     review: {
       quote:
-        'From styling each outfit to the final cut, BMU handled the whole shoot with care. The videos are bright and lively, and they show off the fabric and fit beautifully – exactly the feel we wanted for SB Wears.',
+        'BMU styled and shot every outfit with care. The videos are bright and lively, and show off the fabric and fit beautifully.',
       name: 'Harshitha CM',
       role: 'Founder, SB Wears',
     },
@@ -160,7 +143,7 @@ export const workProjects: WorkProject[] = [
     media: [],
     review: {
       quote:
-        'The BMU team understood our brand from the very first call. The shoot was smooth and well organised, and the edits are sharp, stylish and made for Instagram. Great work from start to finish.',
+        'BMU understood our brand from the first call. The shoot was smooth, and the edits are sharp, stylish and made for Instagram.',
       name: 'Hariprasad Gowda',
       role: 'Founder, Buttons',
     },
@@ -174,7 +157,7 @@ export const workProjects: WorkProject[] = [
     media: [],
     review: {
       quote:
-        'They captured the food, the people and the feel of our cafe perfectly. Every shot looks delicious and the edit has a lovely rhythm. Working with BMU was easy and genuinely fun.',
+        'They captured our food, our people and the feel of the cafe perfectly. Every shot looks delicious, and the edit has a lovely rhythm.',
       name: 'Sowmya E N',
       role: 'Founder, Cafe Social Crust',
     },
@@ -205,7 +188,7 @@ export const workProjects: WorkProject[] = [
     ],
     review: {
       quote:
-        'BMU built us a website that feels as fresh as our milk. It’s fast, simple to shop on and looks great on every screen. They thought through every detail, from products to subscriptions, and kept us involved at every step.',
+        'BMU built a website as fresh as our milk: fast, easy to shop on and great on every screen, with every detail thought through.',
       name: 'Praveen',
       role: 'Founder, Chiranvi Farm',
     },
@@ -237,7 +220,7 @@ export const workProjects: WorkProject[] = [
     ],
     review: {
       quote:
-        'On a phone, everything a customer needs – choosing products, starting a subscription, reaching us – is just a tap or two away. The design is clean, easy to use and every bit as good as our desktop site.',
+        'On a phone, choosing products or starting a subscription is just a tap or two away. Clean, easy and as good as our desktop site.',
       name: 'Praveen',
       role: 'Founder, Chiranvi Farm',
     },
@@ -245,8 +228,34 @@ export const workProjects: WorkProject[] = [
     link: 'https://www.chiranvifarm.com/',
   },
 
-  // ---------- Graphic Design (samples) ----------
-  samplePoster('sample-poster-1', 'poster-1', 'Poster'),
-  samplePoster('sample-poster-2', 'poster-2', 'Campaign artwork'),
-  samplePoster('sample-poster-3', 'poster-3', 'Social artwork'),
+  // ---------- Graphic Design ----------
+  // Packaging posters for three products (public/images/work/earthella-nuts, 1200 × 1513)
+  {
+    id: 'earthella-nuts-packaging',
+    category: 'graphic-design',
+    client: 'Earthella Nuts',
+    title: 'Packaging design',
+    ratio: 1200 / 1513,
+    media: [
+      {
+        image: `${EARTHELLA}/almonds.webp`,
+        alt: 'Earthella Nuts Mamra Almonds pouch in green, with a bowl of almonds on a white wave label',
+      },
+      {
+        image: `${EARTHELLA}/cashews.webp`,
+        alt: 'Earthella Nuts W240 Cashews pouch in coral, with a bowl of cashews on a white wave label',
+      },
+      {
+        image: `${EARTHELLA}/raisins.webp`,
+        alt: 'Earthella Nuts Brown Raisins pouch in brown and orange, with a bowl of raisins on a white wave label',
+      },
+    ],
+    review: {
+      quote:
+        'Bold colours and a clear logo: our packaging now stands out on any shelf and feels natural and premium.',
+      name: 'Vivek M',
+      role: 'Founder, Earthella Nuts',
+    },
+    services: ['Concept', 'Packaging design'],
+  },
 ];

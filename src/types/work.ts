@@ -36,8 +36,8 @@ export type WorkTour = {
 
 export type WorkMedia = {
   image: string; // the picture – for a video or a tour, the frame shown before it plays
-  video?: string; // .mp4 file or link
-  youtube?: string; // a YouTube video's id (the part after /shorts/ or ?v=) – plays in YouTube's player
+  video?: string; // .mp4 file (H.264) – plays in our own player (WorkVideo)
+  youtube?: string; // the same video's YouTube id (after /shorts/ or ?v=), for "Watch on YouTube"
   tour?: WorkTour;
   alt: string; // what it shows, for people who can't see it
 };
@@ -71,7 +71,7 @@ export type WorkShowcaseContent = {
     previousLabel: string;
     nextLabel: string;
     soundLabel: string;
-    // The controls on a YouTube video (WorkYouTube)
+    // The controls on a video (WorkVideo)
     player: {
       play: string;
       pause: string;
@@ -82,7 +82,6 @@ export type WorkShowcaseContent = {
       more: string; // the ⋮ menu
       speed: string; // heading of the speeds in the menu
       normalSpeed: string;
-      captions: string;
       watchOnYouTube: string;
       replay: string;
       progress: string; // the seek bar

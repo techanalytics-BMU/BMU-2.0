@@ -7,7 +7,7 @@ import { workCategories, workShowcase } from '@/data/work/workShowcase';
 import type { WorkProject } from '@/types/work';
 import styles from './WorkStage.module.css';
 import WorkTour from './WorkTour';
-import WorkYouTube from './WorkYouTube';
+import WorkVideo from './WorkVideo';
 
 type Props = {
   projects: WorkProject[];
@@ -16,11 +16,10 @@ type Props = {
 
 // Inside an open panel: the video or product as large as it fits, with a thumbnail for every piece,
 // and the client's review on a glass card beside it (under it on tablets and phones). The panel
-// takes its colours from a blurred copy of whatever is showing. Videos start silently, as browsers
-// require, so a button offers the sound – a client talking on mute says nothing.
+// takes its colours from a blurred copy of whatever is showing. Videos play in WorkVideo (our own
+// controls; they start silently, as browsers require, with a button offering the sound).
 export default function WorkStage({ projects, live }: Props) {
-  const { servicesLabel, cta, visitLabel, previousLabel, nextLabel, soundLabel } =
-    workShowcase.stage;
+  const { servicesLabel, cta, visitLabel, previousLabel, nextLabel } = workShowcase.stage;
   const [shown, setShown] = useState(0);
   // Once sound is turned on, the next videos start with it too
   const [sound, setSound] = useState(false);
@@ -43,24 +42,14 @@ export default function WorkStage({ projects, live }: Props) {
             <div key={media.image} className={styles.frame}>
               {media.tour ? (
                 <WorkTour tour={media.tour} label={media.alt} />
-              ) : media.youtube && live ? (
-                <WorkYouTube
-                  id={media.youtube}
+              ) : media.video && live ? (
+                <WorkVideo
+                  src={media.video}
                   cover={media.image}
                   title={media.alt}
+                  youtube={media.youtube}
                   sound={sound}
                   onSoundChange={setSound}
-                />
-              ) : media.video && live ? (
-                <video
-                  src={media.video}
-                  poster={media.image}
-                  aria-label={media.alt}
-                  controls
-                  autoPlay={!window.matchMedia('(prefers-reduced-motion: reduce)').matches}
-                  muted={!sound}
-                  loop
-                  playsInline
                 />
               ) : (
                 <Image
@@ -69,16 +58,6 @@ export default function WorkStage({ projects, live }: Props) {
                   fill
                   sizes="(max-width: 1024px) 100vw, 900px"
                 />
-              )}
-              {/* A video file; a YouTube video has its own (WorkYouTube) */}
-              {media.video && live && !sound && (
-                <button type="button" className={styles.sound} onClick={() => setSound(true)}>
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" />
-                    <path className={styles.waves} d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" />
-                  </svg>
-                  {soundLabel}
-                </button>
               )}
             </div>
           </div>
