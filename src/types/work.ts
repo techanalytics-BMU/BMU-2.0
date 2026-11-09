@@ -71,6 +71,22 @@ export type WorkShowcaseContent = {
     previousLabel: string;
     nextLabel: string;
     soundLabel: string;
+    // The controls on a YouTube video (WorkYouTube)
+    player: {
+      play: string;
+      pause: string;
+      mute: string;
+      unmute: string;
+      fullscreen: string;
+      exitFullscreen: string;
+      more: string; // the ⋮ menu
+      speed: string; // heading of the speeds in the menu
+      normalSpeed: string;
+      captions: string;
+      watchOnYouTube: string;
+      replay: string;
+      progress: string; // the seek bar
+    };
   };
 };
 

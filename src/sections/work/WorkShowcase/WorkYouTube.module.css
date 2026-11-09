@@ -1,0 +1,351 @@
+/* Fills the work's frame (WorkStage); in full screen it fills the screen */
+.player {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #000000;
+  color: var(--color-text);
+}
+
+.player:fullscreen {
+  width: 100%;
+  height: 100%;
+}
+
+/* YouTube still puts its own sound button and ⋮ menu in the player's top strip – ours are in the
+   bar below. So the player is made taller than the frame by --crop at the top and bottom: the
+   upright video still fills the frame exactly (YouTube fits it to the width), and that strip falls
+   outside the frame, out of sight. */
+.player iframe {
+  --crop: 64px;
+  position: absolute;
+  top: calc(var(--crop) * -1);
+  left: 0;
+  display: block;
+  width: 100%;
+  height: calc(100% + var(--crop) * 2);
+  border: 0;
+  pointer-events: none; /* clicks go to .surface, so YouTube's own links never open */
+}
+
+/* Over the whole video: click to play / pause */
+.surface {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.surface:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: -4px;
+}
+
+/* ---------- At the end ---------- */
+.end {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  animation: fade 0.3s ease;
+}
+
+.end img {
+  object-fit: cover;
+  filter: brightness(0.45);
+}
+
+.replay {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px 11px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-pill);
+  background: rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.replay:hover {
+  background: rgba(0, 0, 0, 0.8);
+  transform: scale(1.04);
+}
+
+.replay svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+/* ---------- "Turn sound on" ---------- */
+.soundOn {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px 7px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-pill);
+  background: rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--color-text);
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.soundOn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.soundOn svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+/* ---------- Control bar ---------- */
+.controls {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  padding: 28px 8px 6px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.72), transparent);
+  opacity: 0;
+  pointer-events: none; /* tucked away, a tap goes to the video */
+  transform: translateY(6px);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+/* Shown while paused, at the end, or for a moment after the pointer moves */
+.player[data-controls] .controls,
+.controls:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.control {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.control:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.control svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+/* The time pushes the sound, full screen and menu buttons to the right */
+.time {
+  flex: 1;
+  padding-left: 4px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: var(--font-size-xs);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ---------- ⋮ menu ---------- */
+.menuWrap {
+  position: relative;
+}
+
+.menu {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 6px);
+  display: flex;
+  flex-direction: column;
+  min-width: 168px;
+  padding: 6px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: rgba(14, 15, 17, 0.94);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  animation: rise 0.18s ease;
+}
+
+.menuHeading {
+  padding: 6px 10px 4px;
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.menuItem:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* The chosen speed, and Captions when on, get a lime tick */
+.menuItem[aria-checked='true']::after {
+  content: '';
+  width: 6px;
+  height: 11px;
+  margin-right: 3px;
+  border: solid var(--color-accent);
+  border-width: 0 2px 2px 0;
+  transform: translateY(-2px) rotate(45deg);
+}
+
+/* A line above Captions and above Watch on YouTube */
+.menuDivided {
+  position: relative;
+  margin-top: 9px;
+}
+
+.menuDivided::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  right: 4px;
+  left: 4px;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ---------- Seek bar ---------- */
+.seek {
+  position: relative;
+  height: 18px;
+  margin: 0 8px;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.track {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 4px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-50%);
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+  background: var(--color-accent);
+  transform-origin: left;
+}
+
+.knob {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-text);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.15s ease;
+}
+
+.seek:hover .knob,
+.seek:focus-visible .knob,
+.seek:active .knob {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.control:focus-visible,
+.menuItem:focus-visible,
+.replay:focus-visible,
+.soundOn:focus-visible,
+.seek:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .controls,
+  .knob,
+  .replay {
+    transition: none;
+  }
+
+  .end,
+  .menu {
+    animation: none;
+  }
+}

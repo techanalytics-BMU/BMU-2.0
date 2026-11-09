@@ -17,6 +17,21 @@ export const workShowcase: WorkShowcaseContent = {
     previousLabel: 'Previous',
     nextLabel: 'Next',
     soundLabel: 'Turn sound on',
+    player: {
+      play: 'Play',
+      pause: 'Pause',
+      mute: 'Mute',
+      unmute: 'Unmute',
+      fullscreen: 'Full screen',
+      exitFullscreen: 'Exit full screen',
+      more: 'More options',
+      speed: 'Playback speed',
+      normalSpeed: 'Normal',
+      captions: 'Captions',
+      watchOnYouTube: 'Watch on YouTube',
+      replay: 'Replay',
+      progress: 'Video progress',
+    },
   },
 };
 
