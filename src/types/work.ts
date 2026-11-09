@@ -11,7 +11,7 @@ export type WorkHeroContent = {
   clients: WorkClientLogo[];
 };
 
-export type WorkCategoryId = 'graphic-design' | 'websites' | 'ui-ux' | 'ugc' | 'insta-videos';
+export type WorkCategoryId = 'graphic-design' | 'websites' | 'ui-ux' | 'videos';
 
 export type WorkCategory = {
   id: WorkCategoryId;
@@ -19,9 +19,26 @@ export type WorkCategory = {
   ratio: number; // width ÷ height of its pieces
 };
 
+// One page of a website, as a full-length screenshot (top to bottom)
+export type WorkTourPage = {
+  path: string; // shown in the address bar, e.g. '/community'
+  image: string;
+  width: number; // the screenshot's size in pixels
+  height: number;
+};
+
+// A website playing by itself: each page scrolls down, then it moves on to the next one
+export type WorkTour = {
+  device: 'browser' | 'phone';
+  site: string; // the address, without https:// – e.g. 'chiranvifarm.com'
+  pages: WorkTourPage[];
+};
+
 export type WorkMedia = {
-  image: string; // the picture – for a video, the frame shown before it plays
+  image: string; // the picture – for a video or a tour, the frame shown before it plays
   video?: string; // .mp4 file or link
+  youtube?: string; // a YouTube video's id (the part after /shorts/ or ?v=) – plays in YouTube's player
+  tour?: WorkTour;
   alt: string; // what it shows, for people who can't see it
 };
 
@@ -38,7 +55,7 @@ export type WorkProject = {
   client: string;
   title: string;
   ratio?: number; // only when this piece isn't the shape of its category
-  media: WorkMedia[]; // each one gets its own thumbnail
+  media: WorkMedia[]; // each one gets its own thumbnail – left empty, the project waits off the page
   review?: WorkReview;
   services: string[];
   link?: string; // the live site or post

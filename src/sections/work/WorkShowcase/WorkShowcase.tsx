@@ -7,11 +7,13 @@ import { useInView } from '@/hooks/useInView';
 import styles from './WorkShowcase.module.css';
 import WorkStage from './WorkStage';
 
-// One panel per type of work; types with nothing to show yet stay out
+// One panel per type of work; projects and types with nothing to show yet stay out
 const PANELS = Object.values(workCategories)
   .map((category) => ({
     ...category,
-    projects: workProjects.filter((project) => project.category === category.id),
+    projects: workProjects.filter(
+      (project) => project.category === category.id && project.media.length > 0
+    ),
   }))
   .filter((panel) => panel.projects.length > 0);
 
