@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   // mark on a solid dark square – what Google shows beside results, on a white circle that white
   // letters would vanish into – and phone home screens use.
   title: {
-    default: 'BMU Marketing – Build Your Brand’s Universe',
+    default: 'BMU Marketing – Build Your Brand’s Universee',
     template: `%s | ${site.name}`,
   },
   description:
