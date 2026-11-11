@@ -68,14 +68,16 @@ export default function ServiceGroupPage({
         </PseoReveal>
       )}
 
+      {/* The figures and the roadmap are set like a printed annual report: centred, ruled with
+          hairlines, no boxes */}
       {results && (
-        <PseoReveal id="results" className={styles.section}>
-          <SectionHead eyebrow={results.eyebrow} heading={results.heading} />
+        <PseoReveal id="results" className={`${styles.section} ${styles.centred}`}>
+          <SectionHead eyebrow={results.eyebrow} heading={results.heading} intro={results.intro} />
           <dl className={styles.stats}>
             {results.items.map((stat, i) => (
-              <div key={stat.label} className={`${styles.stat} ${styles.rise}`} style={vars({ '--i': i + 2 })}>
-                <dd className={styles.statValue}>{stat.value}</dd>
+              <div key={stat.label} className={`${styles.stat} ${styles.rise}`} style={vars({ '--i': i + 3 })}>
                 <dt className={styles.statLabel}>{stat.label}</dt>
+                <dd className={styles.statValue}>{stat.value}</dd>
                 {stat.text && <dd className={styles.statText}>{stat.text}</dd>}
               </div>
             ))}
@@ -84,14 +86,16 @@ export default function ServiceGroupPage({
       )}
 
       {roadmap && (
-        <PseoReveal id="roadmap" className={styles.section}>
-          <SectionHead eyebrow={roadmap.eyebrow} heading={roadmap.heading} />
-          <ol className={styles.phases}>
+        <PseoReveal id="roadmap" className={`${styles.section} ${styles.centred}`}>
+          <SectionHead eyebrow={roadmap.eyebrow} heading={roadmap.heading} intro={roadmap.intro} />
+          <ol className={styles.chapters}>
             {roadmap.items.map((phase, i) => (
-              <li key={phase.title} className={`${styles.phase} ${styles.rise}`} style={vars({ '--i': i + 2 })}>
-                <span className={styles.phaseNumber}>{pad(i + 1)}</span>
-                <h3 className={styles.phaseTitle}>{phase.title}</h3>
-                <ul className={styles.phasePoints}>
+              <li key={phase.title} className={`${styles.chapter} ${styles.rise}`} style={vars({ '--i': i + 3 })}>
+                <span className={styles.numeral} aria-hidden="true">
+                  {pad(i + 1)}
+                </span>
+                <h3 className={styles.chapterTitle}>{phase.title}</h3>
+                <ul className={styles.chapterPoints}>
                   {phase.points.map((point) => (
                     <li key={point}>{point}</li>
                   ))}

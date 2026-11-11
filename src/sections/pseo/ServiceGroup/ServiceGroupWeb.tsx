@@ -3,7 +3,7 @@ import { HeroText, Offer, vars, type VibeProps } from './ServiceGroupParts';
 import styles from './ServiceGroupWeb.module.css';
 
 export const servicesHeading = 'What we build';
-export const headBeside = false;
+export const headBeside = true;
 
 function Dots() {
   return (
