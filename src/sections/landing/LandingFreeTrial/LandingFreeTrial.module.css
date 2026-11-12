@@ -6,7 +6,7 @@
   --head: clamp(0, calc(var(--progress) / 0.4), 1);
 
   overflow: hidden;
-  padding: clamp(4.5rem, 8vw, 7rem) var(--space-3) clamp(4rem, 7vw, 6rem);
+  padding: clamp(4.5rem, 8vw, 7rem) var(--page-gutter) clamp(4rem, 7vw, 6rem);
   /* Starts on LandingCore's background so there's no seam, then fades to black */
   background: linear-gradient(to bottom, #0a0a0a, #000000 14rem);
 }
@@ -677,7 +677,7 @@
    The window is capped at the site container width; everything inside it scales with it. ---------- */
 @media (max-width: 1439px) {
   .section {
-    padding: clamp(3.5rem, 6vw, 5.5rem) 60px clamp(3.5rem, 5.5vw, 5rem);
+    padding: clamp(3.5rem, 6vw, 5.5rem) var(--page-gutter) clamp(3.5rem, 5.5vw, 5rem);
   }
 
   .header .cta {
@@ -700,12 +700,6 @@
   }
 }
 
-/* Phones: 60px gutters would squeeze the content, so keep a slimmer one */
-@media (max-width: 720px) {
-  .section {
-    padding-inline: var(--space-4);
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .queue,

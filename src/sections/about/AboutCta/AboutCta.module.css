@@ -1,7 +1,7 @@
 .section {
   position: relative;
   overflow: hidden;
-  padding: clamp(6rem, 13vw, 11rem) var(--space-4) clamp(7rem, 14vw, 12rem);
+  padding: clamp(6rem, 13vw, 11rem) var(--page-gutter) clamp(7rem, 14vw, 12rem);
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   background: var(--color-bg);
   text-align: center;

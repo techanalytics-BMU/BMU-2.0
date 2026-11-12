@@ -18,7 +18,7 @@ const launch: LandingPricingPlan = {
   name: 'Launch',
   price: rupees(LAUNCH),
   period: 'per month',
-  tagline: 'For single-location businesses getting consistent online',
+  tagline: 'For single-location businesses building a consistent online presence',
   billing: 'Billed monthly, plus your ad spend',
   cta: 'Start with Launch',
   features: [
@@ -61,21 +61,22 @@ const scale: LandingPricingPlan = {
   ],
 };
 
-// The same card shown per hour, with its own billing line under the price.
+// The same card shown per hour. The line under the price says where the figure comes from – the
+// plan's monthly price over a working month – so ₹162 isn't read as one hour of work on its own.
 // `from` adds a "+" for plans whose monthly price is a starting price.
 const perHour = (
   plan: LandingPricingPlan,
   monthly: number,
-  billing: string,
+  extra: string,
   from = false,
 ): LandingPricingPlan => ({
   ...plan,
   price: `${rupees(Math.round(monthly / HOURS_A_MONTH))}${from ? '+' : ''}`,
   period: 'per hour',
-  billing,
+  billing: `${from ? 'From ' : ''}${rupees(monthly)} a month over ${HOURS_A_MONTH} working hours (${WORK_DAYS} days × ${HOURS_PER_DAY} hrs), ${extra}`,
 });
 
-const HOURLY_BILLING = 'Billed by the hour, plus your ad spend';
+const HOURLY_EXTRA = 'plus your ad spend';
 
 export const landingPricing: LandingPricingContent = {
   heading: 'Pricing that scales with you',
@@ -90,9 +91,9 @@ export const landingPricing: LandingPricingContent = {
       label: 'Hourly retainers',
       shortLabel: 'Hourly',
       plans: [
-        perHour(launch, LAUNCH, HOURLY_BILLING),
-        perHour(growth, GROWTH, HOURLY_BILLING),
-        perHour(scale, SCALE_FROM, 'Custom scope, billed by the hour', true),
+        perHour(launch, LAUNCH, HOURLY_EXTRA),
+        perHour(growth, GROWTH, HOURLY_EXTRA),
+        perHour(scale, SCALE_FROM, 'custom scope', true),
       ],
     },
     {

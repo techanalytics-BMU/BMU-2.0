@@ -14,7 +14,7 @@
 /* Starts as a smaller rounded card coming up from below, grows into the full-width section */
 .card {
   position: relative;
-  padding: var(--space-7) var(--space-4) var(--space-8);
+  padding: var(--space-7) var(--page-gutter) var(--space-8);
   border: 1px solid rgba(255, 255, 255, calc(0.08 * (1 - var(--card))));
   border-radius: calc(36px * (1 - var(--card)));
   /* Faint grid lines: one vertical line down the middle */

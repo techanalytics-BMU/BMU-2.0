@@ -107,7 +107,7 @@ export default function ServiceGroupPage({
       )}
 
       {everyService && everyService.links.length > 0 && (
-        <PseoReveal id="all-services" className={styles.section}>
+        <PseoReveal id="all-services" className={`${styles.section} ${styles.centred}`}>
           <SectionHead eyebrow={everyService.eyebrow} heading={everyService.heading} />
           <ServiceGroupBento links={everyService.links} />
         </PseoReveal>

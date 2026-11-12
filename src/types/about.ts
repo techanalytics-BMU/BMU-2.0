@@ -10,6 +10,7 @@ export type AboutHeaderContent = {
 };
 
 export type AboutHeroContent = {
+  title: string; // the page's real heading, read by Google and screen readers (the big word is drawn)
   wordStart: string; // 'AB' – left of the planet (which stands in for the O)
   wordEnd: string; // 'UT'
   statement: string; // shown inside the opened window

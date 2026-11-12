@@ -9,17 +9,17 @@ import styles from './AboutHero.module.css';
 // the planet opens into a framed window, pushing the letters out, then the statement and the four
 // facts fade in inside it.
 export default function AboutHero() {
-  const { wordStart, wordEnd, statement, accent, stats } = aboutHero;
+  const { title, wordStart, wordEnd, statement, accent, stats } = aboutHero;
   const ref = useScrollProgress<HTMLElement>({ mode: 'pinned' });
 
   return (
     <section ref={ref} id="about-hero" className={styles.section}>
       <div className={styles.sticky}>
-        {/* The planet stays centred; the letters hang off its sides, so they get pushed out as it grows */}
-        <h1 className={styles.word}>
-          <span className={styles.srOnly}>
-            {wordStart}O{wordEnd}
-          </span>
+        {/* The planet stays centred; the letters hang off its sides, so they get pushed out as it
+            grows. The word is drawing only: the heading itself is the hidden h1, so Google and screen
+            readers get "About BMU Marketing", not the pieces of the word ("AB", "UT"). */}
+        <div className={styles.word}>
+          <h1 className={styles.srOnly}>{title}</h1>
           <span className={`${styles.ring} ${styles.ringBack}`} aria-hidden="true" />
           <span className={styles.planet} aria-hidden="true" />
           <span className={`${styles.ring} ${styles.ringFront}`} aria-hidden="true" />
@@ -29,7 +29,7 @@ export default function AboutHero() {
           <span className={`${styles.letters} ${styles.lettersEnd}`} aria-hidden="true">
             {wordEnd}
           </span>
-        </h1>
+        </div>
 
         <div className={styles.content}>
           <p className={styles.statement}>

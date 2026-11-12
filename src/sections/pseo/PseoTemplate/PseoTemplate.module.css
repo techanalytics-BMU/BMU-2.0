@@ -61,7 +61,7 @@
   align-items: center;
   justify-content: center;
   min-height: max(100svh, 680px);
-  padding: calc(var(--navbar-height) + var(--navbar-offset) + clamp(24px, 5svh, 64px)) var(--space-4)
+  padding: calc(var(--navbar-height) + var(--navbar-offset) + clamp(24px, 5svh, 64px)) var(--page-gutter)
     calc(var(--horizon) + clamp(64px, 11svh, 128px));
   overflow: clip;
   /* where the rim runs off the sides near the bottom, its glow fades out instead of being cut */
@@ -260,7 +260,7 @@
 .glance {
   position: relative;
   z-index: 1;
-  width: min(var(--width), 100% - 2 * var(--space-4));
+  width: min(var(--width), 100% - 2 * var(--page-gutter));
   margin: 0 auto;
 }
 
@@ -387,7 +387,7 @@
    Sections
    ===================================================================================== */
 .body {
-  width: min(var(--width), 100% - 2 * var(--space-4));
+  width: min(var(--width), 100% - 2 * var(--page-gutter));
   margin: 0 auto;
 }
 
@@ -1355,7 +1355,7 @@ a.cardInner:focus-visible {
   align-items: center;
   min-height: clamp(600px, 96svh, 900px);
   margin-top: var(--gap-section);
-  padding: clamp(96px, 14svh, 160px) var(--space-4) 0;
+  padding: clamp(96px, 14svh, 160px) var(--page-gutter) 0;
   overflow: clip;
   text-align: center;
   /* soft edges, so the section melts out of the page and into the footer */

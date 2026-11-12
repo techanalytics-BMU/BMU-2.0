@@ -6,7 +6,7 @@
   --reveal: clamp(0, calc((var(--progress) - 0.25) / 0.6), 1);
   --sign: clamp(0, calc((var(--reveal) - 0.75) / 0.25), 1);
 
-  padding: var(--space-8) var(--space-4);
+  padding: var(--space-8) var(--page-gutter);
   overflow: hidden;
   background:
     radial-gradient(ellipse 50% 45% at 50% 50%, rgba(140, 198, 63, 0.06), transparent 70%),

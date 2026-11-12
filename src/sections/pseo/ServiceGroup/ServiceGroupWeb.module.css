@@ -6,7 +6,7 @@
   align-items: center;
   gap: var(--space-5);
   min-height: 100svh;
-  padding: calc(var(--hero-top) + clamp(8px, 3svh, 32px)) var(--space-4) 0;
+  padding: calc(var(--hero-top) + clamp(8px, 3svh, 32px)) var(--page-gutter) 0;
   overflow: clip;
   text-align: center;
 }

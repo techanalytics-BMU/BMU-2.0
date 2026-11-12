@@ -12,7 +12,7 @@
   top: 0;
   right: 0;
   left: 0;
-  padding: 8px clamp(12px, 3vw, 32px) 0;
+  padding: 8px var(--page-edge) 0; /* see --page-gutter in variables.css */
   transition: transform 0.5s var(--ease);
 }
 

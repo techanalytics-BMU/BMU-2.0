@@ -1,31 +1,36 @@
 'use client';
 
 import { Fragment } from 'react';
-import { useScrollProgress } from '@/hooks/useScrollProgress';
+import { useInView } from '@/hooks/useInView';
+import type { LandingConversionRateContent } from '@/types/landing';
 import styles from './LandingConversionRateFlow.module.css';
 
-type Props = {
-  inputs: string[];
-  strategy: string[];
-  testLabel: string;
-  variants: [string, string];
-};
+type Props = Pick<
+  LandingConversionRateContent,
+  'inputs' | 'strategy' | 'testLabel' | 'customerView' | 'ownerView'
+>;
 
 // Vertical positions (in % of the diagram height) where the curves start and end.
 // They match the CSS: the inputs box is 84% tall and centred, each input gets an equal row;
-// the test box is full height with rows 2fr / 1fr / 2fr, so the two windows sit at 20% and 80%.
+// the outcome box is full height with rows 3fr / 1fr / 3fr, so the two windows sit at 3/14 and 11/14.
 const INPUTS_TOP = 8;
 const INPUTS_HEIGHT = 84;
-const VARIANT_Y = [20, 80];
+const VARIANT_Y = [(1.5 / 7) * 100, (5.5 / 7) * 100];
 
 // Curve from (0, y1) to (100, y2) in a 100 × 100 box
 const curve = (y1: number, y2: number) => `M0 ${y1} C 55 ${y1}, 45 ${y2}, 100 ${y2}`;
 
-// Business flow, drawn by the scroll like the timeline above it (see the CSS for the steps):
-// it stays pinned on screen while each service → the middle → the outcomes appear in turn.
-export default function LandingConversionRateFlow({ inputs, strategy, testLabel, variants }: Props) {
-  // data-active: the travelling dots and glows run only once the diagram is nearly done, on screen
-  const ref = useScrollProgress<HTMLDivElement>({ mode: 'pinned', activeAfter: 0.5 });
+// Business flow: it draws itself once when it comes into view – each service → the middle → the two
+// outcomes, in turn (see the CSS for the steps) – and the page keeps scrolling normally.
+// The outcomes show both sides of a result: what a customer sees, and what you get.
+export default function LandingConversionRateFlow({
+  inputs,
+  strategy,
+  testLabel,
+  customerView,
+  ownerView,
+}: Props) {
+  const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.35 });
 
   const inputPaths = inputs.map((_, i) =>
     curve(INPUTS_TOP + INPUTS_HEIGHT * ((i + 0.5) / inputs.length), 50)
@@ -45,7 +50,7 @@ export default function LandingConversionRateFlow({ inputs, strategy, testLabel,
   );
 
   return (
-    <div ref={ref} className={styles.scroller}>
+    <div ref={ref} className={styles.scroller} data-in-view={inView}>
       <div className={styles.sticky}>
         <div className={styles.flow}>
           {/* 1. Services */}
@@ -77,22 +82,55 @@ export default function LandingConversionRateFlow({ inputs, strategy, testLabel,
           {renderCurves(variantPaths, 'out')}
           <span className={`${styles.connector} ${styles.connectorOut}`} aria-hidden="true" />
 
-          {/* 3. Outcomes – the two windows take turns lighting up */}
+          {/* 3. Outcomes – the customer's view and yours; they take turns lighting up */}
           <div className={`${styles.box} ${styles.test}`}>
-            {variants.map((variant, i) => (
-              <div key={variant} className={styles.browser} style={{ '--i': i } as React.CSSProperties}>
-                <div className={styles.browserBar} aria-hidden="true">
-                  <span />
-                  <span />
-                  <span />
-                </div>
-                <div className={styles.browserBody}>
-                  <span className={styles.variant}>{variant}</span>
-                  <span className={styles.block} aria-hidden="true" />
-                  <span className={styles.block} aria-hidden="true" />
-                </div>
+            <div className={styles.browser} style={{ '--i': 0 } as React.CSSProperties}>
+              <div className={styles.browserBar}>
+                <span aria-hidden="true" />
+                <span aria-hidden="true" />
+                <span aria-hidden="true" />
+                <b className={styles.browserLabel}>{customerView.label}</b>
               </div>
-            ))}
+              <div className={styles.view}>
+                <span className={styles.search}>
+                  <svg viewBox="0 0 16 16" aria-hidden="true">
+                    <circle cx="7" cy="7" r="4.5" />
+                    <path d="M10.5 10.5L14 14" />
+                  </svg>
+                  {customerView.search}
+                </span>
+                <span className={styles.result}>
+                  <span className={styles.resultName}>{customerView.business}</span>
+                  <span className={styles.stars} aria-hidden="true">
+                    ★★★★★
+                  </span>
+                  <span className={styles.actions}>
+                    {customerView.actions.map((action) => (
+                      <span key={action} className={styles.action}>
+                        {action}
+                      </span>
+                    ))}
+                  </span>
+                </span>
+              </div>
+            </div>
+
+            <div className={styles.browser} style={{ '--i': 1 } as React.CSSProperties}>
+              <div className={styles.browserBar}>
+                <span aria-hidden="true" />
+                <span aria-hidden="true" />
+                <span aria-hidden="true" />
+                <b className={styles.browserLabel}>{ownerView.label}</b>
+              </div>
+              <div className={styles.view}>
+                <span className={styles.enquiriesHead}>{ownerView.heading}</span>
+                <ul className={styles.enquiries}>
+                  {ownerView.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
             <span className={`${styles.chip} ${styles.testLabel}`}>{testLabel}</span>
             {VARIANT_Y.map((y) => (
               <span

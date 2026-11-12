@@ -12,7 +12,7 @@
   display: grid;
   place-items: center;
   min-height: 100svh;
-  padding: calc(var(--navbar-height) + var(--navbar-offset) + 64px) var(--space-4)
+  padding: calc(var(--navbar-height) + var(--navbar-offset) + 64px) var(--page-gutter)
     calc(var(--arch) + 56px);
   overflow: clip; /* the planet ends with the first screen */
   isolation: isolate;
@@ -203,7 +203,7 @@
 .next {
   max-width: 1180px;
   margin: 0 auto;
-  padding: var(--space-8) var(--space-4);
+  padding: var(--space-8) var(--page-gutter);
 }
 
 /* The site's section head: pill badge, heading with its second line in lime */
@@ -433,7 +433,7 @@
   .stage {
     --arch: 64px;
 
-    padding: calc(var(--navbar-height) + var(--navbar-offset) + 52px) 14px calc(var(--arch) + 40px);
+    padding: calc(var(--navbar-height) + var(--navbar-offset) + 52px) var(--page-gutter) calc(var(--arch) + 40px);
   }
 
   .horizon {

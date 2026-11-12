@@ -1,6 +1,6 @@
 .section {
   /* extra room below: the lowered even column and the parallax push the last pills down */
-  padding: var(--space-7) var(--space-4) calc(var(--space-8) + 170px);
+  padding: var(--space-7) var(--page-gutter) calc(var(--space-8) + 170px);
   background: var(--color-bg);
 }
 

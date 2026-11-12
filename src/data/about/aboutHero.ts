@@ -1,6 +1,7 @@
 import type { AboutHeroContent } from '@/types/about';
 
 export const aboutHero: AboutHeroContent = {
+  title: 'About BMU Marketing',
   wordStart: 'AB',
   wordEnd: 'UT',
   statement: 'Strategists, designers, editors and engineers – one team building brands that get',

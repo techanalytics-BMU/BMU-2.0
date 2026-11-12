@@ -23,7 +23,7 @@
 /* ---------- The viewfinder ---------- */
 .viewfinder {
   position: absolute;
-  inset: calc(var(--hero-top) + 4px) var(--space-4) var(--space-4);
+  inset: calc(var(--hero-top) + 4px) var(--page-gutter) var(--space-4); /* corners in line with the navbar */
   color: var(--color-text-muted);
   font-size: var(--font-size-xs);
   font-variant-numeric: tabular-nums;
@@ -236,8 +236,8 @@ a.frame:hover {
 
 @media (max-width: 900px) {
   .hero {
-    padding-right: var(--space-5);
-    padding-left: var(--space-5);
+    padding-right: calc(var(--page-gutter) + 16px);
+    padding-left: calc(var(--page-gutter) + 16px);
   }
 
   .strip {

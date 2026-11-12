@@ -1,5 +1,5 @@
 .section {
-  padding: var(--space-6) var(--space-4) var(--space-8);
+  padding: var(--space-6) var(--page-gutter) var(--space-8);
   background: var(--color-bg);
 }
 
@@ -470,9 +470,9 @@
 
   .chips {
     flex-wrap: nowrap;
-    width: calc(100% + 2 * var(--space-4));
-    margin-inline: calc(-1 * var(--space-4));
-    padding: 2px var(--space-4);
+    width: calc(100% + 2 * var(--page-gutter));
+    margin-inline: calc(-1 * var(--page-gutter));
+    padding: 2px var(--page-gutter);
     overflow-x: auto;
     scrollbar-width: none;
   }

@@ -12,7 +12,7 @@ const tile = (title: string, service: ServiceSlug) => ({ title, href: paths.serv
 
 export const landingAllServices: LandingAllServicesContent = {
   heading: 'Our Services',
-  subheading: 'we are good at!',
+  subheading: 'What we’re good at',
   tiles: [
     tile('Marketing Strategy', 'digital-marketing'),
     tile('Search Engine Optimisation', 'seo'),

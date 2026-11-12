@@ -1,5 +1,5 @@
 .section {
-  padding: var(--space-6) var(--space-4) var(--space-8);
+  padding: var(--space-6) var(--page-gutter) var(--space-8);
   background: var(--color-bg);
 }
 

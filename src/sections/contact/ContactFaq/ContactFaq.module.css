@@ -1,5 +1,5 @@
 .section {
-  padding: var(--space-8) var(--space-4);
+  padding: var(--space-8) var(--page-gutter);
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   background: var(--color-bg);
 }
@@ -453,7 +453,7 @@
 
 @media (max-width: 600px) {
   .section {
-    padding: var(--space-7) var(--space-3);
+    padding: var(--space-7) var(--page-gutter);
   }
 
   .question {

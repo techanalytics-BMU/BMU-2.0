@@ -5,7 +5,7 @@
   flex-direction: column;
   align-items: center;
   /* little padding below: the stage already leaves room under its lowest chip */
-  padding: var(--space-8) var(--space-4) var(--space-3);
+  padding: var(--space-8) var(--page-gutter) var(--space-3);
   overflow: hidden;
   background: var(--color-bg);
 }

@@ -1,6 +1,7 @@
 import type { TeamHeroContent } from '@/types/team';
 
 export const teamHero: TeamHeroContent = {
+  title: 'Meet the BMU Marketing team',
   wordStart: 'TE',
   wordEnd: 'AM',
   // image: '/images/team/hero/team-hero-group.webp', // add a team photo here

@@ -1,14 +1,13 @@
 'use client';
 
 import Badge from '@/components/ui/Badge/Badge';
-import Button from '@/components/ui/Button/Button';
 import { landingConversionRate } from '@/data/landing/landingConversionRate';
 import { useInView } from '@/hooks/useInView';
 import styles from './LandingConversionRate.module.css';
 import LandingConversionRateFlow from './LandingConversionRateFlow';
 import LandingConversionRateTimeline from './LandingConversionRateTimeline';
 
-// Conversion rate optimisation: header → website-lifecycle timeline → CRO process diagram → CTA.
+// Conversion rate optimisation: header → website-lifecycle timeline → CRO process diagram.
 // Each part animates in when it scrolls into view (see src/hooks/useInView.ts).
 export default function LandingConversionRate() {
   const {
@@ -20,11 +19,10 @@ export default function LandingConversionRate() {
     inputs,
     strategy,
     testLabel,
-    variants,
-    cta,
+    customerView,
+    ownerView,
   } = landingConversionRate;
   const header = useInView<HTMLDivElement>();
-  const ctaView = useInView<HTMLDivElement>({ threshold: 0.6 });
 
   return (
     <section id="conversion-rate" className={styles.section}>
@@ -42,13 +40,13 @@ export default function LandingConversionRate() {
 
       <div className={styles.visuals}>
         <LandingConversionRateTimeline markers={timeline} />
-        <LandingConversionRateFlow inputs={inputs} strategy={strategy} testLabel={testLabel} variants={variants} />
-      </div>
-
-      <div ref={ctaView.ref} className={styles.cta} data-in-view={ctaView.inView}>
-        <Button href={cta.href}>
-          {cta.label}
-        </Button>
+        <LandingConversionRateFlow
+          inputs={inputs}
+          strategy={strategy}
+          testLabel={testLabel}
+          customerView={customerView}
+          ownerView={ownerView}
+        />
       </div>
     </section>
   );

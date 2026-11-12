@@ -1,7 +1,7 @@
 /* A long read: quiet type in a comfortable column, the site's heading style on top, and a
    contents list that stays beside the text on wide screens */
 .section {
-  padding: calc(var(--navbar-height) + var(--navbar-offset) + clamp(3rem, 7vw, 5.5rem)) var(--space-4)
+  padding: calc(var(--navbar-height) + var(--navbar-offset) + clamp(3rem, 7vw, 5.5rem)) var(--page-gutter)
     clamp(4rem, 8vw, 6rem);
   background:
     radial-gradient(ellipse 60% 30% at 50% 0%, rgba(140, 198, 63, 0.06), transparent 70%),
@@ -206,10 +206,6 @@
 }
 
 @media (max-width: 600px) {
-  .section {
-    padding-inline: var(--space-3);
-  }
-
   .text,
   .list {
     font-size: var(--font-size-sm);

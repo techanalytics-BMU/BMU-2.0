@@ -1,4 +1,5 @@
 export type TeamHeroContent = {
+  title: string; // the page's real heading, read by Google and screen readers (the big word is drawn)
   wordStart: string; // big word, before the pill window ("TE")
   wordEnd: string; // after the pill window ("AM")
   image?: string; // .webp team photo inside the pill – an atmospheric placeholder is shown until set

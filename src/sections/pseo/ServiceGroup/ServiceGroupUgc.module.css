@@ -1,113 +1,204 @@
+/* The words' column is as wide as the words (the heading kept to two lines, "UGC & Creator" and
+   "Marketing"), never more than half; the shelf takes the rest, so no dead space opens between them
+   on laptops, where the heading is set smaller */
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: fit-content(50%) minmax(0, 1fr);
   gap: var(--space-5);
   align-items: center;
-  max-width: 1320px;
+  max-width: var(--page-max);
   min-height: 100svh;
   margin: 0 auto;
-  padding: var(--hero-top) var(--space-4) var(--space-4);
+  padding: var(--hero-top) var(--page-gutter) var(--space-4);
 }
 
-/* ---------- Three phones, the middle one in front ---------- */
-.phones {
-  --phone: min(232px, calc((100svh - var(--hero-top) - 70px) * 0.5));
+.hero h1 {
+  max-width: 7em;
+}
+
+/* ---------- The shelf of formats ----------
+   Five vertical videos in a gentle curve: the middle one in front, the others turned towards it and
+   dimmer with distance, all reflected in a glossy floor. Everything inside a frame is sized in em,
+   from its width, and the frames from the shelf's width – five of them, overlapping, span about
+   four frames – so the shelf always fills its column. */
+.shelf {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  container-type: inline-size;
+  perspective: 1600px;
+}
+
+/* A faint pool of light on the floor */
+.shelf::before {
+  content: '';
+  position: absolute;
+  bottom: 14%;
+  left: 50%;
+  width: 120%;
+  height: 42%;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(140, 198, 63, 0.1), transparent 70%);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.reel {
+  --reel: clamp(118px, min(25cqw, (100svh - var(--hero-top) - 120px) * 0.5), 196px);
 
   position: relative;
-  height: calc(var(--phone) * 2);
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  width: var(--reel);
+  aspect-ratio: 9 / 16;
+  margin: 0 calc(var(--reel) * -0.1) calc(var(--reel) * 0.4); /* below: room for the reflection */
+  padding: 1em;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 1.6em;
+  background:
+    radial-gradient(120% 55% at 50% 0%, rgba(255, 255, 255, 0.07), transparent 70%),
+    linear-gradient(180deg, #181a1e, #0b0c0e);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 30px 60px -20px rgba(0, 0, 0, 0.8);
+  font-size: calc(var(--reel) / 15);
+  -webkit-box-reflect: below 6px linear-gradient(transparent 70%, rgba(0, 0, 0, 0.16));
+  animation: reel-in 1s var(--ease) backwards;
+  animation-delay: calc(0.25s + var(--i) * 0.12s);
 }
 
-.phone {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: var(--phone);
-  aspect-ratio: 1 / 2;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 26px;
-  background: linear-gradient(170deg, #24272c, #0d0f12 70%);
-  animation: phone-in 1s var(--ease) 0.3s backwards;
+.reel[data-pos='0'] {
+  z-index: 3;
+  border-color: rgba(255, 255, 255, 0.24);
 }
 
-.middle {
+.reel[data-pos='-1'],
+.reel[data-pos='1'] {
+  z-index: 2;
+  filter: brightness(0.72);
+}
+
+.reel[data-pos='-2'],
+.reel[data-pos='2'] {
   z-index: 1;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7);
+  filter: brightness(0.45);
 }
 
-.left {
-  opacity: 0.6;
-  transform: translate(-112%, -47%) rotate(-7deg) scale(0.86);
+.reel[data-pos='-1'] {
+  transform: rotateY(20deg) scale(0.86);
 }
 
-.right {
-  opacity: 0.6;
-  transform: translate(12%, -47%) rotate(7deg) scale(0.86);
+.reel[data-pos='1'] {
+  transform: rotateY(-20deg) scale(0.86);
 }
 
-@keyframes phone-in {
+.reel[data-pos='-2'] {
+  transform: rotateY(30deg) scale(0.72);
+}
+
+.reel[data-pos='2'] {
+  transform: rotateY(-30deg) scale(0.72);
+}
+
+@keyframes reel-in {
   from {
     opacity: 0;
+    translate: 0 30px;
   }
 }
 
-/* A head and shoulders in the dark of the screen */
-.person {
-  position: absolute;
-  inset: 22% 0 0;
-  background:
-    radial-gradient(circle at 50% 22%, #5e6369 0 18%, transparent 18.5%),
-    radial-gradient(ellipse 56% 42% at 50% 84%, #3b3f45 0 98%, transparent 100%);
+.reelTime {
+  align-self: flex-end;
+  padding: 0.15em 0.6em;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--color-text-muted);
+  font-size: 0.8em;
+  font-variant-numeric: tabular-nums;
 }
 
-.side {
-  position: absolute;
-  right: 10px;
-  bottom: 26%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.reel[data-pos^='-'] .reelTime {
+  align-self: flex-start;
 }
 
-.side i {
-  width: 22px;
-  height: 22px;
+.reel[data-pos='1'] .reelFormat,
+.reel[data-pos='2'] .reelFormat {
+  text-align: right;
+}
+
+.reel .creator {
+  margin-top: 0.6em;
+  font-size: 0.9em;
+}
+
+.reelScene {
+  flex: 1;
+  min-height: 0;
+  margin-top: 0.6em;
+}
+
+.reelFormat {
+  margin-top: 0.6em;
+  color: var(--color-text);
+  font-size: 1.05em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* The featured video, part way through: a still progress bar under it */
+.reelProgress {
+  position: relative;
+  height: 2px;
+  margin-top: 0.8em;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.reelProgress i {
+  position: absolute;
+  inset: 0 62% 0 0;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.reelProgress i::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -0.25em;
+  width: 0.5em;
+  height: 0.5em;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.22);
+  background: #fff;
+  transform: translateY(-50%);
 }
 
-.side i:first-child {
-  background: var(--color-accent);
+/* A printed quote mark (the sans one is two plain slashes) */
+.sceneQuote {
+  fill: rgba(255, 255, 255, 0.85);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 84px;
+  font-weight: 400;
 }
 
-.caption {
-  position: absolute;
-  right: 44px;
-  bottom: 16px;
-  left: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
+.sceneDigit {
+  fill: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  font-weight: 600;
 }
 
-.caption i {
-  height: 8px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.72);
+.sceneDigitOn {
+  fill: #0b0d10;
+  font-size: 12px;
+  font-weight: 600;
 }
 
-.caption i:last-child {
-  width: 60%;
-  background: rgba(255, 255, 255, 0.34);
-}
-
-/* ---------- The services: tall stories in a row ---------- */
+/* ---------- The services: stories, three to a row ---------- */
 .stories {
   display: grid;
-  grid-auto-columns: minmax(0, 1fr);
-  grid-auto-flow: column;
-  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
   margin-top: var(--space-5);
 }
 
@@ -115,8 +206,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  min-height: clamp(380px, 32vw, 460px);
-  padding: 14px;
+  padding: 16px;
   overflow: hidden;
   border: 1px solid var(--color-border);
   border-radius: 18px;
@@ -124,30 +214,123 @@
   transition: border-color 0.25s ease;
 }
 
-/* Each story is a video waiting to play: a ring and a triangle */
-.story::before,
-.story::after {
-  content: '';
-  position: absolute;
-  top: 26%;
-  left: 50%;
+/* The creator's bar under the progress marks: a face, a name and the post's label */
+.creator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
 }
 
-.story::before {
-  width: 64px;
-  height: 64px;
-  margin-left: -32px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
+.creatorFace {
+  flex: none;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 38%, #8b9097 0 24%, transparent 25%),
+    radial-gradient(ellipse 60% 44% at 50% 100%, #6d7279 0 96%, transparent 100%), #23262b;
+  box-shadow: 0 0 0 1.5px var(--color-accent);
 }
 
-.story::after {
+.creatorName {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.creatorName i {
+  display: block;
+  width: 60%;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.creatorName i + i {
+  width: 38%;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.creatorTag {
+  flex: none;
+  padding: 2px 7px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  color: var(--color-text-muted);
+  font-size: 0.625rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* The scene, with room on the right for the reactions (.story .scene outranks the drawing's own
+   full width) */
+.story .scene {
+  flex: 1;
+  width: calc(100% - 34px);
+  min-height: 0;
+  max-height: 140px;
+  margin-top: 10px;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+a.story:hover .scene {
+  opacity: 1;
+}
+
+.lens {
+  fill: rgba(140, 198, 63, 0.2);
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+}
+
+.beam {
+  fill: rgba(255, 255, 255, 0.05);
+}
+
+.sceneButton {
+  fill: #0b0d10;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.sceneMark {
+  fill: rgba(255, 255, 255, 0.85);
+  font-size: 22px;
+  font-weight: 300;
+}
+
+.sceneRec {
+  fill: rgba(255, 255, 255, 0.7);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+/* Like, comment and save, down the right side as in the feed */
+.reactions {
+  position: absolute;
+  top: 38%;
+  right: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reactions svg {
   width: 16px;
-  height: 20px;
-  margin-top: 22px;
-  margin-left: -6px;
-  background: rgba(255, 255, 255, 0.6);
-  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  height: 16px;
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-linejoin: round;
+  stroke-width: 1.6;
+}
+
+.reactions .liked {
+  fill: var(--color-accent);
+  stroke: var(--color-accent);
 }
 
 .progress,
@@ -178,15 +361,15 @@ a.story:hover {
 }
 
 .title {
-  margin: auto 0 0;
-  font-size: 1.25rem;
+  margin: 10px 0 0;
+  font-size: 1.125rem;
   font-weight: 400;
   letter-spacing: -0.025em;
   line-height: 1.2;
 }
 
 .text {
-  margin-top: var(--space-2);
+  margin-top: 6px;
   color: var(--color-text-muted);
   font-size: 0.8125rem;
   line-height: 1.5;
@@ -200,12 +383,15 @@ a.story:hover {
 /* Touch screens: the stories run off the edge and swipe, like the real thing */
 @media (max-width: 1024px) {
   .stories {
+    grid-template-columns: none;
     grid-auto-columns: min(62vw, 240px);
-    margin-right: calc(var(--space-4) * -1);
-    margin-left: calc(var(--space-4) * -1);
-    padding: 0 var(--space-4) var(--space-2);
+    grid-auto-flow: column;
+    gap: 12px;
+    margin-right: calc(var(--page-gutter) * -1);
+    margin-left: calc(var(--page-gutter) * -1);
+    padding: 0 var(--page-gutter) var(--space-2);
     overflow-x: auto;
-    scroll-padding: 0 var(--space-4);
+    scroll-padding: 0 var(--page-gutter);
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
   }
@@ -222,17 +408,27 @@ a.story:hover {
 @media (max-width: 900px) {
   .hero {
     grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
     padding-top: calc(var(--hero-top) + var(--space-5));
-    padding-bottom: 0;
+    padding-bottom: var(--space-4);
   }
 
-  .phones {
-    --phone: min(200px, 46vw);
+  .hero h1 {
+    max-width: none;
+  }
+
+  .reel {
+    --reel: clamp(112px, 34vw, 172px);
+  }
+
+  .reel[data-pos='-2'],
+  .reel[data-pos='2'] {
+    display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .phone {
+  .reel {
     animation: none;
   }
 }

@@ -62,6 +62,21 @@
   --container-width: 1100px;
   --navbar-height: 56px;
   --navbar-offset: 16px;
+
+  /* Page gutters – the navbar sits --page-edge in from each side of the screen and starts its logo
+     20px inside that, so every section keeps its content --page-gutter in and lines up with it.
+     --page-max is a full-width section's widest, gutters included: 1280px of content, the
+     navbar's own width inside its padding. */
+  --page-edge: clamp(12px, 3vw, 32px);
+  --page-gutter: calc(var(--page-edge) + 20px);
+  --page-max: calc(1280px + 2 * var(--page-gutter));
+}
+
+/* Phones and tablets: the navbar's logo starts 18px inside its edge */
+@media (max-width: 900px) {
+  :root {
+    --page-gutter: calc(var(--page-edge) + 18px);
+  }
 }
 
 /* Phones and tablets held upright: a rounder, taller planet so more of the earth shows */

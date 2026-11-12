@@ -4,7 +4,7 @@
 .footer {
   position: relative;
   overflow: hidden;
-  padding: clamp(4.5rem, 8vw, 6.5rem) var(--space-4) 0;
+  padding: clamp(4.5rem, 8vw, 6.5rem) var(--page-gutter) 0;
   background:
     radial-gradient(ellipse 60% 40% at 50% 0%, rgba(140, 198, 63, 0.05), transparent 70%),
     var(--color-bg);
@@ -455,10 +455,6 @@ a.link:focus-visible {
 
 /* ---------- Phone ---------- */
 @media (max-width: 720px) {
-  .footer {
-    padding-inline: var(--space-3);
-  }
-
   .join {
     padding: 22px 18px;
   }

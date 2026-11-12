@@ -53,9 +53,11 @@ export type LandingConversionRateContent = {
   timeline: LandingConversionRateMarker[];
   inputs: string[]; // left box of the flow diagram (our services)
   strategy: string[]; // middle box
-  testLabel: string; // between the two browser mock-ups
-  variants: [string, string]; // short words shown in the two browser mock-ups
-  cta: NavLink;
+  testLabel: string; // between the two outcome windows
+  // The two outcome windows: what a customer sees (your business, top of their search) and what
+  // you get (leads, customers, rankings)
+  customerView: { label: string; search: string; business: string; actions: string[] };
+  ownerView: { label: string; heading: string; items: string[] };
 };
 
 export type LandingPricingPlan = {

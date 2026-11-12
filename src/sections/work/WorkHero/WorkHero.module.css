@@ -8,7 +8,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100svh;
-  padding: calc(var(--navbar-height) + var(--navbar-offset)) var(--space-4) 0;
+  padding: calc(var(--navbar-height) + var(--navbar-offset)) var(--page-gutter) 0;
   overflow: clip;
   background: var(--color-bg);
 }
@@ -84,7 +84,7 @@
   position: relative;
   flex: none;
   height: var(--show);
-  margin: 0 calc(var(--space-4) * -1);
+  margin: 0 calc(var(--page-gutter) * -1);
   pointer-events: none; /* its glow reaches up past the button on short screens */
 }
 

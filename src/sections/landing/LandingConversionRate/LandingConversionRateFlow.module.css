@@ -1,16 +1,22 @@
-/* Scroll-driven business flow. --progress (0 → 1) is set by useScrollProgress({ mode: 'pinned' }):
-   it starts as the diagram scrolls into view (visible from ~0.1), pins at ~0.45, ends at 1. Steps:
+/* The business flow draws itself once, when it comes into view: --progress runs 0 → 1 on its own
+   (a registered property, so it can transition), and every step below reads it. Steps:
      0.10 – 0.40  services appear one by one          (rows, --show)
      0.13 – 0.45  their curves draw into the middle    (.in, --draw)
      0.45 – 0.53  middle box appears                   (--mid)
      0.53 – 0.65  curves branch out                    (.out, --draw)
      0.58 – 0.74  outcome box and its two windows      (--test, browsers --show)
      0.74 – 0.80  dots start flowing along the curves  (--flowing)
-     0.80 – 1     holds the finished diagram while it is pinned */
+     0.80 – 1     the finished diagram */
+@property --progress {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
 .scroller {
   --progress: 0;
   --p: var(--progress); /* every step below reads --p (phones speed it up) */
-  --flow-h: clamp(300px, 32vw, 400px); /* diagram height */
+  --flow-h: clamp(340px, 34vw, 430px); /* diagram height */
   --mid: clamp(0, calc((var(--p) - 0.45) / 0.08), 1);
   --test: clamp(0, calc((var(--p) - 0.58) / 0.08), 1);
   --flowing: clamp(0, calc((var(--p) - 0.74) / 0.06), 1);
@@ -18,22 +24,17 @@
 
   position: relative;
   width: 100%;
-  height: 220vh; /* 100vh on screen + 120vh of scrolling while pinned */
-  height: 220svh;
-  /* The pinned area is a full screen tall; pull it in so the diagram keeps its normal spacing,
-     and up by the empty 8% above the services, so their container starts right where the
-     timeline's space after its line ends (--space-after in LandingConversionRateTimeline.module.css) */
-  margin-block: calc((100svh - var(--flow-h)) / -2);
-  margin-top: calc((100svh - var(--flow-h)) / -2 - var(--flow-h) * 0.08);
+  transition: --progress 2.6s cubic-bezier(0.33, 0, 0.2, 1);
+}
+
+/* On arrival it runs through every step once, then stays finished */
+.scroller[data-in-view='true'] {
+  --progress: 1;
 }
 
 .sticky {
-  position: sticky;
-  top: 0;
   display: grid;
   place-items: center;
-  height: 100vh;
-  height: 100svh;
 }
 
 /* ---------- Layout (desktop): services → curves → middle → curves → outcomes ---------- */
@@ -41,9 +42,9 @@
   position: relative;
   isolation: isolate; /* keeps the dot backdrop (z-index: -1) behind the diagram, not behind the page */
   display: grid;
-  grid-template-columns: 1.4fr 0.7fr 1.1fr 0.65fr 1.05fr;
+  grid-template-columns: 1.3fr 0.62fr 1.05fr 0.58fr 1.35fr;
   align-items: center;
-  width: min(100% - 2 * var(--pad), 940px); /* room for the containers to reach past the edges */
+  width: min(100% - 2 * var(--pad), 1000px); /* room for the containers to reach past the edges */
   height: var(--flow-h);
 }
 
@@ -259,10 +260,10 @@
   }
 }
 
-/* 3. Outcomes – rows 2fr / 1fr / 2fr put the windows at 20% and 80% of the height */
+/* 3. Outcomes – rows 3fr / 1fr / 3fr put the windows at 3/14 and 11/14 of the height */
 .test {
   display: grid;
-  grid-template-rows: 2fr 1fr 2fr;
+  grid-template-rows: 3fr 1fr 3fr;
   align-items: center;
   height: 100%;
   opacity: var(--test);
@@ -280,12 +281,13 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 8%;
-  height: 80%;
-  padding: 7%;
+  gap: 0.7em;
+  height: 90%;
+  padding: 0.75em 0.85em;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 5px;
+  border-radius: 6px;
   background: #1f2227;
+  font-size: clamp(9px, 0.9vw, 11px); /* everything inside is sized in em, from this */
   opacity: var(--show);
   transform: scale(calc(0.9 + 0.1 * var(--show)));
 }
@@ -300,6 +302,7 @@
 
 .browserBar {
   display: flex;
+  align-items: center;
   gap: 4px;
 }
 
@@ -318,30 +321,115 @@
   background: #28c840;
 }
 
-/* Window content: the word on top, two placeholder blocks below */
-.browserBody {
-  display: grid;
+/* What the window shows, in small capitals beside its dots */
+.browserLabel {
+  margin-left: 0.6em;
+  color: var(--color-text-muted);
+  font-size: 0.9em;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.view {
+  display: flex;
   flex: 1;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto 1fr;
-  gap: 6px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.6em;
+  min-height: 0;
 }
 
-.variant {
-  display: grid;
-  grid-column: 1 / -1;
-  place-items: center;
-  padding: 6px 4px;
-  border-radius: 3px;
+/* The customer's side: their search, and your business at the top of it */
+.search {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.45em 0.8em;
+  border-radius: 999px;
   background: #2a2d33;
+  color: var(--color-text-muted);
+}
+
+.search svg {
+  flex: none;
+  width: 1em;
+  height: 1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.8;
+}
+
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+  padding: 0.6em 0.75em;
+  border: 1px solid rgba(140, 198, 63, 0.45);
+  border-radius: 5px;
+  background: #262a30;
+}
+
+.resultName {
+  color: var(--color-text);
+  font-size: 1.15em;
+  font-weight: 600;
+}
+
+.stars {
   color: var(--color-accent);
-  font-size: clamp(0.7rem, 1.05vw, 0.95rem);
-  font-weight: 700;
+  font-size: 0.85em;
+  letter-spacing: 0.15em;
 }
 
-.block {
-  border-radius: 3px;
-  background: #2a2d33;
+.actions {
+  display: flex;
+  gap: 0.4em;
+  margin-top: 0.15em;
+}
+
+.action {
+  padding: 0.2em 0.7em;
+  border-radius: 999px;
+  background: rgba(140, 198, 63, 0.16);
+  color: #d2ecab;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+/* Your side: the enquiries coming in */
+.enquiriesHead {
+  color: var(--color-text);
+  font-size: 1.15em;
+  font-weight: 600;
+}
+
+.enquiries {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.enquiries li {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.45em 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  color: var(--color-text-muted);
+}
+
+.enquiries li::before {
+  content: '';
+  flex: none;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 6px rgba(140, 198, 63, 0.6);
 }
 
 /* Curves between the boxes.
@@ -415,10 +503,10 @@
   pointer-events: none;
 }
 
-/* The endless animations run only while the finished diagram is on screen (data-active) */
-.scroller[data-active='true'] .link,
-.scroller[data-active='true'] .pulse,
-.scroller[data-active='true'] .browser::after {
+/* The travelling dots and glows run once the diagram has arrived */
+.scroller[data-in-view='true'] .link,
+.scroller[data-in-view='true'] .pulse,
+.scroller[data-in-view='true'] .browser::after {
   animation-play-state: running;
 }
 
@@ -449,17 +537,9 @@
 
 /* ---------- Mobile: stack top to bottom ---------- */
 @media (max-width: 720px) {
-  /* No pinning: the diagram scrolls up the page normally and draws while it does,
-     finishing when it is ~55% through the screen (fully in view) */
+  /* Stacked, it all fits a phone screen at once, so it draws a little faster */
   .scroller {
     --p: clamp(0, calc(var(--progress) * 1.45), 1);
-    height: auto;
-    margin-block: 0;
-  }
-
-  .sticky {
-    position: static;
-    height: auto;
   }
 
   .flow {
@@ -484,7 +564,7 @@
     display: none;
   }
 
-  /* Vertical connectors that fill in with the scroll */
+  /* Vertical connectors that fill in as it draws */
   .connector {
     position: relative;
     display: block;
@@ -540,8 +620,8 @@
     font-size: 0.75rem;
   }
 
+  /* The two views one above the other, the label between them */
   .test {
-    grid-template-columns: 1fr auto 1fr;
     grid-template-rows: auto;
     gap: 10px;
     height: auto;
@@ -549,36 +629,27 @@
 
   .browser {
     height: auto;
-    aspect-ratio: 1.2;
-    padding: 8px;
+    font-size: 11px;
   }
 
   .browser:nth-of-type(1) {
     grid-row: 1;
-    grid-column: 1;
-  }
-
-  .browser:nth-of-type(2) {
-    grid-row: 1;
-    grid-column: 3;
   }
 
   .testLabel {
-    grid-row: 1;
-    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .browser:nth-of-type(2) {
+    grid-row: 3;
   }
 }
 
-/* Reduce motion: no pinning – the finished diagram */
+/* Reduce motion: the finished diagram straight away, nothing moving */
 @media (prefers-reduced-motion: reduce) {
   .scroller {
-    height: auto;
-    margin: 0;
-  }
-
-  .sticky {
-    position: static;
-    height: auto;
+    --progress: 1;
+    transition: none;
   }
 
   .pulse,

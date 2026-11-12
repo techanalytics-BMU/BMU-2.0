@@ -83,9 +83,9 @@
 
 /* ---------- Sections ---------- */
 .section {
-  max-width: 1320px;
+  max-width: var(--page-max);
   margin: 0 auto;
-  padding: clamp(56px, 8vw, 104px) var(--space-4) 0;
+  padding: clamp(56px, 8vw, 104px) var(--page-gutter) 0;
 }
 
 .head {
@@ -303,7 +303,7 @@
   align-items: center;
   gap: var(--space-3);
   margin-top: clamp(56px, 8vw, 104px);
-  padding: clamp(64px, 9vw, 120px) var(--space-4) clamp(150px, 20vw, 240px);
+  padding: clamp(64px, 9vw, 120px) var(--page-gutter) clamp(150px, 20vw, 240px);
   overflow: clip;
   text-align: center;
 }

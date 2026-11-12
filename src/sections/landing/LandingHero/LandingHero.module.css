@@ -10,7 +10,7 @@
   min-height: 560px;
   /* Top: just below the navbar; the planet fills the bottom (--planet-arch) */
   padding: calc(var(--navbar-height) + var(--navbar-offset) + clamp(var(--space-4), 5svh, var(--space-7)))
-    var(--space-3) 0;
+    var(--page-gutter) 0;
   overflow: hidden;
   /* The bottom fades softly to black, so the hero ends without a hard edge before LandingAllServices */
   -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--hero-fade)), transparent);
