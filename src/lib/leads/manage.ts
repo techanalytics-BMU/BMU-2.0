@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { getProfile, isStaff } from '@/lib/auth/session';
 import { STATUSES } from '@/lib/leads/filters';
+import { pageName } from '@/lib/leads/pages';
 import { createClient } from '@/lib/supabase/server';
 import type { ActionResult, Lead, LeadDetails, LeadEvent, LeadNote, LeadStatus } from '@/types/leads';
 
@@ -51,6 +52,7 @@ export async function getLeadDetails(id: string): Promise<LeadDetails | null> {
 
   return {
     lead: lead.data as Lead,
+    pageName: pageName((lead.data as Lead).page_path),
     notes: (notes.data ?? []).map(
       (note): LeadNote => ({
         id: note.id,

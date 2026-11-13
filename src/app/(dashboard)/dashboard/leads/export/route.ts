@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { getProfile } from '@/lib/auth/session';
 import { parseFilters, todayIST } from '@/lib/leads/filters';
 import { formatDateTime } from '@/lib/leads/format';
+import { pageName } from '@/lib/leads/pages';
 import { applyFilters } from '@/lib/leads/queries';
 import { dashboardLeads } from '@/data/dashboard/dashboardLeads';
 import { createClient } from '@/lib/supabase/server';
@@ -33,7 +34,8 @@ export async function GET(request: NextRequest) {
     ['Status', (lead) => t.statuses[lead.status]],
     ['Follow-up date', (lead) => lead.follow_up_on],
     ['Source', (lead) => t.sources[lead.source]],
-    ['Sent from', (lead) => lead.page_path],
+    ['Sent from', (lead) => pageName(lead.page_path)],
+    ['Sent from (address)', (lead) => lead.page_path],
     ['First page', (lead) => lead.landing_page],
     ['Came from', (lead) => lead.referrer],
     ['UTM source', (lead) => lead.utm_source],

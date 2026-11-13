@@ -1,7 +1,7 @@
 import DashboardIcon from '@/components/dashboard/DashboardIcon/DashboardIcon';
 import { dashboardLeads } from '@/data/dashboard/dashboardLeads';
 import { filtersToQuery } from '@/lib/leads/filters';
-import type { LeadDay, LeadFilters, LeadRow, LeadStats } from '@/types/leads';
+import type { LeadDay, LeadFilters, LeadPage, LeadRow, LeadStats } from '@/types/leads';
 import styles from './DashboardLeads.module.css';
 import DashboardLeadPanel from './DashboardLeadPanel';
 import DashboardLeadsChart from './DashboardLeadsChart';
@@ -15,12 +15,13 @@ type Props = {
   total: number; // leads matching the filters (all pages)
   stats: LeadStats;
   days: LeadDay[];
+  pages: LeadPage[]; // the pages leads were sent from, for the "Sent from" filter
   isAdmin: boolean;
 };
 
 // The leads dashboard, top to bottom: heading (+ Export CSV for admins) → summary cards →
 // "Leads per day" chart → filters → the list → the side panel for the open lead.
-export default function DashboardLeads({ filters, rows, total, stats, days, isAdmin }: Props) {
+export default function DashboardLeads({ filters, rows, total, stats, days, pages, isAdmin }: Props) {
   const t = dashboardLeads;
 
   return (
@@ -44,7 +45,7 @@ export default function DashboardLeads({ filters, rows, total, stats, days, isAd
 
       <DashboardLeadsStats stats={stats} filters={filters} />
       <DashboardLeadsChart days={days} filters={filters} />
-      <DashboardLeadsFilters filters={filters} isAdmin={isAdmin} />
+      <DashboardLeadsFilters filters={filters} pages={pages} isAdmin={isAdmin} />
       <DashboardLeadsTable rows={rows} total={total} filters={filters} />
       <DashboardLeadPanel rows={rows} filters={filters} isAdmin={isAdmin} />
     </div>

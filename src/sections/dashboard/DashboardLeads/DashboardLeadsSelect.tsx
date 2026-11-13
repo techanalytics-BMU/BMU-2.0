@@ -11,6 +11,7 @@ type Option = {
   value: string; // '' = all
   label: string;
   status?: string; // a lead status – shows its coloured dot
+  count?: number; // how many leads it has – shown on the right of the list
 };
 
 type Props = {
@@ -145,6 +146,7 @@ export default function DashboardLeadsSelect({ label, value, options, onChange, 
                 <span className={styles.selectDotSpace} aria-hidden="true" />
               )}
               {option.label}
+              {option.count !== undefined && <span className={styles.selectCount}>{option.count}</span>}
               {option.value === value && <span className={styles.selectCheck}>✓</span>}
             </button>
           ))}

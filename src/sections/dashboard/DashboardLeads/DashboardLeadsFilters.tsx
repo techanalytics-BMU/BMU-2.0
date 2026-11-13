@@ -7,7 +7,7 @@ import { dashboardLeads } from '@/data/dashboard/dashboardLeads';
 import { useDismiss } from '@/hooks/useDismiss';
 import { RANGES, SOURCES, STATUSES } from '@/lib/leads/filters';
 import { formatDate } from '@/lib/leads/format';
-import type { LeadFilters, LeadSource, LeadStatus } from '@/types/leads';
+import type { LeadFilters, LeadPage, LeadSource, LeadStatus } from '@/types/leads';
 import styles from './DashboardLeads.module.css';
 import DashboardLeadsCalendar from './DashboardLeadsCalendar';
 import DashboardLeadsSelect from './DashboardLeadsSelect';
@@ -15,9 +15,12 @@ import { useLeadNavigation } from './useLeadNavigation';
 
 const SEARCH_DELAY = 400; // ms after the last key before searching
 
+type Props = { filters: LeadFilters; pages: LeadPage[]; isAdmin: boolean };
+
 // One row of filters above the list: date range chips (+ a calendar for your own dates), status,
-// source, search – and for admins, Active / Archived
-export default function DashboardLeadsFilters({ filters, isAdmin }: { filters: LeadFilters; isAdmin: boolean }) {
+// source (which form), the page it was sent from (with how many leads each brought), search – and
+// for admins, Active / Archived
+export default function DashboardLeadsFilters({ filters, pages, isAdmin }: Props) {
   const t = dashboardLeads;
   const { pending, setFilters } = useLeadNavigation(filters);
   const [query, setQuery] = useState(filters.q);
@@ -102,6 +105,16 @@ export default function DashboardLeadsFilters({ filters, isAdmin }: { filters: L
             ...SOURCES.map((source) => ({ value: source, label: t.sources[source] })),
           ]}
           onChange={(value) => setFilters({ source: (value || null) as LeadSource | null })}
+        />
+
+        <DashboardLeadsSelect
+          label={t.table.page}
+          value={filters.path ?? ''}
+          options={[
+            { value: '', label: t.filters.allPages },
+            ...pages.map((page) => ({ value: page.path, label: page.name, count: page.count })),
+          ]}
+          onChange={(value) => setFilters({ path: value || null })}
         />
 
         <label className={styles.search}>

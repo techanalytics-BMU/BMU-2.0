@@ -1,8 +1,7 @@
 import shared from './ServiceGroupPage.module.css';
 import { HeroText, Offer, pad, vars, type VibeProps } from './ServiceGroupParts';
 import styles from './ServiceGroupBrand.module.css';
-
-const SHADES = ['#ffffff', '#b5bac2', '#6d7279', '#2a2d31'];
+import { BrandIndex, BrandStack } from './ServiceGroupBrandLayers';
 
 export const servicesHeading = 'The system, plate by plate';
 export const headBeside = false;
@@ -27,53 +26,18 @@ const PLATE_ART = [
   </>,
 ];
 
-// Brand & Design, a page from a brand guidelines book: a mark drawn on its construction lines, the
-// way a logo is really built, with its type and colours beside it
+// Brand & Design, the system taken apart: its four layers – mark, type, colour, grid – lifted off
+// one another like glass plates (the moving parts are in ServiceGroupBrandLayers.tsx). They fly in
+// and draw themselves, then take turns sliding out of the stack while the index under the words
+// keeps time; after the last, the stack presses into one card and bursts open again. The stack turns
+// towards the mouse, and pointing at a layer in the index pulls that one out.
 export function Hero({ page, price }: VibeProps) {
   return (
     <header className={styles.hero}>
-      <HeroText page={page} price={price} />
-
-      <div className={styles.plate} aria-hidden="true">
-        <span className={`${styles.crop} ${styles.topLeft}`} />
-        <span className={`${styles.crop} ${styles.topRight}`} />
-        <span className={`${styles.crop} ${styles.bottomLeft}`} />
-        <span className={`${styles.crop} ${styles.bottomRight}`} />
-
-        <svg className={styles.mark} viewBox="0 0 400 400">
-          <g className={styles.guides}>
-            <path pathLength={1} d="M0 200H400" />
-            <path pathLength={1} d="M200 0V400" />
-            <path pathLength={1} d="M40 40L360 360" />
-            <path pathLength={1} d="M360 40L40 360" />
-            <rect pathLength={1} x="60" y="60" width="280" height="280" />
-            <circle pathLength={1} cx="200" cy="200" r="140" />
-            <circle pathLength={1} cx="200" cy="130" r="70" />
-            <circle pathLength={1} cx="200" cy="270" r="70" />
-          </g>
-          {/* The mark itself: two circles and a stem, cut from the lines above */}
-          <path
-            className={styles.shape}
-            d="M130 60H200A70 70 0 0 1 244 184A70 70 0 0 1 200 340H130Z"
-          />
-          <circle className={styles.dot} cx="200" cy="200" r="4" />
-          <text className={styles.note} x="344" y="56">
-            x
-          </text>
-          <text className={styles.note} x="12" y="196">
-            Clear space
-          </text>
-        </svg>
-
-        <div className={styles.spec}>
-          <span className={styles.specimen}>Aa</span>
-          <ul className={styles.shades}>
-            {SHADES.map((shade) => (
-              <li key={shade} style={{ background: shade }} />
-            ))}
-          </ul>
-        </div>
-      </div>
+      <HeroText page={page} price={price}>
+        <BrandIndex />
+      </HeroText>
+      <BrandStack />
     </header>
   );
 }

@@ -235,6 +235,21 @@
   white-space: pre-wrap;
 }
 
+/* "Sent from": the page's address under its name */
+.pageLink {
+  display: block;
+  margin-top: 2px;
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.2);
+  text-underline-offset: 3px;
+}
+
+.pageLink:hover {
+  color: var(--color-text);
+}
+
 .muted {
   color: var(--color-text-dim);
   font-size: var(--font-size-sm);

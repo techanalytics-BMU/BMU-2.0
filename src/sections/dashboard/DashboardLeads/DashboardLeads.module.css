@@ -449,6 +449,19 @@ button.stat:focus-visible {
   color: var(--color-accent);
 }
 
+/* How many leads an option has (the "Sent from" filter), on the right */
+.selectCount {
+  margin-left: auto;
+  padding-left: 16px;
+  color: var(--color-text-dim);
+  font-size: var(--font-size-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.selectCount + .selectCheck {
+  margin-left: 8px;
+}
+
 .search {
   display: flex;
   flex: 1 1 240px;
@@ -566,6 +579,17 @@ button.stat:focus-visible {
 .cellReceived,
 .cellSource {
   white-space: nowrap;
+}
+
+/* "Sent from": the page's name (cut short with … when long), the form under it */
+.cellSource > * {
+  display: block;
+}
+
+.pageName {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .pagination {
@@ -739,6 +763,15 @@ button.stat:focus-visible {
 
   .cellSource {
     grid-column: 1;
+  }
+
+  /* One line on the card: "Brand Identity · Popup" */
+  .cellSource > * {
+    display: inline;
+  }
+
+  .cellSource .sub::before {
+    content: ' · ';
   }
 
   .cellReceived {

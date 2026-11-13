@@ -1,11 +1,13 @@
 import 'server-only';
 import type { PostgrestFilterBuilder } from '@supabase/postgrest-js';
 import { addDays, PAGE_SIZE, rangeDates, startOfDayIST, STATUSES, todayIST } from '@/lib/leads/filters';
+import { pageName } from '@/lib/leads/pages';
 import { createClient } from '@/lib/supabase/server';
 import type {
   Lead,
   LeadDay,
   LeadFilters,
+  LeadPage,
   LeadRow,
   LeadStats,
   UnseenLead,
@@ -28,12 +30,18 @@ export function applyFilters<Q extends LeadQuery>(query: Q, filters: LeadFilters
   }
   if (withStatus && filters.status) q = q.eq('status', filters.status);
   if (filters.source) q = q.eq('source', filters.source);
+  if (filters.path) q = q.eq('page_path', filters.path);
 
   if (filters.q) {
     // Characters that would break the search syntax are dropped
     const text = filters.q.replace(/["%*,()\\]/g, ' ').trim();
     const digits = text.replace(/\D/g, '');
-    const parts = [`name.ilike."*${text}*"`, `email.ilike."*${text}*"`];
+    const parts = [
+      `name.ilike."*${text}*"`,
+      `email.ilike."*${text}*"`,
+      // the page, by its address: "brand identity" finds /services/brand-identity, "mumbai" its city
+      `page_path.ilike."*${text.replace(/\s+/g, '-')}*"`,
+    ];
     if (digits.length >= 3) parts.push(`phone_digits.like."*${digits}*"`);
     if (text) q = q.or(parts.join(','));
   }
@@ -74,6 +82,7 @@ export async function getLeadsPage(filters: LeadFilters) {
 
   const rows: LeadRow[] = leads.map((lead) => ({
     ...lead,
+    pageName: pageName(lead.page_path),
     isNew: !seen.has(lead.id),
     isRepeat: others.some(
       (other) =>
@@ -83,6 +92,32 @@ export async function getLeadsPage(filters: LeadFilters) {
     ),
   }));
   return { rows, total: count ?? 0 };
+}
+
+/**
+ * The pages leads were sent from, most leads first, for the "Sent from" filter – counted within the
+ * other filters (dates, status, form, search), so each count matches what picking it shows
+ */
+export async function getLeadPages(filters: LeadFilters): Promise<LeadPage[]> {
+  const supabase = await createClient();
+  const { data } = await applyFilters(supabase.from('leads').select('page_path'), {
+    ...filters,
+    path: null,
+  })
+    .not('page_path', 'is', null)
+    .limit(10000);
+
+  const counts = new Map<string, number>();
+  for (const row of data ?? []) {
+    const path = row.page_path as string;
+    counts.set(path, (counts.get(path) ?? 0) + 1);
+  }
+  // The page picked keeps its place even when the other filters leave it no leads
+  if (filters.path && !counts.has(filters.path)) counts.set(filters.path, 0);
+
+  return [...counts]
+    .map(([path, count]) => ({ path, name: pageName(path) ?? path, count }))
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
 }
 
 /** Totals for the summary cards – every status, for the chosen dates/source/search */

@@ -227,6 +227,7 @@ export type DashboardLeadsContent = {
   filters: {
     allStatuses: string;
     allSources: string;
+    allPages: string;
     search: string;
     export: string;
     active: string;
@@ -236,6 +237,7 @@ export type DashboardLeadsContent = {
     name: string;
     contact: string;
     source: string;
+    page: string; // the "Sent from" column and filter
     received: string;
     status: string;
     empty: string;

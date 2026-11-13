@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getProfile, isStaff } from '@/lib/auth/session';
 import { parseFilters } from '@/lib/leads/filters';
-import { getLeadsPage, getLeadsPerDay, getLeadStats } from '@/lib/leads/queries';
+import { getLeadPages, getLeadsPage, getLeadsPerDay, getLeadStats } from '@/lib/leads/queries';
 import { DashboardLeads } from '@/sections/dashboard';
 
 export const metadata: Metadata = { title: 'Leads' };
@@ -20,10 +20,11 @@ export default async function LeadsPage({ searchParams }: Props) {
   const filters = parseFilters(params);
   if (!isAdmin) filters.view = 'active'; // archived leads are for admins only
 
-  const [page, stats, days] = await Promise.all([
+  const [page, stats, days, pages] = await Promise.all([
     getLeadsPage(filters),
     getLeadStats(filters),
     getLeadsPerDay(filters),
+    getLeadPages(filters),
   ]);
   return (
     <DashboardLeads
@@ -32,6 +33,7 @@ export default async function LeadsPage({ searchParams }: Props) {
       total={page.total}
       stats={stats}
       days={days}
+      pages={pages}
       isAdmin={isAdmin}
     />
   );

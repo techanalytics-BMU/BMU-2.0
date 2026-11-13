@@ -36,7 +36,11 @@ export type SubmitLeadResult = { ok: true } | { ok: false; fieldErrors?: Record<
 export type LeadRow = Lead & {
   isNew: boolean; // they haven't opened it yet
   isRepeat: boolean; // the same phone or email sent a lead before
+  pageName: string | null; // the page it was sent from, by name – 'Digital Marketing · Mumbai'
 };
+
+/** A page that leads were sent from, for the "Sent from" filter */
+export type LeadPage = { path: string; name: string; count: number };
 
 export type LeadNote = {
   id: string;
@@ -57,6 +61,7 @@ export type LeadEvent = {
 
 export type LeadDetails = {
   lead: Lead;
+  pageName: string | null; // the page it was sent from, by name
   notes: LeadNote[];
   events: LeadEvent[];
 };
@@ -70,7 +75,8 @@ export type LeadFilters = {
   to: string | null;
   status: LeadStatus | null;
   source: LeadSource | null;
-  q: string; // search: name, phone or email
+  path: string | null; // the page they were sent from ('/services/brand-identity')
+  q: string; // search: name, phone, email or page
   page: number; // from 1
   view: 'active' | 'archived'; // archived: admins only
 };

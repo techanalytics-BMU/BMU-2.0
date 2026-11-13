@@ -20,7 +20,8 @@ export function HeroText({
   page,
   price,
   className = '',
-}: Pick<VibeProps, 'page' | 'price'> & { className?: string }) {
+  children,
+}: Pick<VibeProps, 'page' | 'price'> & { className?: string; children?: React.ReactNode }) {
   return (
     <div className={`${styles.heroText} ${className}`}>
       <h1 className={styles.h1}>
@@ -32,6 +33,7 @@ export function HeroText({
       <p className={`${styles.intro} ${styles.enter}`} style={vars({ '--i': 2 })}>
         {page.intro}
       </p>
+      {children /* a page's own extra, between the words and the button */}
       <div
         id="pseo-hero-actions"
         className={`${styles.actions} ${styles.enter}`}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
+import { useCallback, useEffect, useRef, useState, useTransition, type ReactNode } from 'react';
 import { useConfirm } from '@/components/dashboard/DashboardDialog/useConfirm';
 import DashboardIcon from '@/components/dashboard/DashboardIcon/DashboardIcon';
 import { dashboardLeads } from '@/data/dashboard/dashboardLeads';
@@ -105,12 +105,23 @@ export default function DashboardLeadPanel({ rows, filters, isAdmin }: Props) {
         [t.panel.labels.business, lead.business],
         [t.panel.labels.message, lead.message],
         [t.panel.labels.source, t.sources[lead.source]],
-        [t.panel.labels.page, lead.page_path],
+        // The page by name, and its address – opens that page in a new tab
+        [
+          t.panel.labels.page,
+          lead.page_path && (
+            <>
+              {details?.pageName ?? lead.page_path}
+              <a className={styles.pageLink} href={lead.page_path} target="_blank" rel="noreferrer">
+                {lead.page_path}
+              </a>
+            </>
+          ),
+        ],
         [t.panel.labels.landing, lead.landing_page],
         [t.panel.labels.referrer, lead.referrer || t.panel.direct],
         [t.panel.labels.campaign, campaign || null],
         [t.panel.labels.received, formatDateTime(lead.created_at)],
-      ].filter(([, value]) => value) as [string, string][])
+      ].filter(([, value]) => value) as [string, ReactNode][])
     : [];
 
   return (

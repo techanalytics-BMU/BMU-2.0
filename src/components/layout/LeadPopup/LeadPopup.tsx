@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { leadPopup } from '@/data/leadPopup';
+import { useSignedIn } from '@/hooks/useSignedIn';
 import { leadSentThisVisit } from '@/lib/leads/browser';
 import styles from './LeadPopup.module.css';
 import LeadPopupForm from './LeadPopupForm';
@@ -31,9 +32,10 @@ function rememberCloses(closes: number) {
 // "Let's build your next growth move." – a lead form that floats over every page (added in
 // src/app/(site)/layout.tsx). On every visit: shows 5s after arriving; after a close, once more 30s
 // later (timings in src/data/leadPopup.ts). Once they send it (or the contact page form) it stays
-// away for the rest of the visit and returns on the next. Never on /login or /contact – if it's due
-// there, it waits until the visitor leaves. The page behind is dimmed and blurred but still
-// scrolls; a click outside the card, the ✕ or Escape closes it.
+// away for the rest of the visit and returns on the next. Never for anyone logged in (clients and
+// the team), and never on the pages in `hiddenOn` (/login, /contact, /work) – if it's due there, it
+// waits until the visitor leaves. The page behind is dimmed and blurred but still scrolls; a click
+// outside the card, the ✕ or Escape closes it.
 export default function LeadPopup() {
   const { timing, hiddenOn, closeLabel, headingStart, headingHighlight, description, explore } =
     leadPopup;
@@ -42,7 +44,10 @@ export default function LeadPopup() {
   const timer = useRef<number | undefined>(undefined);
   const [open, setOpen] = useState(false);
 
-  const hidden = hiddenOn.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+  const signedIn = useSignedIn(); // 'checking' counts as hidden too – it's known well before 5s
+  const hidden =
+    signedIn !== 'out' ||
+    hiddenOn.some((path) => pathname === path || pathname.startsWith(`${path}/`));
   const visible = open && !hidden;
 
   const schedule = useCallback((delay: number) => {

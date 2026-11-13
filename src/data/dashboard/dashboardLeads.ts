@@ -39,7 +39,8 @@ export const dashboardLeads: DashboardLeadsContent = {
   filters: {
     allStatuses: 'All statuses',
     allSources: 'All sources',
-    search: 'Search name, phone or email',
+    allPages: 'All pages',
+    search: 'Search name, phone, email or page',
     export: 'Export CSV',
     active: 'Active',
     archived: 'Archived',
@@ -48,6 +49,7 @@ export const dashboardLeads: DashboardLeadsContent = {
     name: 'Name',
     contact: 'Contact',
     source: 'Source',
+    page: 'Sent from',
     received: 'Received',
     status: 'Status',
     empty: 'No leads yet. They’ll appear here the moment someone fills in a form.',

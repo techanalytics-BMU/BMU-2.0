@@ -59,6 +59,7 @@ export function parseFilters(params: Params): LeadFilters {
   const range = one(params.range) as LeadRange;
   const status = one(params.status) as LeadStatus;
   const source = one(params.source) as LeadSource;
+  const path = one(params.path).trim();
   const from = one(params.from);
   const to = one(params.to);
   const page = Number.parseInt(one(params.page), 10);
@@ -70,6 +71,7 @@ export function parseFilters(params: Params): LeadFilters {
     to: custom ? to : null,
     status: STATUSES.includes(status) ? status : null,
     source: SOURCES.includes(source) ? source : null,
+    path: path.startsWith('/') ? path.slice(0, 300) : null,
     q: one(params.q).trim().slice(0, 100),
     page: Number.isFinite(page) && page > 1 ? page : 1,
     view: one(params.view) === 'archived' ? 'archived' : 'active',
@@ -86,6 +88,7 @@ export function filtersToQuery(filters: LeadFilters) {
   }
   if (filters.status) params.set('status', filters.status);
   if (filters.source) params.set('source', filters.source);
+  if (filters.path) params.set('path', filters.path);
   if (filters.q) params.set('q', filters.q);
   if (filters.page > 1) params.set('page', String(filters.page));
   if (filters.view === 'archived') params.set('view', 'archived');

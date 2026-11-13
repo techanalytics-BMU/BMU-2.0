@@ -17,7 +17,7 @@ export default function DashboardLeadsTable({ rows, total, filters }: Props) {
   const t = dashboardLeads;
   const { pending, setFilters, openLead } = useLeadNavigation(filters);
   const filtered =
-    filters.range !== 'all' || Boolean(filters.status || filters.source || filters.q);
+    filters.range !== 'all' || Boolean(filters.status || filters.source || filters.path || filters.q);
 
   if (!rows.length) {
     return (
@@ -34,7 +34,7 @@ export default function DashboardLeadsTable({ rows, total, filters }: Props) {
             type="button"
             className={styles.clearFilters}
             onClick={() =>
-              setFilters({ range: 'all', from: null, to: null, status: null, source: null, q: '' })
+              setFilters({ range: 'all', from: null, to: null, status: null, source: null, path: null, q: '' })
             }
           >
             {t.table.clearFilters}
@@ -54,7 +54,7 @@ export default function DashboardLeadsTable({ rows, total, filters }: Props) {
           <tr>
             <th scope="col">{t.table.name}</th>
             <th scope="col">{t.table.contact}</th>
-            <th scope="col">{t.table.source}</th>
+            <th scope="col">{t.table.page}</th>
             <th scope="col">{t.table.received}</th>
             <th scope="col">{t.table.status}</th>
           </tr>
@@ -80,7 +80,15 @@ export default function DashboardLeadsTable({ rows, total, filters }: Props) {
                 <span>{lead.phone}</span>
                 <span className={styles.sub}>{lead.email}</span>
               </td>
-              <td className={styles.cellSource}>{t.sources[lead.source]}</td>
+              {/* The page it was sent from, and which form – the popup can come from any page */}
+              <td className={styles.cellSource}>
+                <span className={styles.pageName} title={lead.page_path ?? undefined}>
+                  {lead.pageName ?? t.sources[lead.source]}
+                </span>
+                {lead.source !== 'contact_page' && lead.pageName && (
+                  <span className={styles.sub}>{t.sources[lead.source]}</span>
+                )}
+              </td>
               <td className={styles.cellReceived}>
                 <time dateTime={lead.created_at} title={formatDateTime(lead.created_at)} suppressHydrationWarning>
                   {timeAgo(lead.created_at)}

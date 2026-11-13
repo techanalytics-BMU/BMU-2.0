@@ -3,7 +3,9 @@ import type { LeadPopupContent } from '@/types/leadPopup';
 // The lead popup shown over the site (src/components/layout/LeadPopup). Times are in milliseconds.
 export const leadPopup: LeadPopupContent = {
   timing: { firstDelay: 5000, repeatDelay: 30000, maxCloses: 2 },
-  hiddenOn: ['/login', '/contact'], // /contact already has the full form
+  // /contact already has the full form; /work is for looking at the work, undisturbed.
+  // (Anyone logged in never sees it either – see LeadPopup.tsx.)
+  hiddenOn: ['/login', '/contact', '/work'],
   closeLabel: 'Close',
   headingStart: 'Let’s build your next',
   headingHighlight: 'growth move.',
