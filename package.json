@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "images:webp": "node scripts/convert-to-webp.mjs"
+    "images:webp": "node scripts/convert-to-webp.mjs",
+    "search:status": "node scripts/search-console.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
