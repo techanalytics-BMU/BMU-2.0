@@ -1,0 +1,320 @@
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: center;
+  max-width: var(--page-max);
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: var(--hero-top) var(--page-gutter) var(--space-4);
+}
+
+/* ---------- The CRM: a window with the owner's numbers and the sales pipeline ----------
+   Everything inside is sized in em from the window, so it scales as one piece */
+.app {
+  justify-self: end;
+  width: min(100%, 600px);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.3em;
+  background: linear-gradient(160deg, #15161a, #0b0c0e 70%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 40px 90px -40px rgba(0, 0, 0, 0.9);
+  font-size: clamp(10px, 0.95vw, 13px);
+  animation: app-in 1s var(--ease) 0.3s backwards;
+}
+
+@keyframes app-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  padding: 0.9em 1.1em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.dots {
+  display: flex;
+  gap: 0.4em;
+}
+
+.dots i {
+  width: 0.65em;
+  height: 0.65em;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.appTitle {
+  color: var(--color-text);
+  font-size: 1em;
+  font-weight: 600;
+}
+
+.search {
+  margin-left: auto;
+  padding: 0.35em 0.9em;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  color: var(--color-text-dim);
+  font-size: 0.85em;
+}
+
+/* The owner's numbers */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7em;
+  padding: 1em 1.1em 0.4em;
+}
+
+.kpi {
+  display: grid;
+  gap: 0.2em;
+  padding: 0.75em 0.9em;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 0.8em;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.kpi small {
+  color: var(--color-text-dim);
+  font-size: 0.8em;
+}
+
+.kpi b {
+  color: var(--color-text);
+  font-size: 1.45em;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The pipeline: four stages side by side */
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.7em;
+  padding: 0.8em 1.1em 1.2em;
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55em;
+  min-height: 15em;
+  padding: 0.7em;
+  border-radius: 0.8em;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.stageHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.15em 0.2em;
+  color: var(--color-text-muted);
+  font-size: 0.82em;
+  font-weight: 600;
+}
+
+.stageHead em {
+  padding: 0.05em 0.55em;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--color-text-dim);
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+}
+
+.lead {
+  position: relative;
+  display: grid;
+  gap: 0.25em;
+  padding: 0.7em 2.2em 0.7em 0.75em;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.7em;
+  background: linear-gradient(160deg, #1b1c20, #131417);
+  animation: lead-in 0.7s var(--ease) backwards;
+  animation-delay: calc(0.6s + var(--i) * 0.07s);
+}
+
+@keyframes lead-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.lead b {
+  overflow: hidden;
+  color: var(--color-text);
+  font-size: 0.85em;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lead small {
+  overflow: hidden;
+  color: var(--color-text-dim);
+  font-size: 0.72em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Who owns the lead */
+.owner {
+  position: absolute;
+  top: 0.75em;
+  right: 0.7em;
+  width: 1.1em;
+  height: 1.1em;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 38%, #8b9097 0 24%, transparent 25%),
+    radial-gradient(ellipse 60% 44% at 50% 100%, #6d7279 0 96%, transparent 100%), #23262b;
+}
+
+/* Won: the one touch of green */
+.stage[data-won] .lead {
+  border-color: rgba(140, 198, 63, 0.45);
+}
+
+.stage[data-won] .lead small {
+  color: var(--color-accent);
+}
+
+/* ---------- The services: modules of one system ---------- */
+.modules {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background: linear-gradient(175deg, #17181b, #0b0c0e 70%);
+  transition: border-color 0.25s ease;
+}
+
+a.card:hover {
+  border-color: rgba(255, 255, 255, 0.32);
+}
+
+.preview {
+  display: block;
+  padding: 10px;
+  border-radius: 10px;
+  background:
+    radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1.2px) 0 0 / 14px 14px,
+    rgba(255, 255, 255, 0.02);
+}
+
+.preview svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 130px;
+}
+
+.title {
+  margin-top: 14px;
+  font-size: 1.125rem;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.text {
+  margin-top: 6px;
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.meta {
+  margin-top: var(--space-2);
+  font-size: var(--font-size-sm);
+}
+
+/* ---------- Tablets and phones ---------- */
+@media (max-width: 1024px) {
+  .modules {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .card {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: 4px 16px;
+    align-items: center;
+  }
+
+  .preview {
+    grid-row: span 3;
+  }
+
+  .title {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
+    min-height: 0;
+    padding-top: calc(var(--hero-top) + var(--space-5));
+    padding-bottom: var(--space-4);
+  }
+
+  .app {
+    justify-self: stretch;
+    width: 100%;
+    font-size: clamp(9px, 2.5vw, 12px);
+  }
+}
+
+/* Phones: three stages fit; the last one makes way */
+@media (max-width: 600px) {
+  .board {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .stage:nth-child(4) {
+    display: none;
+  }
+
+  .card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .preview {
+    grid-row: auto;
+  }
+
+  .title {
+    margin-top: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app,
+  .lead {
+    animation: none;
+  }
+}

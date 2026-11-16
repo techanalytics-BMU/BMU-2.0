@@ -35,6 +35,7 @@ import {
   indexable,
   industries,
   industriesUsing,
+  isCityService,
   isLocalIndustry,
   isLocalService,
   linkable,
@@ -162,6 +163,9 @@ const JOURNEY_STAGES: Record<ServiceSlug, number[]> = {
   photography: [0, 1],
   'video-production': [0, 1],
   'drone-shoots': [0, 1],
+  'crm-development': [2, 3],
+  'admin-panel-development': [2, 3],
+  'dashboard-development': [3],
 };
 
 // `abroad` swaps in the reworded texts for deliverables that name Indian platforms
@@ -489,8 +493,9 @@ export const serviceHub = (slug: ServiceSlug): PseoPage => {
     });
   }
 
-  const local = isLocalService(slug);
-  if (local) {
+  // Bengaluru's neighbourhoods for the local services; other cities, Dubai and abroad for those
+  // and business software
+  if (isLocalService(slug)) {
     sections.push(
       ...zoneSections('areas', (area) => ({
         label: `${service.title} in ${localities[area].name}`,
@@ -498,6 +503,8 @@ export const serviceHub = (slug: ServiceSlug): PseoPage => {
         live: indexable.serviceLocality(slug, area),
       }))
     );
+  }
+  if (isCityService(slug)) {
     const byCity = keep(
       CITY_PAGE_SLUGS.map((city) => ({
         label: `${service.title} in ${getCity(city).name}`,
@@ -567,7 +574,7 @@ export const serviceHub = (slug: ServiceSlug): PseoPage => {
     facts: [
       { label: 'Part of', value: service.group },
       { label: 'Tailored for', value: `${using.length} industries` },
-      ...(local
+      ...(isLocalService(slug)
         ? [{ label: 'Bengaluru areas', value: `${LOCALITY_PAGE_SLUGS.length} localities` }]
         : []),
       { label: 'We report on', value: service.reportsOn[0] },

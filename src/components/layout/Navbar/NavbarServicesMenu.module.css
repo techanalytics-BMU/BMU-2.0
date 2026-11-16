@@ -144,13 +144,13 @@
   box-shadow: 0 0 0 3px rgba(140, 198, 63, 0.18);
 }
 
-/* ---------- Bento grid: one tall card on the left, wide cards top-right and bottom-left ---------- */
+/* ---------- Bento grid: one tall card on the left, a wide card top-right, three along the bottom ---------- */
 .grid {
   display: grid;
   grid-template-areas:
     'tall wide wide'
     'tall c d'
-    'e e f';
+    'e f g';
   grid-template-columns: 1.22fr 1fr 1fr;
   grid-template-rows: minmax(92px, auto) minmax(86px, auto) minmax(102px, auto);
   gap: 8px;
@@ -178,6 +178,10 @@
 
 .card:nth-child(6) {
   grid-area: f;
+}
+
+.card:nth-child(7) {
+  grid-area: g;
 }
 
 /* Card: text on the left, chrome icon on the right */
@@ -324,9 +328,8 @@ a.card:focus-visible {
   transform: translateY(-50%) scale(1.06) rotate(-2deg);
 }
 
-/* Wide cards: a bigger icon */
-.card:nth-child(2) .icon,
-.card:nth-child(5) .icon {
+/* The wide card: a bigger icon */
+.card:nth-child(2) .icon {
   right: 6%;
   width: 86px;
 }

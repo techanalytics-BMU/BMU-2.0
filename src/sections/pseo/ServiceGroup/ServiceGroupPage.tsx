@@ -7,6 +7,7 @@ import PseoReveal from '../PseoTemplate/PseoReveal';
 import ServiceGroupBento from './ServiceGroupBento';
 import * as Brand from './ServiceGroupBrand';
 import * as Content from './ServiceGroupContent';
+import * as Crm from './ServiceGroupCrm';
 import * as Marketing from './ServiceGroupMarketing';
 import { pad, SectionHead, vars } from './ServiceGroupParts';
 import styles from './ServiceGroupPage.module.css';
@@ -22,6 +23,7 @@ const VIBES = {
   'social-and-personal-brand': Social,
   'marketing-and-visibility': Marketing,
   'content-and-production': Content,
+  'crm-and-business-software': Crm,
 };
 
 type Section = PseoPage['sections'][number];

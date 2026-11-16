@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { isService, localServices } from '@/lib/pseo/catalog';
+import { cityServices, isService } from '@/lib/pseo/catalog';
 import { pageMetadata } from '@/lib/pseo/metadata';
 import { serviceMarket } from '@/lib/pseo/pages';
 import PseoTemplate from '@/sections/pseo/PseoTemplate/PseoTemplate';
@@ -9,7 +9,7 @@ import PseoTemplate from '@/sections/pseo/PseoTemplate/PseoTemplate';
 type Props = { params: Promise<{ slug: string }> };
 
 export const dynamicParams = false;
-export const generateStaticParams = () => localServices.map((slug) => ({ slug }));
+export const generateStaticParams = () => cityServices.map((slug) => ({ slug }));
 
 const load = async ({ params }: Props) => {
   const { slug } = await params;

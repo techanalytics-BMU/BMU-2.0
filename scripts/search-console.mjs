@@ -4,32 +4,57 @@
 //   npm run search:status                 the last 28 days, against the 28 before
 //   npm run search:status -- --days 7     any number of days (Google keeps 16 months)
 //   npm run search:status -- --json       everything, as JSON
+//   npm run search:status -- --json --all  …with every page Google showed, not just the top 20
+//   npm run search:status -- --login      sign in with Google once (see "Sign in with Google" below)
 //
-// Needs, in .env.local (never committed):
-//   GOOGLE_SERVICE_ACCOUNT_EMAIL – a Google service account's client_email (…@….iam.gserviceaccount.com)
-//   GOOGLE_SERVICE_ACCOUNT_KEY   – its private_key, "-----BEGIN PRIVATE KEY-----\n…" (\n as written)
-//   SEARCH_CONSOLE_SITE          – optional; found by itself ('sc-domain:bmumarketing.in' or
-//                                  'https://www.bmumarketing.in/')
-// The service account has to be added to the Search Console property (Settings → Users and
-// permissions → Add user, Restricted), and the "Google Search Console API" enabled in its project.
+// Two ways to connect, both read-only, both kept in .env.local (never committed):
+//
+// 1. Sign in with Google (no key file – works where the organisation blocks service account keys)
+//    In Google Cloud (project "BMU Search Console", with the Google Search Console API enabled):
+//    Google Auth Platform → Audience: Internal → Clients → Create client → Desktop app → download its
+//    JSON. Then `npm run search:status -- --login` (it finds the newest client_secret*.json in
+//    Downloads, or pass its path after --login): the browser opens, you pick the Google account that
+//    can see bmumarketing.in in Search Console and Allow. It saves GOOGLE_OAUTH_CLIENT_ID,
+//    GOOGLE_OAUTH_CLIENT_SECRET and GOOGLE_OAUTH_REFRESH_TOKEN to .env.local.
+//
+// 2. A service account key
+//    GOOGLE_SERVICE_ACCOUNT_EMAIL – the service account's client_email (…@….iam.gserviceaccount.com)
+//    GOOGLE_SERVICE_ACCOUNT_KEY   – its private_key, "-----BEGIN PRIVATE KEY-----\n…" (\n as written)
+//    The service account must be added to the property (Settings → Users and permissions, Restricted).
+//
+//   SEARCH_CONSOLE_SITE – optional; found by itself ('sc-domain:bmumarketing.in' or
+//                         'https://www.bmumarketing.in/')
 
-import { createSign } from 'node:crypto';
-import { readFileSync } from 'node:fs';
+import { exec } from 'node:child_process';
+import { createHash, createSign, randomBytes } from 'node:crypto';
+import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { createServer } from 'node:http';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
 
 const DOMAIN = 'bmumarketing.in';
 const SCOPE = 'https://www.googleapis.com/auth/webmasters.readonly';
 const TOKEN_URL = 'https://oauth2.googleapis.com/token';
+const AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
 const API = 'https://searchconsole.googleapis.com/webmasters/v3';
+const ENV_FILE = '.env.local';
+
+// Problems print as one plain line (what's wrong and what to do), not a stack trace
+process.setUncaughtExceptionCaptureCallback((error) => {
+  console.error(`ERROR: ${error?.message ?? error}`);
+  process.exit(1);
+});
 
 // ---------- Settings ----------
 const args = process.argv.slice(2);
 const days = Math.max(1, Math.min(480, Number(args[args.indexOf('--days') + 1]) || 28));
 const asJson = args.includes('--json');
+const login = args.includes('--login');
 
-const env = (() => {
+const readEnv = () => {
   try {
     return Object.fromEntries(
-      readFileSync('.env.local', 'utf8')
+      readFileSync(ENV_FILE, 'utf8')
         .split(/\r?\n/)
         .filter((line) => /^[A-Z0-9_]+=/.test(line))
         .map((line) => {
@@ -40,41 +65,190 @@ const env = (() => {
   } catch {
     return {};
   }
-})();
-const email = (process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL ?? env.GOOGLE_SERVICE_ACCOUNT_EMAIL)?.trim();
-const key = (process.env.GOOGLE_SERVICE_ACCOUNT_KEY ?? env.GOOGLE_SERVICE_ACCOUNT_KEY)?.replace(/\\n/g, '\n').trim();
-const configuredSite = (process.env.SEARCH_CONSOLE_SITE ?? env.SEARCH_CONSOLE_SITE)?.trim();
+};
+let env = readEnv();
+const setting = (name) => (process.env[name] ?? env[name])?.trim() || undefined;
 
-if (!email || !key) {
-  console.log(`NOT CONNECTED – Search Console can't be read yet.
-Add GOOGLE_SERVICE_ACCOUNT_EMAIL and GOOGLE_SERVICE_ACCOUNT_KEY to .env.local:
-  1. console.cloud.google.com → a project → APIs & Services → Library → "Google Search Console API" → Enable
-  2. IAM & Admin → Service accounts → Create (no roles) → Keys → Add key → JSON (downloads a .json)
-  3. search.google.com/search-console → ${DOMAIN} → Settings → Users and permissions → Add user:
-     the .json's client_email, Restricted
-  4. .env.local: GOOGLE_SERVICE_ACCOUNT_EMAIL=<client_email>
-                 GOOGLE_SERVICE_ACCOUNT_KEY="<private_key>"`);
-  process.exit(2);
+/** Adds or replaces settings in .env.local, leaving every other line as it was */
+function saveEnv(values) {
+  const text = existsSync(ENV_FILE) ? readFileSync(ENV_FILE, 'utf8') : '';
+  const newline = text.includes('\r\n') ? '\r\n' : '\n';
+  const lines = text.split(/\r?\n/);
+  for (const [name, value] of Object.entries(values)) {
+    const at = lines.findIndex((line) => line.startsWith(`${name}=`));
+    if (at >= 0) lines[at] = `${name}=${value}`;
+    else {
+      if (lines.length && lines[lines.length - 1] === '') lines.pop();
+      lines.push(`${name}=${value}`, '');
+    }
+  }
+  writeFileSync(ENV_FILE, lines.join(newline));
+  env = readEnv();
 }
 
-// ---------- Google ----------
-async function accessToken() {
-  const now = Math.floor(Date.now() / 1000);
-  const encode = (value) => Buffer.from(JSON.stringify(value)).toString('base64url');
-  const unsigned = `${encode({ alg: 'RS256', typ: 'JWT' })}.${encode({ iss: email, scope: SCOPE, aud: TOKEN_URL, iat: now, exp: now + 3600 })}`;
-  let signature;
-  try {
-    signature = createSign('RSA-SHA256').update(unsigned).sign(key, 'base64url');
-  } catch {
-    throw new Error('The private key could not be read – GOOGLE_SERVICE_ACCOUNT_KEY should start with -----BEGIN PRIVATE KEY-----');
+const notConnected = () => {
+  console.log(`NOT CONNECTED – Search Console can't be read yet. Either:
+
+  Sign in with Google (no key file, recommended):
+    1. console.cloud.google.com → project "BMU Search Console" → Google Auth Platform
+       → Get started → app name, your email → Audience: Internal → Create
+    2. Clients → Create client → Application type: Desktop app → Create → Download JSON
+    3. npm run search:status -- --login   (browser opens → choose your account → Allow)
+
+  Or a service account key: GOOGLE_SERVICE_ACCOUNT_EMAIL and GOOGLE_SERVICE_ACCOUNT_KEY in .env.local,
+  with that email added in Search Console → ${DOMAIN} → Settings → Users and permissions.`);
+  process.exit(2);
+};
+
+// ---------- Sign in with Google, once ----------
+/** The newest Google OAuth client file in Downloads (client_secret_….json), or the path given */
+function findClientFile() {
+  const given = args[args.indexOf('--login') + 1];
+  if (given && !given.startsWith('--')) return given;
+  const downloads = join(homedir(), 'Downloads');
+  const files = existsSync(downloads)
+    ? readdirSync(downloads)
+        .filter((name) => /^client_secret.*\.json$/i.test(name))
+        .map((name) => join(downloads, name))
+        .sort((a, b) => statSync(b).mtimeMs - statSync(a).mtimeMs)
+    : [];
+  return files[0];
+}
+
+async function signIn() {
+  let client = { id: setting('GOOGLE_OAUTH_CLIENT_ID'), secret: setting('GOOGLE_OAUTH_CLIENT_SECRET') };
+  const file = findClientFile();
+  if (file) {
+    const json = JSON.parse(readFileSync(file, 'utf8'));
+    const details = json.installed ?? json.web;
+    if (!details?.client_id) throw new Error(`${file} isn't a Google OAuth client file (no client_id)`);
+    client = { id: details.client_id, secret: details.client_secret };
+    console.log(`Using the sign-in app from ${file}`);
   }
+  if (!client.id || !client.secret) {
+    throw new Error('No sign-in app found: download the Desktop app client JSON to Downloads (client_secret_….json), or pass its path after --login');
+  }
+
+  // PKCE and a state value, so only this sign-in can use the answer
+  const verifier = randomBytes(48).toString('base64url');
+  const challenge = createHash('sha256').update(verifier).digest('base64url');
+  const state = randomBytes(16).toString('hex');
+
+  const { code, redirectUri } = await new Promise((resolve, reject) => {
+    const server = createServer((request, response) => {
+      const url = new URL(request.url, 'http://127.0.0.1');
+      if (!url.searchParams.has('code') && !url.searchParams.has('error')) {
+        response.writeHead(404).end();
+        return;
+      }
+      const ok = url.searchParams.get('state') === state && url.searchParams.has('code');
+      response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      response.end(
+        `<body style="font-family:system-ui;background:#000;color:#fff;display:grid;place-items:center;height:100vh;margin:0"><p>${
+          ok ? 'Connected to Search Console – you can close this tab.' : 'Sign-in didn’t complete – go back to the terminal.'
+        }</p></body>`
+      );
+      server.close();
+      clearTimeout(timer);
+      if (ok) resolve({ code: url.searchParams.get('code'), redirectUri: `http://127.0.0.1:${server.address()?.port ?? port}` });
+      else reject(new Error(`Google sign-in was cancelled or refused (${url.searchParams.get('error') ?? 'state mismatch'})`));
+    });
+    let port = 0;
+    const timer = setTimeout(() => {
+      server.close();
+      reject(new Error('No answer from the browser within 5 minutes – run --login again'));
+    }, 5 * 60 * 1000);
+    server.listen(0, '127.0.0.1', () => {
+      port = server.address().port;
+      const authUrl = `${AUTH_URL}?${new URLSearchParams({
+        client_id: client.id,
+        redirect_uri: `http://127.0.0.1:${port}`,
+        response_type: 'code',
+        scope: SCOPE,
+        access_type: 'offline',
+        prompt: 'consent',
+        code_challenge: challenge,
+        code_challenge_method: 'S256',
+        state,
+      })}`;
+      console.log('Opening Google sign-in in your browser. If it doesn’t open, visit:\n' + authUrl);
+      const open =
+        process.platform === 'win32' ? `start "" "${authUrl}"` : process.platform === 'darwin' ? `open "${authUrl}"` : `xdg-open "${authUrl}"`;
+      exec(open);
+    });
+  });
+
   const response = await fetch(TOKEN_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({ grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer', assertion: `${unsigned}.${signature}` }),
+    body: new URLSearchParams({
+      grant_type: 'authorization_code',
+      code,
+      client_id: client.id,
+      client_secret: client.secret,
+      redirect_uri: redirectUri,
+      code_verifier: verifier,
+    }),
   });
   const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(`Google refused the service account: ${data.error_description || data.error || response.status}`);
+  if (!response.ok || !data.refresh_token) {
+    throw new Error(`Google didn’t complete the sign-in: ${data.error_description || data.error || 'no refresh token'}`);
+  }
+  saveEnv({
+    GOOGLE_OAUTH_CLIENT_ID: client.id,
+    GOOGLE_OAUTH_CLIENT_SECRET: client.secret,
+    GOOGLE_OAUTH_REFRESH_TOKEN: data.refresh_token,
+  });
+  console.log('Signed in – saved to .env.local (GOOGLE_OAUTH_CLIENT_ID / _SECRET / _REFRESH_TOKEN).\n');
+}
+
+// ---------- Google ----------
+if (login) await signIn();
+
+const account = {
+  email: setting('GOOGLE_SERVICE_ACCOUNT_EMAIL'),
+  key: setting('GOOGLE_SERVICE_ACCOUNT_KEY')?.replace(/\\n/g, '\n'),
+};
+const oauth = {
+  id: setting('GOOGLE_OAUTH_CLIENT_ID'),
+  secret: setting('GOOGLE_OAUTH_CLIENT_SECRET'),
+  refresh: setting('GOOGLE_OAUTH_REFRESH_TOKEN'),
+};
+const configuredSite = setting('SEARCH_CONSOLE_SITE');
+const signedIn = Boolean(oauth.id && oauth.secret && oauth.refresh);
+if (!signedIn && !(account.email && account.key)) notConnected();
+const who = signedIn ? 'the signed-in Google account' : account.email;
+
+async function accessToken() {
+  let body;
+  if (signedIn) {
+    body = new URLSearchParams({
+      grant_type: 'refresh_token',
+      refresh_token: oauth.refresh,
+      client_id: oauth.id,
+      client_secret: oauth.secret,
+    });
+  } else {
+    const now = Math.floor(Date.now() / 1000);
+    const encode = (value) => Buffer.from(JSON.stringify(value)).toString('base64url');
+    const unsigned = `${encode({ alg: 'RS256', typ: 'JWT' })}.${encode({ iss: account.email, scope: SCOPE, aud: TOKEN_URL, iat: now, exp: now + 3600 })}`;
+    let signature;
+    try {
+      signature = createSign('RSA-SHA256').update(unsigned).sign(account.key, 'base64url');
+    } catch {
+      throw new Error('The private key could not be read – GOOGLE_SERVICE_ACCOUNT_KEY should start with -----BEGIN PRIVATE KEY-----');
+    }
+    body = new URLSearchParams({ grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer', assertion: `${unsigned}.${signature}` });
+  }
+  const response = await fetch(TOKEN_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(
+      signedIn && data.error === 'invalid_grant'
+        ? 'The Google sign-in has expired or was removed – run: npm run search:status -- --login'
+        : `Google refused the sign-in: ${data.error_description || data.error || response.status}`
+    );
+  }
   return data.access_token;
 }
 
@@ -89,7 +263,7 @@ async function call(path, body) {
   if (!response.ok) {
     throw new Error(
       response.status === 403
-        ? `The service account can't see the site – add ${email} in Search Console → Settings → Users and permissions. (${data.error?.message ?? ''})`
+        ? `${who} can't see the site in Search Console. (${data.error?.message ?? ''})`
         : `Search Console: ${data.error?.message ?? response.status}`
     );
   }
@@ -103,7 +277,7 @@ async function findSite() {
   const found = options.find((url) => siteEntry.some((entry) => entry.siteUrl === url));
   if (!found) {
     throw new Error(
-      `The service account can see ${siteEntry.map((entry) => entry.siteUrl).join(', ') || 'no properties'} – not ${DOMAIN}. Add it to the ${DOMAIN} property.`
+      `${who} can see ${siteEntry.map((entry) => entry.siteUrl).join(', ') || 'no Search Console properties'} – not ${DOMAIN}.`
     );
   }
   return found;
@@ -198,7 +372,12 @@ const movers = pages
       .map((page) => ({ ...page, clicks: 0, impressions: 0, change: -page.clicks }))
   );
 
-const queryRows = (queries.rows ?? []).map((row) => ({ query: row.keys[0], clicks: row.clicks, impressions: row.impressions, ctr: row.ctr, position: row.position }));
+// Searches people typed – most clicks, then most impressions; bots' searches (full of site:/intitle:
+// filters) left out
+const queryRows = (queries.rows ?? [])
+  .map((row) => ({ query: row.keys[0], clicks: row.clicks, impressions: row.impressions, ctr: row.ctr, position: row.position }))
+  .filter((row) => !/(^|[\s(])-?(site|intitle|inurl|intext):/i.test(row.query))
+  .sort((a, b) => b.clicks - a.clicks || b.impressions - a.impressions);
 const report = {
   site,
   dates: { from, to, previousFrom, previousTo, days },
@@ -208,6 +387,8 @@ const report = {
   pagesSeenBefore: previousPages.size,
   kinds: [...kinds.values()].sort((a, b) => b.impressions - a.impressions),
   topPages: pages.slice(0, 20),
+  // every page Google showed, with --json --all (for audits)
+  ...(args.includes('--all') ? { pages } : {}),
   rising: movers.filter((page) => page.change > 0).sort((a, b) => b.change - a.change).slice(0, 8),
   falling: movers.filter((page) => page.change < 0).sort((a, b) => a.change - b.change).slice(0, 8),
   topQueries: queryRows.slice(0, 25),

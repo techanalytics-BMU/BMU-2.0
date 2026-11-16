@@ -38,6 +38,30 @@ const nextConfig: NextConfig = {
       },
       // Articles moved from /work/<slug> to /blog/<slug> – old links keep working
       { source: '/work/:slug', destination: '/blog/:slug', permanent: true },
+      // Addresses from the old site that Google still lists (Search Console, Nov 2026) – each to its
+      // nearest page today, so what they earned isn't lost
+      { source: '/store/:path*', destination: '/services', permanent: true },
+      { source: '/products/:path*', destination: '/services', permanent: true },
+      { source: '/bundles', destination: '/services', permanent: true },
+      { source: '/partners', destination: '/about', permanent: true },
+      { source: '/case-studies', destination: '/work', permanent: true },
+      { source: '/industries/education', destination: '/industries/education-and-schools', permanent: true },
+      { source: '/industries/hotels-resorts', destination: '/industries/hospitality-and-hotels', permanent: true },
+      { source: '/industries/healthcare', destination: '/industries/healthcare-and-hospitals', permanent: true },
+      { source: '/services/social-content', destination: '/services/social-and-personal-brand', permanent: true },
+      { source: '/services/seo-local-search', destination: '/services/local-seo', permanent: true },
+      {
+        source: '/services/marketing-and-visibility/digital-marketing',
+        destination: '/services/digital-marketing',
+        permanent: true,
+      },
+      {
+        source: '/services/content-and-production/business-video-shoots',
+        destination: '/services/video-production',
+        permanent: true,
+      },
+      // …and any other old /services/<group>/<offer> address, to its group's page
+      { source: '/services/:group/:offer', destination: '/services/:group', permanent: true },
       {
         source: '/:service/bengaluru/krishnarajapuram',
         destination: '/:service/bengaluru/kr-puram',
@@ -49,6 +73,15 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
     ];
+  },
+  // /sitemap.xml is the sitemap index (src/app/sitemap-index.xml) – checked before the app's own
+  // routes, so it never meets the split sitemaps
+  async rewrites() {
+    return {
+      beforeFiles: [{ source: '/sitemap.xml', destination: '/sitemap-index.xml' }],
+      afterFiles: [],
+      fallback: [],
+    };
   },
 };
 

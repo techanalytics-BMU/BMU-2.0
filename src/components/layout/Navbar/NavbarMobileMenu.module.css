@@ -349,10 +349,23 @@
   font-weight: 600;
 }
 
+/* A last tile alone on its row stretches across it */
+.services > li:last-child:nth-child(3n + 1) {
+  grid-column: 1 / -1;
+}
+
 /* Very narrow phones: two a row */
 @media (max-width: 350px) {
   .services {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .services > li:last-child:nth-child(3n + 1) {
+    grid-column: auto;
+  }
+
+  .services > li:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
   }
 }
 

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7f8f9"/>
+      <stop offset=".22" stop-color="#a3a6ab"/>
+      <stop offset=".5" stop-color="#2a2b2e"/>
+      <stop offset=".78" stop-color="#94979c"/>
+      <stop offset="1" stop-color="#dcdde0"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2d2e32"/>
+      <stop offset=".5" stop-color="#121315"/>
+      <stop offset="1" stop-color="#050506"/>
+    </linearGradient>
+    <linearGradient id="stand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f1f2f3"/>
+      <stop offset=".4" stop-color="#a9acb1"/>
+      <stop offset=".75" stop-color="#55585d"/>
+      <stop offset="1" stop-color="#2b2c2f"/>
+    </linearGradient>
+    <linearGradient id="glyph" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset=".42" stop-color="#c3c6ca"/>
+      <stop offset=".55" stop-color="#4d5055"/>
+      <stop offset="1" stop-color="#e2e3e6"/>
+    </linearGradient>
+    <linearGradient id="lime" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ecffc4"/>
+      <stop offset=".5" stop-color="#a6dc58"/>
+      <stop offset="1" stop-color="#6a9f2c"/>
+    </linearGradient>
+    <radialGradient id="screenGlow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#8cc63f" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#8cc63f" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="shadow">
+      <stop offset="0" stop-color="#000" stop-opacity=".8"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <ellipse cx="104" cy="176" rx="84" ry="11" fill="url(#shadow)"/>
+  <!-- The stand -->
+  <path d="M86 146 L122 143 L134 168 L76 172 Z" fill="url(#stand)"/>
+  <path d="M76 172 L134 168 L134 172 L76 176 Z" fill="#1d1e21"/>
+  <!-- The tablet: a chrome frame, a dark screen -->
+  <path d="M38 33 L164 22 Q172 21 173 29 L181 134 Q182 142 174 143 L44 154 Q36 155 35 147 L30 41 Q30 34 38 33 Z" fill="url(#frame)"/>
+  <path d="M42 41 L166 31 L173 133 L47 144 Z" fill="url(#screen)"/>
+  <ellipse cx="106" cy="88" rx="50" ry="36" fill="url(#screenGlow)"/>
+  <path d="M42 41 L112 35 L60 142 L47 144 Z" fill="#ffffff" opacity=".05"/>
+  <!-- On screen: a bar chart rising to a lime bar, and pipeline cards -->
+  <g transform="matrix(1 -0.082 0.05 1 52 46)">
+    <rect x="4" y="54" width="13" height="28" rx="2.5" fill="url(#glyph)" opacity=".85"/>
+    <rect x="23" y="40" width="13" height="42" rx="2.5" fill="url(#glyph)" opacity=".85"/>
+    <rect x="42" y="20" width="13" height="62" rx="2.5" fill="url(#lime)" filter="url(#glow)"/>
+    <path d="M4 88 H58" stroke="#ffffff" stroke-opacity=".25" stroke-width="1.2"/>
+    <rect x="70" y="16" width="38" height="12" rx="3" fill="#ffffff" opacity=".22"/>
+    <rect x="70" y="34" width="38" height="12" rx="3" fill="#ffffff" opacity=".14"/>
+    <rect x="70" y="52" width="38" height="12" rx="3" fill="#ffffff" opacity=".14"/>
+    <rect x="70" y="70" width="38" height="12" rx="3" fill="none" stroke="url(#lime)" stroke-width="2"/>
+    <circle cx="101" cy="76" r="2.6" fill="#a6dc58"/>
+  </g>
+  <path d="M38 33 L164 22" stroke="#ffffff" stroke-opacity=".5" stroke-width="1"/>
+</svg>

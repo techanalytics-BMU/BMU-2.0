@@ -393,6 +393,62 @@ const ART: Record<string, React.ReactNode> = {
       <circle className={s.accent} cx="120" cy="70" r="3" />
     </>
   ),
+  // A sales pipeline: four stages, leads moving right, one won
+  'crm-development': (
+    <>
+      {[22, 72, 122, 172].map((x, i) => (
+        <g key={x}>
+          <Bar x={x} y={18} w={i === 3 ? 26 : 34} bright={i === 3} />
+          <rect className={s.panel} x={x} y="30" width="46" height="26" rx="5" />
+          <Bar x={x + 7} y={39} w={26} />
+          {i < 3 && <rect className={s.panel} x={x} y="62" width="46" height="26" rx="5" />}
+          {i < 3 && <Bar x={x + 7} y={71} w={20} />}
+          {i === 0 && <rect className={s.panel} x={x} y="94" width="46" height="26" rx="5" />}
+        </g>
+      ))}
+      <rect className={s.accentLine} x="172" y="30" width="46" height="26" rx="5" />
+      <circle className={s.accent} cx="210" cy="43" r="3.5" />
+      <path className={s.dash} d="M70 43H72M120 43H122M170 43H172" />
+    </>
+  ),
+  // A back office: a menu, a table of records and one being edited
+  'admin-panel-development': (
+    <>
+      <rect className={s.panel} x="22" y="12" width="196" height="120" rx="8" />
+      <rect className={s.dim} x="22" y="12" width="40" height="120" rx="8" />
+      <Bar x={31} y={28} w={22} bright />
+      <Bar x={31} y={42} w={18} />
+      <Bar x={31} y={54} w={22} />
+      <Bar x={31} y={66} w={16} />
+      {[30, 52, 74, 96].map((y, i) => (
+        <g key={y}>
+          <rect className={i === 1 ? s.accentLine : s.panel} x="72" y={y} width="136" height="16" rx="4" />
+          <Bar x={80} y={y + 6} w={40} bright={i === 1} />
+          <Bar x={130} y={y + 6} w={28} />
+          <circle className={i === 1 ? s.accent : s.dim} cx="196" cy={y + 8} r="3" />
+        </g>
+      ))}
+      <Bar x={72} y={118} w={44} />
+    </>
+  ),
+  // A live dashboard: two numbers, a trend and a set of bars
+  'dashboard-development': (
+    <>
+      <rect className={s.panel} x="22" y="12" width="94" height="40" rx="6" />
+      <rect className={s.panel} x="124" y="12" width="94" height="40" rx="6" />
+      <Bar x={32} y={22} w={30} />
+      <rect className={s.bright} x="32" y="32" width="44" height="9" rx="3" />
+      <Bar x={134} y={22} w={26} />
+      <rect className={s.bright} x="134" y="32" width="36" height="9" rx="3" />
+      <rect className={s.panel} x="22" y="60" width="120" height="70" rx="6" />
+      <path className={s.line} d="M32 116L52 102L72 108L94 86L116 92L132 74" />
+      <circle className={s.accent} cx="132" cy="74" r="3.5" />
+      <rect className={s.panel} x="150" y="60" width="68" height="70" rx="6" />
+      {[0, 1, 2, 3].map((i) => (
+        <rect key={i} className={i === 3 ? s.accent : s.dim} x={160 + i * 14} y={120 - [24, 36, 30, 46][i]} width="8" height={[24, 36, 30, 46][i]} rx="2" />
+      ))}
+    </>
+  ),
 };
 
 export default function ServiceGroupArt({ slug, className }: { slug: string; className?: string }) {

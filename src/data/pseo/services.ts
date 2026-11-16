@@ -2507,4 +2507,261 @@ export const services: Record<ServiceSlug, Service> = {
       'For a business serving one neighbourhood, aerial footage shows exactly where you are and what’s around you – the main road, nearby landmarks and how easy it is to reach, which matters most for property projects, schools, hospitals and event venues. Because parts of the city fall in restricted airspace near airports and defence land, we check this location’s zone before confirming a shoot date.',
     related: ['video-production', 'photography', 'meta-ads', 'social-media-management'],
   },
+  'crm-development': {
+    slug: 'crm-development',
+    name: 'CRM development',
+    title: 'CRM Development',
+    agencyNoun: 'CRM development company',
+    group: 'CRM & Business Software',
+    summary:
+      'Custom CRMs that pull every lead into one place, assign it, remind your team to follow up and show what converts.',
+    intro:
+      'A CRM is where every enquiry lives – from the website, ads, WhatsApp, calls and portals like IndiaMART – with who owns it, what was said and what happens next. We build CRMs around how your team actually sells: your stages, your follow-up rules and your reports, on a phone as well as a laptop.',
+    whyItMatters:
+      'Without one, leads sit in inboxes, WhatsApp chats and personal phones, follow-ups depend on memory and nobody can say which source or salesperson actually closes business. Off-the-shelf CRMs often fail for the opposite reason – they’re built for someone else’s process, so the team stops updating them.',
+    deliverables: [
+      {
+        title: 'Sales process map',
+        text: 'Your lead sources, pipeline stages, follow-up rules and who does what, written down and agreed before anything is built.',
+      },
+      {
+        title: 'Lead capture from every source',
+        text: 'Website forms, Google and Meta lead ads, WhatsApp, calls and portals such as IndiaMART and JustDial flowing into one list – no copy-pasting.',
+      },
+      {
+        title: 'Pipeline, tasks and reminders',
+        text: 'Stages that match your sales process, automatic lead assignment, follow-up reminders and a full history of calls, visits and messages.',
+      },
+      {
+        title: 'Quotes and WhatsApp templates',
+        text: 'Quotations, proposals and approved WhatsApp and email templates sent from inside the CRM, so every reply is quick and consistent.',
+      },
+      {
+        title: 'Reports and dashboards',
+        text: 'Leads by source, conversion by salesperson, pipeline value and overdue follow-ups – on one screen for the owner and managers.',
+      },
+      {
+        title: 'Integrations, training and support',
+        text: 'Connections to Tally, payment links and your website, training for every role and a support period after launch.',
+      },
+    ],
+    process: [
+      {
+        title: 'Map how you sell',
+        text: 'We sit with your sales team, list every lead source and stage, and agree what the first version must do.',
+      },
+      {
+        title: 'Design the screens',
+        text: 'We design the lead list, pipeline and lead page as a clickable prototype your team tries before we build.',
+      },
+      {
+        title: 'Build and connect',
+        text: 'We build in short sprints, connect your lead sources and move your existing leads across from sheets or the old system.',
+      },
+      {
+        title: 'Launch and train',
+        text: 'We train each role, watch the first weeks of real use and adjust stages, rules and reports from what we see.',
+      },
+    ],
+    timeline:
+      'A focused CRM for one sales team usually takes 6–12 weeks, depending on lead sources and integrations. The difference shows in the first month of use, when every enquiry has an owner and a next step.',
+    reportsOn: ['Leads by source', 'Response time to new leads', 'Conversion by salesperson', 'Overdue follow-ups'],
+    faqs: [
+      {
+        q: 'Should we build a custom CRM or use Zoho, HubSpot or Salesforce?',
+        a: 'If an off-the-shelf CRM fits your process with light setup, use it – it’s quicker and cheaper. A custom CRM makes sense when your sales steps, approvals or reports are specific enough that the team keeps working around the software, or when per-user licence fees add up for a large team.',
+      },
+      {
+        q: 'Can it capture leads from IndiaMART, JustDial and our website automatically?',
+        a: 'Yes. Most portals, ad platforms and website forms can send leads straight into the CRM, and calls and WhatsApp enquiries can be logged with a tap. The aim is that nobody copies a lead by hand.',
+      },
+      {
+        q: 'Can our salespeople use it on their phones?',
+        a: 'Yes. It works in the phone’s browser and can be installed like an app, so field staff can update a lead right after a call or visit, with the time and location recorded if you want that.',
+      },
+      {
+        q: 'What happens to our existing leads and data?',
+        a: 'We import your current spreadsheets or the export from your old system, clean up duplicates and map the fields, so the team starts with its full history rather than an empty CRM.',
+      },
+    ],
+    localAngle:
+      'For a business serving one neighbourhood – a clinic, coaching centre, showroom or service company – the CRM is usually simple: every walk-in, call and WhatsApp enquiry logged, a reminder to follow up and a weekly view of where enquiries came from. Staff can update it from the front desk or a phone in a few seconds.',
+    related: ['dashboard-development', 'admin-panel-development', 'whatsapp-automation', 'marketing-automation'],
+    abroad: {
+      'Lead capture from every source':
+        'Website forms, Google and Meta lead ads, WhatsApp, calls and the directories your buyers use, flowing into one list – no copy-pasting.',
+      'Integrations, training and support':
+        'Connections to your accounting software, payment links and your website, training for every role and a support period after launch.',
+    },
+  },
+  'admin-panel-development': {
+    slug: 'admin-panel-development',
+    name: 'admin panel development',
+    title: 'Admin Panel Development',
+    agencyNoun: 'admin panel development company',
+    group: 'CRM & Business Software',
+    summary:
+      'Back-office admin panels to manage products, orders, bookings, users and staff roles – built for your website or app.',
+    intro:
+      'An admin panel is the back office of a website or app – where your team adds products, updates prices, approves orders, manages bookings, members or students, and controls who can see what. We build admin panels around the jobs your staff do every day, so routine work takes a few clicks instead of a developer.',
+    whyItMatters:
+      'When the back office is a spreadsheet, a WhatsApp group or a developer’s inbox, simple changes wait days, mistakes creep into prices and stock, and nobody knows who changed what. A panel that’s hard to use ends the same way – staff avoid it and work around it.',
+    deliverables: [
+      {
+        title: 'Roles and permissions',
+        text: 'Separate access for owners, managers, staff and partners, so each person sees and edits only their part.',
+      },
+      {
+        title: 'Catalogue, orders and bookings',
+        text: 'Screens to manage products, prices, stock, orders, bookings or slots – whatever your business runs on – with search and filters.',
+      },
+      {
+        title: 'Users and customers',
+        text: 'Customer, member or student records with history, notes and status, plus approvals where your process needs them.',
+      },
+      {
+        title: 'Bulk upload and export',
+        text: 'Import products or records from Excel and export any list for accounts, GST filing or reporting.',
+      },
+      {
+        title: 'Audit log and security',
+        text: 'A record of who changed what and when, secure logins and data access limited by role.',
+      },
+      {
+        title: 'Reports and documentation',
+        text: 'The numbers your team checks daily, plus a short guide so new staff can use the panel from their first day.',
+      },
+    ],
+    process: [
+      {
+        title: 'List the daily jobs',
+        text: 'We note every task your staff do in the back office today and who does it, and decide what the panel must handle first.',
+      },
+      {
+        title: 'Design the screens',
+        text: 'We design the main lists, forms and approval steps and test them with the people who’ll use them.',
+      },
+      {
+        title: 'Build and connect',
+        text: 'We build the panel, connect it to your website, app or database and move existing data across.',
+      },
+      {
+        title: 'Launch and hand over',
+        text: 'We go live, train your team, fix what real use turns up and hand over documentation.',
+      },
+    ],
+    timeline:
+      'A panel for one website or app usually takes 4–10 weeks, depending on the number of screens, roles and integrations. Larger platforms are built in phases, starting with the screens staff use most.',
+    reportsOn: ['Routine jobs moved into the panel', 'Time per routine task', 'Errors and corrections', 'Active staff users'],
+    faqs: [
+      {
+        q: 'Can you build an admin panel for a website or app we already have?',
+        a: 'Usually, yes. We review how the existing site or app stores its data and build the panel on top of it, or alongside it, without rebuilding what already works.',
+      },
+      {
+        q: 'Can different staff get different access?',
+        a: 'Yes. Roles decide who can view, edit, approve or export each section – for example, store staff update stock while only managers change prices.',
+      },
+      {
+        q: 'Will we need a developer for everyday changes?',
+        a: 'No. Products, prices, banners, content, users and settings are all managed from the panel. Developers are only needed for new features.',
+      },
+      {
+        q: 'Is our data safe?',
+        a: 'Logins are secured, every action is logged, access is limited by role, and data is backed up on the cloud host you choose.',
+      },
+    ],
+    localAngle:
+      'For a business serving one neighbourhood – a restaurant, salon, clinic or coaching centre – the panel is often small: today’s orders or appointments, the menu or price list, offers and customer details, all updated from a phone at the counter.',
+    related: ['crm-development', 'dashboard-development', 'web-apps', 'website-development'],
+    abroad: {
+      'Bulk upload and export':
+        'Import products or records from Excel and export any list for your accountant, tax filing or reporting.',
+    },
+  },
+  'dashboard-development': {
+    slug: 'dashboard-development',
+    name: 'dashboard development',
+    title: 'Dashboard Development',
+    agencyNoun: 'dashboard development company',
+    group: 'CRM & Business Software',
+    summary:
+      'Live business dashboards that bring sales, collections, production and stock numbers from your systems into one screen.',
+    intro:
+      'A business dashboard puts the numbers you check every day – sales, collections, orders, production, stock, leads – on one screen, updated automatically from the systems you already use, such as Tally, your CRM, Google Sheets or your online store. We build dashboards for owners, managers and branches, each seeing the numbers they’re responsible for.',
+    whyItMatters:
+      'Most businesses get their numbers from someone compiling Excel files at the end of the week, so problems show up after they’ve cost money and different teams quote different figures. A dashboard nobody trusts or understands is just as bad, which is why we start from the decisions it has to support.',
+    deliverables: [
+      {
+        title: 'KPI plan',
+        text: 'The numbers that matter for each role, how each one is calculated and where its data comes from, agreed before building.',
+      },
+      {
+        title: 'Data connections',
+        text: 'Automatic feeds from Tally, your CRM, Google Sheets, POS, online store, ad accounts or databases – no manual copying.',
+      },
+      {
+        title: 'Dashboard design',
+        text: 'Clear charts and tables designed for quick reading, with filters by date, branch, product or salesperson.',
+      },
+      {
+        title: 'Role-based views',
+        text: 'An owner’s overview, manager views and branch or plant views, each limited to what that person needs.',
+      },
+      {
+        title: 'Alerts and scheduled reports',
+        text: 'A WhatsApp or email summary each morning, and alerts when a number crosses a limit you set.',
+      },
+      {
+        title: 'Phone, laptop and TV',
+        text: 'Dashboards that work on the owner’s phone and on a TV screen on the shop floor or in the office.',
+      },
+    ],
+    process: [
+      {
+        title: 'Agree the questions',
+        text: 'We list the decisions each person makes and the numbers they need, and check where that data lives today.',
+      },
+      {
+        title: 'Connect and clean the data',
+        text: 'We connect the sources, fix mismatched names and codes, and check the totals against your own reports.',
+      },
+      {
+        title: 'Design and build',
+        text: 'We design the views, test them with the people who’ll use them and build the final dashboards.',
+      },
+      {
+        title: 'Launch and refine',
+        text: 'We roll out by role, set up alerts and summaries, and adjust after the first few weeks of use.',
+      },
+    ],
+    timeline:
+      'A first set of dashboards usually takes 3–8 weeks, depending on how many systems feed it and how clean the data is. Connecting messy sources takes the most time, so we start with the one or two that matter most.',
+    reportsOn: ['Data sources connected', 'Refresh time', 'Weekly active users', 'Alerts sent'],
+    faqs: [
+      {
+        q: 'Can a dashboard pull data from Tally?',
+        a: 'Yes. Tally data can be synced to the dashboard on a schedule, so sales, receivables and stock figures update without anyone exporting reports by hand.',
+      },
+      {
+        q: 'Do we need to replace our existing software?',
+        a: 'No. Dashboards sit on top of what you already use – Tally, a CRM, spreadsheets, an online store or a database – and bring the numbers together.',
+      },
+      {
+        q: 'Should we use Power BI, Looker Studio or a custom dashboard?',
+        a: 'Power BI or Looker Studio work well when your data is already tidy and your team is comfortable with them. A custom dashboard makes sense when you need it inside your own app or portal, want simpler screens for non-technical staff, or need alerts and logic those tools don’t handle well.',
+      },
+      {
+        q: 'How up to date are the numbers?',
+        a: 'That depends on the source – some update every few minutes, others on a schedule such as hourly or overnight. We agree a refresh time for each number at the start.',
+      },
+    ],
+    localAngle:
+      'For a business with one or two outlets – a restaurant, clinic, retail store or service centre – a dashboard is usually one screen on the owner’s phone: today’s sales or appointments, collections, top items and pending payments, compared with last week.',
+    related: ['crm-development', 'admin-panel-development', 'web-apps', 'performance-marketing'],
+    abroad: {
+      'Data connections':
+        'Automatic feeds from your accounting software, CRM, Google Sheets, POS, online store, ad accounts or databases – no manual copying.',
+    },
+  },
 };

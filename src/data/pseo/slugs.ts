@@ -3,7 +3,7 @@
 // (generated – re-run the generator rather than editing these lists by hand). Content for each is
 // keyed by these same slugs, so a typo anywhere is a type error.
 
-// 29 services, grouped as in the navbar’s Services menu
+// 32 services, grouped as in the navbar’s Services menu
 export const SERVICE_SLUGS = [
   'seo',
   'local-seo',
@@ -34,6 +34,9 @@ export const SERVICE_SLUGS = [
   'photography',
   'video-production',
   'drone-shoots',
+  'crm-development',
+  'admin-panel-development',
+  'dashboard-development',
 ] as const;
 
 // The 10 services on the sheet’s "BMU Services" tab – these get a page in every Bengaluru
@@ -49,6 +52,14 @@ export const LOCAL_SERVICE_SLUGS = [
   'content-marketing',
   'google-business-profile',
   'instagram-marketing',
+] as const satisfies readonly (typeof SERVICE_SLUGS)[number][];
+
+// Business software (not on the sheet): a page in every Indian city, Dubai and its areas and the
+// cities abroad – but not in Bengaluru's neighbourhoods, which nobody searches software by
+export const CITY_SERVICE_SLUGS = [
+  'crm-development',
+  'admin-panel-development',
+  'dashboard-development',
 ] as const satisfies readonly (typeof SERVICE_SLUGS)[number][];
 
 // The 58 industries on the sheet

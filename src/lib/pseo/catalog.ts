@@ -15,6 +15,7 @@ import { LOCALITY_PAGE_SLUGS, localities, type PagedLocalitySlug } from '@/data/
 import { services } from '@/data/pseo/services';
 import {
   BUSINESS_SLUGS,
+  CITY_SERVICE_SLUGS,
   INDUSTRY_SLUGS,
   LOCAL_SERVICE_SLUGS,
   SERVICE_SLUGS,
@@ -55,6 +56,12 @@ export type AreaSlug = PagedLocalitySlug;
 export const localServices: readonly LocalServiceSlug[] = LOCAL_SERVICE_SLUGS;
 export const isLocalService = (slug: ServiceSlug): slug is LocalServiceSlug =>
   (LOCAL_SERVICE_SLUGS as readonly string[]).includes(slug);
+
+// Services with a page in every Indian city, in Dubai and its areas and in the cities abroad: the
+// local services, plus business software (CRM, admin panels, dashboards), which skips Bengaluru's
+// neighbourhoods
+export const cityServices: readonly ServiceSlug[] = [...LOCAL_SERVICE_SLUGS, ...CITY_SERVICE_SLUGS];
+export const isCityService = (slug: ServiceSlug) => (cityServices as readonly string[]).includes(slug);
 
 // Industries that also get a page per Bengaluru locality – the ones people look for nearby
 export const LOCAL_INDUSTRIES = [
@@ -98,9 +105,9 @@ export const exists = {
     businessChannelsOf(business).some((channel) => channel.service === service),
   serviceLocality: (service: ServiceSlug) => isLocalService(service),
   industryLocality: (industry: IndustrySlug) => isLocalIndustry(industry),
-  serviceCity: (service: ServiceSlug, city: CitySlug) => isLocalService(service) && city in cities,
-  serviceMarket: (service: ServiceSlug) => isLocalService(service),
-  serviceDubaiArea: (service: ServiceSlug) => isLocalService(service),
+  serviceCity: (service: ServiceSlug, city: CitySlug) => isCityService(service) && city in cities,
+  serviceMarket: (service: ServiceSlug) => isCityService(service),
+  serviceDubaiArea: (service: ServiceSlug) => isCityService(service),
 };
 
 // ---------- Indexing ----------
@@ -191,12 +198,12 @@ export const catalog = (): CatalogEntry[] => {
       )
     )
   );
-  localServices.forEach((service) =>
+  cityServices.forEach((service) =>
     CITY_PAGE_SLUGS.forEach((city) =>
       add('service-city', paths.serviceCity(service, city), indexable.serviceCity(service, city))
     )
   );
-  localServices.forEach((service) => {
+  cityServices.forEach((service) => {
     add(
       'service-dubai',
       paths.serviceMarket(service, 'dubai'),
@@ -210,7 +217,7 @@ export const catalog = (): CatalogEntry[] => {
       )
     );
   });
-  localServices.forEach((service) =>
+  cityServices.forEach((service) =>
     OTHER_MARKET_SLUGS.forEach((market) =>
       add(
         'service-international',

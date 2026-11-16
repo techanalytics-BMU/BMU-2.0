@@ -89,6 +89,14 @@ export const industriesPart3 = {
         service: 'whatsapp-automation',
         why: 'Survey reminders, quote follow-ups, installation updates and panel-cleaning and service reminders on WhatsApp keep a slow decision moving and open referral conversations later.',
       },
+      {
+        service: 'crm-development',
+        why: 'Every rooftop lead is tracked from roof survey to sized quotation, revisions, subsidy paperwork, BESCOM net-metering and commissioning, so none stalls unnoticed. Factory and housing-society proposals keep each decision-maker on file through months of approval, sub-dealer orders are tracked for inverter and battery dealers, and AMC visits are booked after handover.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'An installer’s order book lives in the CRM, its payments in Tally and its commissioned plants’ generation in inverter portals. Brought together, they show the owner kW sold, installations held up by net-metering or subsidy approvals and money due – and flag any rooftop producing fewer units than expected before the client calls.',
+      },
     ],
     seasonality:
       'Enquiries rise before and through summer, when bills and power cuts peak, and inverter and battery sales jump during outages. Commercial buyers often push orders through before 31 March, installation work slows in the monsoon, and every change to subsidy schemes creates a burst of interest.',
@@ -204,6 +212,14 @@ export const industriesPart3 = {
       {
         service: 'ai-chatbots',
         why: 'A chatbot on the website and WhatsApp that quotes standard jobs, checks the PIN code and books a slot captures enquiries late in the evening, when no one is free to answer.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Calls, missed calls, WhatsApp messages and website bookings each become a job with the address, problem and quoted price, assigned to the nearest free technician. Payment links go out on completion, AMC and next-service dates are scheduled, and the owner sees which areas and services bring direct repeat customers rather than aggregator jobs.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'A home services business runs on technicians, jobs and time slots – who is free in which area, and which job is waiting for a part. An admin panel that assigns bookings, records visit charges and UPI payments, and flags AMC renewals stops jobs getting lost between a missed call and a WhatsApp note.',
       },
     ],
     seasonality:
@@ -322,6 +338,14 @@ export const industriesPart3 = {
         service: 'whatsapp-automation',
         why: 'Sharing catalogues, quotes and delivery updates on WhatsApp, and inviting past buyers to new-collection previews, keeps a slow decision moving.',
       },
+      {
+        service: 'crm-development',
+        why: 'Showroom walk-ins, WhatsApp catalogue enquiries, interior designers ordering for clients, office fit-out RFQs and – for mattress brands – dealer orders each follow a different path. Custom sizes, fabrics and quote revisions are recorded, designer commissions tracked, delivery and fitting scheduled, and every walk-in linked to the ad or post that brought it.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'A delivery date promised in the showroom depends on custom orders clearing the workshop, fabric and board in stock and a free dispatch slot. Once showroom, workshop and Tally data share a screen, the owner spots a late order before the customer does, and dealer-wise sales and outstanding show which franchise needs attention.',
+      },
     ],
     seasonality:
       'Dasara, Diwali and the wedding season are the main buying periods, along with year-end and online sale events for mattresses and decor. Housewarmings and moves into newly handed-over apartments keep demand coming through the rest of the year.',
@@ -436,6 +460,14 @@ export const industriesPart3 = {
         service: 'website-development',
         why: 'Appliance brands need model specifications, a dealer locator and service-request and warranty-registration forms; larger stores need a catalogue that shows current stock and offers.',
       },
+      {
+        service: 'crm-development',
+        why: 'An appliance brand’s CRM tracks dealer and distributor applications, scheme claims and bulk quotes for offices, hotels and builders ordering ACs by the dozen. For stores, it logs each walk-in or WhatsApp enquiry by model, follows up on exchange and EMI offers, and schedules warranty and service reminders.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'During an offer window, the sales head should see model-wise sell-in to dealers and sell-out from stores daily, not pieced together from calls and Excel. Stock by dealer, pending service calls and dealer outstanding complete the picture: a model running short in one region moves from another, and overdue dealers don’t get fresh credit.',
+      },
     ],
     seasonality:
       'Dasara, Diwali and the big online sale events set the largest peaks, and summer drives AC, cooler and refrigerator sales. Major phone launches, such as new iPhones each September, create short spikes, and big cricket tournaments often lift TV sales.',
@@ -548,6 +580,10 @@ export const industriesPart3 = {
       {
         service: 'social-media-management',
         why: 'Maintenance notices, network upgrade news, plan offers and local updates keep subscribers informed and show prospects the provider is active and accountable.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Broadband enquiries are tagged by apartment, layout and PIN code, showing where demand is building beyond the network and which installations to schedule first. Renewal dates, payment links and open fault tickets appear on every subscriber’s record, so the team spots likely churn before the cancellation call.',
       },
     ],
     seasonality:
@@ -666,6 +702,10 @@ export const industriesPart3 = {
         service: 'personal-branding',
         why: 'Directors, musicians and authors with a visible voice of their own carry every future project; a steady personal presence turns their following into each release’s first audience.',
       },
+      {
+        service: 'crm-development',
+        why: 'Ad sales, brand integrations, music licensing and distribution deals each run on proposals, rate cards and long email threads. Every agency, brand and platform contact is held with deal stage, rights windows and renewal dates, so revenue beyond views doesn’t depend on one producer’s inbox.',
+      },
     ],
     seasonality:
       'Film releases cluster around festivals, long weekends and holidays – Sankranti, Dasara, Diwali, Christmas and the summer break – while big cricket tournaments compete for the same screen time. Publishing has its own peaks around literature festivals and year-end gifting.',
@@ -783,6 +823,10 @@ export const industriesPart3 = {
         service: 'whatsapp-automation',
         why: 'Automatic replies with package PDFs, availability checks, shoot-day reminders and delivery updates let a small team answer every enquiry fast, even mid-shoot.',
       },
+      {
+        service: 'crm-development',
+        why: 'Wedding and portrait enquiries from Instagram DMs, WhatsApp and the website are gathered in one place with the shoot date, city and budget, so no DM sits unanswered for a day. Bookings carry the package, advance paid and edit-delivery deadline, and brand or agency clients are followed from first quote to repeat work.',
+      },
     ],
     seasonality:
       'Wedding work follows the wedding season and auspicious muhurtham dates, leaving quieter months that commercial, corporate and product shoots can fill. Brand work rises before Diwali and other festive campaigns, and corporate events cluster near the financial year-end.',
@@ -899,6 +943,14 @@ export const industriesPart3 = {
       {
         service: 'google-ads',
         why: 'Search ads reach people actively looking to donate or volunteer for a cause. Registered NGOs should also check whether they qualify for Google’s nonprofit programme, which can include free search ad credit.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Donors, CSR partners and volunteers are kept in one database: every gift with its 80G receipt and campaign, every CSR proposal with its stage and utilisation-report due date, every volunteer with their availability. Lapsed monthly donors and upcoming CSR renewals come up for a call before the financial year closes.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'Donors expect their 80G receipt promptly, and CSR partners expect reports with beneficiary numbers on time. When donations, grants, volunteers and programme data sit in one back office, receipts go out automatically and the figures for a CSR report no longer have to be rebuilt by hand.',
       },
     ],
     seasonality:
@@ -1021,6 +1073,10 @@ export const industriesPart3 = {
         service: 'website-development',
         why: 'Secure, maintainable builds that handle traffic spikes on results or registration days and connect to payment, application and grievance systems keep public services available when demand peaks.',
       },
+      {
+        service: 'crm-development',
+        why: 'For a PSU selling to businesses and institutions, dealer enquiries, tender bids and key accounts are tracked with a clear audit trail. Departments and tourism boards can assign citizen queries, investor leads and travel-trade partners to named officers, with role-based access and status reports ready for review meetings.',
+      },
     ],
     seasonality:
       'Work follows the financial year – new budgets from April and a push to complete spending before 31 March – along with scheme launches, fee and tax deadlines and public events. Tourism promotion peaks ahead of holiday seasons and major festivals such as Mysuru Dasara.',
@@ -1140,6 +1196,10 @@ export const industriesPart3 = {
         service: 'packaging-design',
         why: 'Pet food packaging has to stand out on shelves and in marketplace thumbnails while clearly showing ingredients, life stage and feeding guidance.',
       },
+      {
+        service: 'crm-development',
+        why: 'The pet gets a record as well as the parent – breed, age, vaccination dates, grooming history, usual food – so reminders and refill prompts go out when they’re due. Boarding enquiries, grooming slots and clinic follow-ups are assigned to staff, and pet food brands can track the shops and distributors they supply.',
+      },
     ],
     seasonality:
       'Demand is steady but shifts with the weather – ticks, fleas, skin problems and grooming needs rise in the monsoon and summer, and boarding peaks over Diwali, Christmas and the summer holidays when owners travel. Diwali fireworks also bring anxiety-related vet enquiries.',
@@ -1258,6 +1318,14 @@ export const industriesPart3 = {
         service: 'social-media-management',
         why: 'Posts on member events, workshops and the people working in the space show the community that makes coworking feel different from a regular office.',
       },
+      {
+        service: 'crm-development',
+        why: 'Broker-sourced and direct enquiries are tagged separately, so commission is paid only on deals brokers actually brought. Each centre’s pipeline sits against its seat and cabin inventory, and contract expiry dates, expansion requests and virtual-office KYC documents are tracked on the member’s record.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'An empty cabin nobody knows is empty earns nothing. An occupancy view across every centre is the heart of a coworking admin panel, with meeting rooms booked against member credits and accounts handling contracts, virtual office clients and monthly GST invoices from the same screen.',
+      },
     ],
     seasonality:
       'Demand follows hiring and funding – teams expand after funding rounds and at the start of the financial year, and corporate decisions slow over the December holidays. Virtual-office demand is fairly steady, tied to new business and GST registrations.',
@@ -1366,6 +1434,10 @@ export const industriesPart3 = {
       {
         service: 'whatsapp-automation',
         why: 'Survey scheduling, quote follow-ups, AMC renewal reminders and incident updates on WhatsApp keep client communication fast and on record.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Association and facility contracts come up on fixed cycles, so each building’s current agency, contract end date and committee contacts are recorded well before the contract goes out to bid. Site surveys, manpower or CCTV proposals, AMC renewals and incident reports stay on the client record, ready for the renewal discussion.',
       },
     ],
     seasonality:
@@ -1481,6 +1553,14 @@ export const industriesPart3 = {
       {
         service: 'marketing-automation',
         why: 'A CRM that tracks quotes, sample dispatches and reorder dates prompts follow-ups when a client’s stock is likely to be running low.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Box, label and signage enquiries are captured with the full specification – board GSM, size, print colours, finish, quantity and deadline – so quotations can be costed and revised without chasing the client. Proof approvals and sample dispatches are logged per SKU, and each brand’s reorder history shows when the next run is due.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'In a busy press, nobody notices a job stuck at lamination or die-cutting until the client calls about dispatch. That’s avoidable when job-wise status, machine utilisation, sheet wastage and board and paper stock sit on one screen for the production head to re-plan shifts, with dispatch, reorders and receivables in the owner’s view.',
       },
     ],
     seasonality:
@@ -1599,6 +1679,10 @@ export const industriesPart3 = {
         service: 'google-business-profile',
         why: 'A café’s profile with photos of the setup, the console and PC titles available, hourly prices and reviews decides whether a group of friends chooses it for the evening.',
       },
+      {
+        service: 'crm-development',
+        why: 'Studios and esports organisations track publisher, sponsor and brand conversations from first pitch to signed deliverables, with audience numbers attached to each proposal. Gaming cafés keep a record of regulars, squads, prepaid hours and tournament sign-ups, so off-peak offers reach the players most likely to turn up on a weekday afternoon.',
+      },
     ],
     seasonality:
       'Cafés and tournaments are busiest during school and college holidays, weekends and long festival breaks, and quietest in exam months. Studios plan launches around platform sale events and try to avoid clashing with major releases.',
@@ -1714,6 +1798,10 @@ export const industriesPart3 = {
       {
         service: 'seo',
         why: 'Pages for each sport, age group and programme, and guides on choosing a first bat, a badminton racket or football boots, rank for the questions parents and players search.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Parents’ enquiries for summer camps arrive in a rush, and each needs a trial booked, a batch assigned and a nudge towards a year-round programme once camp ends. Fee due dates and term renewals are tracked per child, and sports goods stores can handle school and club orders for team kits and equipment.',
       },
     ],
     seasonality:
@@ -1833,6 +1921,10 @@ export const industriesPart3 = {
       {
         service: 'google-ads',
         why: 'Search ads for pooja bookings and ceremony services, written to describe what’s offered – rituals, priests, languages, timings – rather than what it will achieve, reach families planning an event.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Pooja and seva bookings from the counter, phone, WhatsApp and devotees abroad go into one register, with the date, gotra and nakshatra details, priest assigned and offering paid. Donation receipts are issued and stored against each devotee, and families are reminded ahead of annual ceremonies they have booked before.',
       },
     ],
     seasonality:
@@ -1955,6 +2047,10 @@ export const industriesPart3 = {
         service: 'drone-shoots',
         why: 'Aerial footage of airfields, training flights and production facilities shows scale and infrastructure in corporate films, show videos and admissions material.',
       },
+      {
+        service: 'crm-development',
+        why: 'Supplier qualification runs for months – RFQs, audits, samples and first-article inspection – so each OEM account needs a full history that only authorised staff can open. The same system holds Aero India contacts, drone demo requests and tender deadlines, and follows flight-school enquiries from first call through campus visit to enrolment.',
+      },
     ],
     seasonality:
       'Aerospace marketing builds towards Aero India in Bengaluru, held every two years, and follows customers’ budget cycles and programme milestones. Flight-school enquiries rise after Class 12 results and whenever airline hiring is in the news.',
@@ -2071,6 +2167,10 @@ export const industriesPart3 = {
       {
         service: 'brand-identity',
         why: 'A biotech startup’s name, visual identity and core message have to look credible to scientists and investors alike – distinctive without overclaiming what the science does.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Before any study is awarded, a sponsor works through a confidentiality agreement, scope discussion, proposal revisions and often a pilot, with scientists and procurement both involved. That trail is kept per sponsor with access restricted by role, and startups can manage investor, grant and partnership conversations alongside it.',
       },
     ],
     seasonality:
@@ -2191,6 +2291,14 @@ export const industriesPart3 = {
       {
         service: 'google-business-profile',
         why: 'A complete profile for the plant or trading office, with product categories, photos and reviews from business buyers, helps industrial buyers who search for a supplier nearby.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Whether it comes through IndiaMART, TradeIndia, a distributor or an importer abroad, each enquiry is recorded by product, grade and CAS number, with TDS, SDS and COA requests alongside. Samples, approvals and price revisions as raw materials move build one account history, and the team is prompted when a regular buyer’s reorder is overdue.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'The plant tracks batch yield, reactor utilisation and off-spec lots; accounts tracks raw-material prices, stock and customer receivables – and a shrinking margin falls into the gap. Combining the ERP, lab records and Tally shows the plant head and owner which product and which customer is actually earning money this month.',
       },
     ],
     seasonality:

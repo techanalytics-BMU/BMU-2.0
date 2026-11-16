@@ -15,13 +15,13 @@ export const navLogin: NavLink = { label: 'Login', href: '/login' };
 export const navDashboard: NavLink = { label: 'Dashboard', href: '/dashboard' };
 export const navAccount: NavLink = { label: 'My account', href: '/account' };
 
-// "Services" in the navbar: a hover panel on desktop (a short intro beside the six cards), a grid
-// of tiles in the full-screen menu on phones. The six service groups each open their overview page
+// "Services" in the navbar: a hover panel on desktop (a short intro beside the seven cards), a grid
+// of tiles in the full-screen menu on phones. The seven service groups each open their overview page
 // (src/data/pseo/groups.ts).
 export const servicesMenu: ServicesMenuContent = {
   intro: {
     heading: 'One team for every channel',
-    text: 'Six service groups working to one plan. Pick one to see what’s included and where prices start.',
+    text: 'Seven service groups working to one plan. Pick one to see what’s included and where prices start.',
     links: [
       { label: 'All services', href: '/services' },
       { label: 'Industries we serve', href: '/industries' },
@@ -64,6 +64,12 @@ export const servicesMenu: ServicesMenuContent = {
       href: '/services/content-and-production',
       description: 'Shoots, reels and video production.',
       icon: '/icons/common/services/content-production.svg',
+    },
+    {
+      title: 'CRM & Business Software',
+      href: '/services/crm-and-business-software',
+      description: 'CRMs, admin panels and live dashboards.',
+      icon: '/icons/common/services/crm-software.svg',
     },
   ],
 };

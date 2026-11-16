@@ -91,6 +91,18 @@ export const industriesPart1 = {
         service: 'google-business-profile',
         why: 'Brokers, co-living operators and experience centres all get “near me” searches – “real estate agent near me”, “PG near me”. A verified profile with photos, timings, reviews and the right category puts the office or property on Maps, where tenants and walk-in buyers look first.',
       },
+      {
+        service: 'crm-development',
+        why: 'Leads from 99acres, MagicBricks, Meta lead forms and channel partners land in one list, tagged by project with the first source on record, so nobody argues later over who brought the buyer. Site visits, revisits and price discussions are logged, and reminders keep a family followed up through months of comparison until the booking.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'Selling the same flat twice is what happens when unit inventory lives in a spreadsheet. A developer’s admin panel should hold live unit status – available, blocked, booked – alongside the current price sheet and floor-rise charges, route discounts to a sales manager and show each channel partner only their own leads.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'Pricing decisions – a revision, a launch offer, a channel partner incentive – depend on unsold units by tower, site visits and bookings by channel, cancellations and collections due against construction milestones. Kept live rather than rebuilt from the CRM for each meeting, they’re in front of the MD and sales head before anyone asks.',
+      },
     ],
     seasonality:
       'Bookings cluster around auspicious days such as Ugadi, Akshaya Tritiya, Dasara and Diwali, when developers run festive offers, and Pitru Paksha is traditionally a slow fortnight. New launches and price revisions create their own peaks, while co-living demand follows campus joining dates and office hiring.',
@@ -210,6 +222,10 @@ export const industriesPart1 = {
         service: 'linkedin-branding',
         why: 'Office fit-outs are bought by founders, admin heads and facility managers, and they look for vendors on LinkedIn. Posting completed workspaces, handover timelines and the founder’s view on workplace design keeps the firm on shortlists for corporate projects.',
       },
+      {
+        service: 'crm-development',
+        why: 'Each enquiry is saved with its possession date, flat size and budget, so follow-ups are timed to when the keys arrive instead of fading out months earlier. Consultations, site measurements, 3D design rounds and itemised quotations sit on one record, and stage-wise payments are tracked once the project is signed.',
+      },
     ],
     seasonality:
       'Demand follows possession dates in new apartment projects and rises in the months before Diwali and planned griha pravesha dates, as families want homes ready for the festival or housewarming. Office fit-outs follow lease renewals and expansion plans, which often firm up around the financial year.',
@@ -328,6 +344,14 @@ export const industriesPart1 = {
         service: 'whatsapp-automation',
         why: 'Automated WhatsApp replies send packages and project galleries the moment someone enquires. Stage-wise updates to current clients keep them informed – which is what turns them into referrers.',
       },
+      {
+        service: 'crm-development',
+        why: 'Calls from Google Maps and JustDial, website forms and WhatsApp messages are logged the moment they arrive, so an urgent leak or a plot owner’s first call isn’t lost to a missed ring. Inspections are assigned to the right site engineer, package quotes go out from the CRM, and stage-wise payments sync with Tally.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'Running several sites means progress reports arrive as WhatsApp photos and site engineers’ spreadsheets. What the owner needs instead is a project-wise view of work done against schedule, material issued, labour on site and RA bills raised, certified and paid – enough to spot cost overruns and the client payment holding up the next stage.',
+      },
     ],
     seasonality:
       'Many families plan bhoomi puja and griha pravesha around auspicious dates, and new construction often starts once the monsoon eases, so build enquiries rise from late monsoon into the new year. Waterproofing runs the other way – demand peaks just before and during the monsoon, when leaks show up.',
@@ -444,6 +468,10 @@ export const industriesPart1 = {
       {
         service: 'drone-shoots',
         why: 'Aerial views show how a building sits on its site – landscape, context and roofscape. For villas, campuses, landscape schemes and larger plans, they complete the portfolio.',
+      },
+      {
+        service: 'crm-development',
+        why: 'For a practice that lives on referrals and a few large commissions, the CRM keeps every enquiry, fee proposal and tender or empanelment deadline on one board. Past clients, developers and consultants stay on file with check-in reminders, so the next project is lined up before the current one is handed over.',
       },
     ],
     seasonality:
@@ -562,6 +590,18 @@ export const industriesPart1 = {
       {
         service: 'whatsapp-automation',
         why: 'Appointment reminders, report-ready alerts and post-discharge follow-ups on WhatsApp cut no-shows and make the patient experience smoother. A simple WhatsApp assistant can also answer OPD timings and insurance questions at any hour.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Every call, WhatsApp message and web enquiry about a surgery package or cashless insurance goes to that speciality’s patient coordinator, with a callback deadline so nobody waits hours. The record follows each patient from estimate to admission and credits the referring doctor or corporate tie-up, with medical details visible only to the care team.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'A website still showing a consultant’s old OPD timings sends patients to an empty consulting room. A hospital admin panel lets each department update its own doctors, schedules and health check-up packages, while the front desk confirms appointment requests and every change to patient records is logged.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'An alert when TPA claims age past 30 days, or bed occupancy and OT utilisation dip in a department, is worth more than a monthly report from the HIS and billing. OPD footfall, admissions, occupancy and pending claims are split by department, with one view for the administrator and another for the medical director.',
       },
     ],
     seasonality:
@@ -683,6 +723,14 @@ export const industriesPart1 = {
         service: 'ai-search-visibility',
         why: 'Patients now ask AI assistants which clinic or specialist to see for a treatment in their area. Consistent listings, detailed treatment pages and genuine reviews help those answers include the clinic and describe the doctor accurately.',
       },
+      {
+        service: 'crm-development',
+        why: 'Bookings from Practo, Google calls, WhatsApp and the website sit in one patient list, so the front desk sees who confirmed, who missed and who hasn’t come back. Multi-sitting treatment plans, physiotherapy courses and vaccination due dates get their own reminders, and the clinic can see which source brings patients who complete treatment.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'Receptionists at a multi-doctor clinic spend the day moving appointment slots around leave days, branch timings and walk-ins. What they need is one calendar per doctor and branch, with no-shows and follow-up dates marked, and a way for the doctor to block a day off without ringing the front desk.',
+      },
     ],
     seasonality:
       'Most clinic work runs through the year, with peaks tied to the speciality – fever and respiratory cases for paediatricians around the monsoon, skin and hair concerns in summer, and cosmetic dental and skin treatments before the wedding season and festivals. Patient education works all year, since people research a doctor long before they book.',
@@ -801,6 +849,14 @@ export const industriesPart1 = {
       {
         service: 'packaging-design',
         why: 'For franchise and third-party brands, the carton and label have to carry the required details – composition, batch number, dates, price and licence number – and still look distinct on a chemist’s shelf. Good packaging design works within those rules and gives a new range a recognisable family look.',
+      },
+      {
+        service: 'crm-development',
+        why: 'IndiaMART buy-leads, PCD franchise enquiries and hospital RFQs are logged with the molecule or equipment model asked for, then assigned to the rep covering that territory. Samples, document requests, demos and quotations are tracked to the first order, and AMC renewal dates and payments outstanding in Tally show up on the same account.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'When the national sales head, zonal managers and finance each keep their own Excel of stockist sales, rep-wise targets and distributor outstanding, every review starts with an argument over whose figures are right. One shared view – with near-expiry stock flagged by depot – settles that and leaves the meeting for the slow territories.',
       },
     ],
     seasonality:
@@ -921,6 +977,10 @@ export const industriesPart1 = {
         service: 'meta-ads',
         why: 'Instagram and Facebook ads can promote workshops, retreats and introductory consultations to people nearby who follow yoga, nutrition or Ayurveda. Meta restricts ads about weight loss and health conditions, so creative focuses on the experience and the practitioner rather than results.',
       },
+      {
+        service: 'crm-development',
+        why: 'Enquiries about Panchakarma, therapy sessions or a nutrition plan move from first call to consultation to a booked programme, with each step visible to the team. Session counts, package renewals and check-in dates are tracked per client, and role-based access keeps therapy and health notes private to the practitioner.',
+      },
     ],
     seasonality:
       'Many people book Ayurvedic and Panchakarma programmes in the monsoon, which Ayurvedic tradition treats as the right season for them, and nutrition enquiries rise in January and before weddings. Mental health enquiries are steadier, with awareness rising around World Mental Health Day in October and exam season for students.',
@@ -1040,6 +1100,14 @@ export const industriesPart1 = {
         service: 'website-design',
         why: 'A site with class descriptions, schedules, trainer profiles and online trial booking – or, for equipment sellers, clear product pages with delivery and installation details – lets people commit the moment they’re ready.',
       },
+      {
+        service: 'crm-development',
+        why: 'Walk-ins, Instagram DMs and free-trial bookings are logged with the member’s goal and preferred batch time, then followed up the same day by an assigned trainer or front-desk lead. Membership and class-pack expiry dates trigger renewal reminders, and members whose attendance drops are flagged before they quietly lapse.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'Renewals pay a gym’s rent, and they slip quietly when membership records sit in a register and on the owner’s phone. An admin panel shows which packs expire this week, which classes are full and which trainer’s members are dropping off, alongside rosters, trial sign-ups and membership freezes.',
+      },
     ],
     seasonality:
       'Joining peaks in January with new-year resolutions and again before summer and the wedding season, and yoga studios see extra interest around International Yoga Day on 21 June. Retention matters most from February onwards, when early-year joiners tend to drop off, and equipment sellers do well in festive marketplace sales.',
@@ -1155,6 +1223,18 @@ export const industriesPart1 = {
       {
         service: 'marketing-automation',
         why: 'An admissions CRM tracks every enquiry from first contact to admission, so no parent is forgotten and the school can see which channels bring families who actually join.',
+      },
+      {
+        service: 'crm-development',
+        why: 'During the admission window, every parent enquiry – from the website, Meta forms, walk-ins or an existing parent’s referral – is recorded with the child’s grade and intake year. Campus tours, interactions and fee payments are tracked against grade-wise seat availability, so the admissions team knows which families to call before they settle elsewhere.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'Schools handle admission enquiries, term fees, transport routes, circulars and the events calendar – often across a spreadsheet, a register and several parent WhatsApp groups. One admin panel for applications and fee records, with separate views for the admissions office, accounts and class teachers, ends the hunt for the latest version.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'Admission season is short, so the principal needs daily enquiries, campus visits and seats filled by grade, alongside fee collections and term dues. On one screen, a lagging grade or a long list of fee defaulters surfaces in time to call parents, instead of staying buried in the ERP, front-office register and accounts sheets.',
       },
     ],
     seasonality:
@@ -1274,6 +1354,18 @@ export const industriesPart1 = {
         service: 'instagram-marketing',
         why: 'Students spend their evenings on Instagram. Short concept explainers, exam-day tips, faculty reels and batch announcements keep the institute in their feed through a long preparation year, and DMs become an easy way to ask about the next batch.',
       },
+      {
+        service: 'crm-development',
+        why: 'Students and parents are recorded with the exam they’re preparing for, the batch they want and the demo they attended, so counsellors call while interest is fresh. Scholarship-test scores, fee instalments and payment links sit on the same profile, and seats filled per batch show where to push before the start date.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'Which students are in which batch, who has paid the second instalment, which demo attendees haven’t enrolled – a coaching centre needs these answers daily, not at month-end. The admin panel is where batches, timetables, faculty and fee instalments live for every branch, so counsellors and accounts stop keeping separate lists.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'Enquiries, demo attendance, enrolments by batch, overdue fee instalments and mock-test scores usually sit in a separate register at every centre. The director sees all of it together, each centre head sees their own branch, and an under-filled batch or a student falling behind gets noticed well before the exam.',
+      },
     ],
     seasonality:
       'Long-term NEET and JEE batches fill after Class 10 and 12 results in April and May, while crash courses sell in the weeks before each exam. UPSC and CAT enrolments follow their exam dates, and IELTS and GRE demand tracks the September and January intakes at universities abroad.',
@@ -1387,6 +1479,10 @@ export const industriesPart1 = {
       {
         service: 'ai-search-visibility',
         why: 'Students increasingly ask ChatGPT and Gemini which colleges to consider for a course. Clear, consistent course and approval information helps AI tools describe the college accurately.',
+      },
+      {
+        service: 'crm-development',
+        why: 'One student often enquires through Shiksha, CollegeDunia, a search ad and an education fair, so the duplicates merge into a single applicant. Counsellors see entrance scores, preferred course and every past conversation, and each applicant moves through application fee, counselling round and seat confirmation, with education agents’ referrals credited correctly.',
       },
     ],
     seasonality:
@@ -1505,6 +1601,14 @@ export const industriesPart1 = {
       {
         service: 'ui-ux-design',
         why: 'Onboarding, the course player and checkout decide whether a trial user becomes a paying learner. UX work on those flows – fewer steps, clearer progress, simpler payments – improves conversion without adding ad spend.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Webinar attendance, trial activity and counsellor call notes build up on one learner record, so the sales team can tell who is close to paying and who needs an EMI option. A separate pipeline handles corporate learning deals – demo, pilot, contract and renewal – which rarely fit the consumer funnel.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'The learner app is only half the product; the other half is where the team publishes modules, runs cohorts, assigns mentors, issues certificates and processes refunds. Give those jobs a proper admin panel and the tech team stops getting a ticket for every access extension or coupon code.',
       },
     ],
     seasonality:
@@ -1625,6 +1729,14 @@ export const industriesPart1 = {
         service: 'ai-search-visibility',
         why: 'Students now ask ChatGPT and Gemini which consultants to trust or how to apply for a visa. Clear, current guides, consistent listings and genuine reviews help those tools mention the consultancy accurately.',
       },
+      {
+        service: 'crm-development',
+        why: 'Test scores, preferred countries and intake sit on one student profile alongside every university application, the education loan and the visa file, so any counsellor can pick up where a colleague left off. Calls with parents are logged too, and counselling fee instalments are tracked with payment links.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'An overseas application takes months to move from university shortlist through test scores, offer letters and loan documents to the visa itself. Each one needs a visible stage, deadline and counsellor in the back office, with documents shared securely rather than over WhatsApp, or an applicant misses an intake over one forgotten form.',
+      },
     ],
     seasonality:
       'Enquiries build roughly a year before the main September intake for the US, UK and Canada, with a second wave for January intakes and Australia’s February and July intakes. Visa and immigration enquiries spike whenever a country announces a policy change.',
@@ -1743,6 +1855,10 @@ export const industriesPart1 = {
         service: 'whatsapp-automation',
         why: 'Most boutiques already sell over WhatsApp, so the chat works as a second shop counter. Catalogue sharing, new-arrival broadcasts, order updates and festive previews for past customers turn one purchase into a habit.',
       },
+      {
+        service: 'crm-development',
+        why: 'Boutiques and designer labels can keep each client’s measurements, past orders and upcoming occasions on file, while custom pieces move through fabric selection, stitching, trial and alteration with dates the whole team can see. New-arrival messages on WhatsApp then go to past buyers whose size and style match.',
+      },
     ],
     seasonality:
       'Ethnic wear peaks before Ugadi, Varamahalakshmi, Dasara, Diwali and Eid and through the wedding season. Western and D2C labels lean on festive marketplace sales and the end-of-season sales in January and July.',
@@ -1854,6 +1970,14 @@ export const industriesPart1 = {
       {
         service: 'influencer-marketing',
         why: 'Fashion and bridal creators styling pieces introduce collections to engaged audiences, particularly for D2C, silver and lightweight jewellery brands.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Bridal enquiries are saved with the wedding date, budget and the designs the family liked, and every showroom visit is logged against its original source – so an Instagram lead who buys in store is credited correctly. Gold savings scheme instalments, custom order stages, birthdays and anniversaries also sit on each customer’s record.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'The gold rate changes every morning, and with it the price of every piece in the catalogue. In a jeweller’s admin panel, prices recalculate from the day’s rate, each design carries its weight, stone details and HUID number, and only a few named staff can change making charges.',
       },
     ],
     seasonality:
@@ -1970,6 +2094,10 @@ export const industriesPart1 = {
       {
         service: 'seo',
         why: 'Content on ingredients, routines and concerns – “niacinamide for oily skin”, “hair fall in monsoon” – ranks for what beauty buyers search, and service pages for keratin, balayage or bridal packages do the same for salons. Both bring traffic that doesn’t depend on ad spend.',
+      },
+      {
+        service: 'crm-development',
+        why: 'A salon keeps each client’s service history, preferred stylist and package balance on file, so the business – not just the stylist – owns the relationship and knows when a client is due back. Makeup academies get the same structure for course enquiries, demo sessions, batch allocation and fee instalments.',
       },
     ],
     seasonality:
@@ -2089,6 +2217,18 @@ export const industriesPart1 = {
         service: 'brand-identity',
         why: 'A café’s or cloud kitchen’s name, logo, colours, cups and packaging are what people photograph, share and recognise on a delivery app. For a cloud kitchen with no shopfront, the brand is the only storefront it has.',
       },
+      {
+        service: 'crm-development',
+        why: 'Catering enquiries, party bookings and corporate lunch orders are recorded with the date, headcount and menu, and quotations go out from the same screen with an advance payment link. Regulars and office accounts become a direct customer list, with birthdays and order history, so repeat business doesn’t depend on an aggregator.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'Menus change more often than most websites do – a dish sells out, a weekday lunch combo starts, prices differ by outlet. Each outlet manager should be able to update their own menu, mark items unavailable and handle direct orders, table bookings and catering enquiries without waiting on whoever built the site.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'By the time the accountant reconciles dine-in billing, Swiggy and Zomato payouts and kitchen purchases, the month is over. A nightly WhatsApp summary per outlet – covers, sales by channel, food cost percentage and wastage – shows the owner which kitchen is slipping while it can still be fixed.',
+      },
     ],
     seasonality:
       'Weekends are the steady peak, with spikes around Christmas and New Year’s Eve and during the IPL for places with screens. Ramzan evenings drive iftar and biryani demand, rainy monsoon evenings push delivery orders up, bakeries peak at Christmas and caterers through the wedding season and festivals.',
@@ -2206,6 +2346,18 @@ export const industriesPart1 = {
         service: 'influencer-marketing',
         why: 'Travel creators show a resort or homestay through a guest’s eyes. Hosting creators whose followers take weekend trips from the city brings both content and bookings.',
       },
+      {
+        service: 'crm-development',
+        why: 'Wedding, conference and group enquiries are captured with dates, room count and hall requirements, then moved through site visit, quotation, advance and confirmed function sheet by the sales team. Corporate accounts and past direct guests stay on file with negotiated rates and stay history, ready for the next direct-booking offer.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'A direct-booking website is only as good as the rates and availability behind it. Without a proper back office, it sells rooms that are already gone; with one, reservations and sales staff update tariffs and packages, block rooms for a wedding and keep banquet dates on a calendar of their own.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'A full weekend is only half good news if most rooms came through commission-heavy OTAs. With occupancy, ADR, RevPAR and channel mix from the PMS and channel manager next to banquet and F&B revenue from the POS, the general manager knows by midweek whether to adjust rates or push a direct offer.',
+      },
     ],
     seasonality:
       'Business travel is steady on weekdays outside holiday periods, while leisure, wedding and banquet demand rises from October to February. Long weekends, the Dasara break, Christmas–New Year and summer holidays fill resorts and homestays, and the monsoon draws a different crowd to hill and forest properties.',
@@ -2316,6 +2468,14 @@ export const industriesPart1 = {
       {
         service: 'website-design',
         why: 'A website with package pages, clear inclusions and exclusions, reviews and a short enquiry form gives ad traffic somewhere credible to land. Pages laid out by destination and trip type make the agency look established and let each campaign land on the right trip.',
+      },
+      {
+        service: 'crm-development',
+        why: 'A traveller’s dates, destination, group size and budget are saved from the first WhatsApp message, and each revised itinerary quote stays on the same record. Advance and balance payments, passport and visa documents, and seats left on group departures are tracked, so nothing slips in the weeks before the trip.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'A group tour has a seat count, departure date, supplier rates and part-payment schedule per traveller, none of which should rest on one executive’s memory. Kept in a back office, bookings and payments sit against each departure, packages go live online and sales hands customers to operations without retyping an itinerary.',
       },
     ],
     seasonality:

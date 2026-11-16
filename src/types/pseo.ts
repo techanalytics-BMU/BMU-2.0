@@ -25,7 +25,8 @@ export type ServiceGroup =
   | 'UGC & Creator Marketing'
   | 'Brand & Design'
   | 'Web & AI'
-  | 'Content & Production';
+  | 'Content & Production'
+  | 'CRM & Business Software';
 
 export type Service = {
   slug: ServiceSlug;

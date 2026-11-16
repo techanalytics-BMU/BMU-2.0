@@ -89,6 +89,14 @@ export const industriesPart2 = {
         service: 'drone-shoots',
         why: 'Aerial shots of an outdoor venue, a farmhouse wedding or a large decor setup show scale that ground cameras miss. They make strong opening shots for wedding films and venue promotions.',
       },
+      {
+        service: 'crm-development',
+        why: 'Instead of a WhatsApp thread that only says “package price?”, each enquiry is logged with the event date, guest count and budget, and checked against the calendar so a date is never promised twice. Venue visits, family meetings, quotation versions and payment milestones after the advance are tracked right up to the event day.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'During peak muhurtham season, a planner or decorator may have several events in one weekend, each with its own venue, vendor team, package inclusions and payment milestones. A back-office calendar showing dates on hold, advances due and the coordinator on each event stops two families being promised the same Sunday.',
+      },
     ],
     seasonality:
       'Bookings follow the muhurtham calendar rather than one fixed season. In Karnataka, Ashada (around June–July) and Dhanurmasa (mid-December to mid-January) are traditionally avoided for weddings, so the months either side fill up fast – and corporate events add December parties and the offsites companies hold before March.',
@@ -206,6 +214,14 @@ export const industriesPart2 = {
         service: 'website-development',
         why: 'For used car dealers and multi-brand outlets, a website with searchable inventory, prices and photos is the showroom online. For new vehicle dealers, fast offer and booking pages matter most.',
       },
+      {
+        service: 'crm-development',
+        why: 'Sales consultants see the model and variant enquired about, the test-drive slot, exchange valuation, finance status and the quote shared, so a deal doesn’t stall when one of them is on leave. After delivery, service due dates and insurance renewals bring the owner back to the workshop instead of a local garage.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'A dealership runs two businesses on systems that never meet – the showroom’s enquiries, test drives, bookings and ageing stock, and the workshop’s throughput, parts sales and labour revenue. The dealer principal gets both on the sales-office TV for the morning review, and each manager carries their own numbers on a phone.',
+      },
     ],
     seasonality:
       'Sales peak around Navratri, Dasara and Diwali, and around Ugadi and Akshaya Tritiya, when many buyers prefer to take delivery. Year-end offers in December bring another rush, and service and accessories demand rises before the monsoon and long holiday trips.',
@@ -317,6 +333,10 @@ export const industriesPart2 = {
       {
         service: 'linkedin-branding',
         why: 'For EV brands and charging operators selling to fleets, apartments and businesses, LinkedIn reaches fleet managers, facility heads and property developers. Posts on deployments, partnerships and charger uptime build the credibility those deals need.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Retail leads are tracked from test ride to booking, with notes on daily distance and whether the buyer’s apartment allows a home charger. Fleet operators and charging-site deals with apartment associations, offices and property owners run in their own pipeline, where site surveys, multi-vehicle quotations and approvals take weeks.',
       },
     ],
     seasonality:
@@ -435,6 +455,14 @@ export const industriesPart2 = {
         service: 'pitch-decks',
         why: 'A capabilities deck and proposal template that explain the approach, team and relevant case studies the same way every time make sales calls and RFP responses sharper. Sales staff stop rebuilding slides for every prospect.',
       },
+      {
+        service: 'crm-development',
+        why: 'Deals are tracked at the account level, with the CTO, business head and procurement contact each logged alongside their concerns, discovery-call notes and proposal versions. RFP deadlines, pilot milestones and contract renewals get reminders, and the pipeline shows which deals are likely to close this quarter.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'Hiring and bench decisions in a services firm often rest on figures that arrive a fortnight late – billable utilisation from timesheets, project margins from finance, pipeline from the CRM. Delivery heads want their projects, the finance head overdue client invoices and the CEO the pipeline against available capacity – all from one combined view.',
+      },
     ],
     seasonality:
       'Demand is fairly steady, but it follows clients’ budget cycles – Indian clients plan around the April financial year, while many US and European clients set budgets in the last quarter of the calendar year. Decisions slow over the Christmas and New Year holidays in export markets.',
@@ -550,6 +578,18 @@ export const industriesPart2 = {
       {
         service: 'mobile-apps',
         why: 'For consumer startups, the Android and iOS app is often the product itself. Getting a solid first version into users’ hands quickly is what proves demand.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Trial sign-ups and demo requests come in with the company, plan and source attached, and product events – a first project created, a team invited – flag the accounts worth a sales call. Renewal dates, upgrade conversations and churn reasons are logged too, so founders see which channel brings customers who stay.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'Every SaaS product or app eventually needs an internal console for looking up accounts, changing plans, issuing credits, toggling feature flags and handling support tickets. Building it early, with proper roles and an audit log, saves engineers from running production queries by hand and stops a well-meant quick fix becoming a security incident.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'Founders often rebuild MRR, net churn, trial-to-paid conversion, CAC payback and runway by hand before every board update, pulling from billing, the CRM, product analytics and the bank. Instead, a live dashboard keeps those figures current, and a weekly email summary puts the team and investors on the same version of the numbers.',
       },
     ],
     seasonality:
@@ -667,6 +707,18 @@ export const industriesPart2 = {
         service: 'influencer-marketing',
         why: 'Creators with engaged audiences in your category build awareness and trust and supply content for ads. Tracked links and codes show which ones actually sell.',
       },
+      {
+        service: 'crm-development',
+        why: 'Website orders, WhatsApp chats and support calls merge into one customer profile with purchase history, returns and refused COD orders, so the team knows whom to reward and whom to ask for prepaid. Bulk, reseller and corporate gifting enquiries get their own pipeline with quotations and GST invoices.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'Behind every D2C store sits a daily list of jobs: matching stock across the website and marketplaces, confirming COD orders, approving returns, setting up coupons and raising GST invoices. An admin panel with separate roles for warehouse, support and finance staff replaces the spreadsheets that drift out of sync as orders grow.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'Shopify, Amazon, Flipkart, Meta and Google each report differently, so few founders see true contribution per order after ad spend, returns and RTO. Put blended CAC, ROAS, COD share, return rate and SKU-level stock side by side and the team stops scaling ads on a product that’s about to sell out.',
+      },
     ],
     seasonality:
       'The festive season around Dasara and Diwali, with the big marketplace sale events, is the main peak for most categories. End-of-season sales, Valentine’s Day, Raksha Bandhan and the new year bring smaller spikes depending on the product.',
@@ -775,6 +827,18 @@ export const industriesPart2 = {
       {
         service: 'photography',
         why: 'Professional photos of the store and products make listings, ads and catalogues look trustworthy – which matters when shoppers are deciding whether a visit is worth it.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Customer numbers collected at billing, online enquiries and phone orders sit in one list, each tagged to the outlet that served them. Head office can see which campaign or listing brought a shopper in, while store staff follow up on special orders, home deliveries and loyalty points without a separate register at every branch.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'A chain needs one place for the catalogue, prices and offers at every outlet, plus store timings and click-and-collect orders. Store managers see only their own branch while head office sees all of them, so a festive price change reaches every store at once instead of call by call.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'Each morning the owner compares store-wise sales, bill counts, average bill value and fast-moving stock across outlets straight from the POS, while every store manager sees only their own branch on a phone. A stock-out at one store and dead stock at another no longer vanish inside a combined monthly total.',
       },
     ],
     seasonality:
@@ -893,6 +957,18 @@ export const industriesPart2 = {
         service: 'content-marketing',
         why: 'Recipes, usage ideas and ingredient explainers on the website and YouTube answer what shoppers search for and give them more reasons to use the product. They also give retail partners material to share.',
       },
+      {
+        service: 'crm-development',
+        why: 'Distributor and retailer enquiries from IndiaMART, trade shows and the website are tracked by town and pin code through sampling, margin talks and appointment. Field reps log outlet visits and orders on their phones, and each distributor’s record shows its Tally balance, so scheme claims and reorders are followed up on time.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'Trade schemes are where FMCG back offices get messy – a slab discount in one state, a free case in another, changed monthly over email. The fix is a distributor portal run from an admin panel: SKUs at each distributor’s price, the right scheme applied automatically, orders routed for approval and dispatch tracked by territory.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'Primary billing can look healthy right up to the month distributors stop ordering because secondary sales have slowed. Distributor-wise sales, outlets billed, stock days and scheme spend, drawn from the DMS, the salesforce app and Tally, let the sales head and area managers fix a weak territory while the month is still open.',
+      },
     ],
     seasonality:
       'Demand shifts by category – beverages, ice cream and summer personal care rise from March to May, while sweets, dry fruits and gift packs peak around Raksha Bandhan, Diwali and other festivals. Distributors stock up ahead of the festive season, so trade marketing has to start earlier than consumer campaigns.',
@@ -1007,6 +1083,18 @@ export const industriesPart2 = {
       {
         service: 'website-development',
         why: 'A secure, fast website with product pages, calculators, a branch locator, grievance redressal details and the RBI registration on display gives a lender both credibility and applications.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Loan and deposit leads from ads, branches, field officers and DSAs are logged with eligibility answers and KYC status, and every call and visit leaves an audit trail. Role-based access keeps borrower data with the staff handling it, while gold loan renewals and FD maturities prompt the branch to call in time.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'For a lender, a wrong interest rate on the website is a compliance problem, not a typo. A back office routes online applications to the nearest branch, lets branch staff update status and document checklists, and holds any change to rates, charges or gold loan schemes until a second person approves it.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'Loans slipping from 30 into 60 and 90 days overdue need catching branch by branch, not in a month-end MIS. Branch managers, regional heads and leadership can each watch disbursals, collection efficiency and DPD buckets straight from the loan management system, with an alert the moment a branch’s overdue ratio starts climbing.',
       },
     ],
     seasonality:
@@ -1126,6 +1214,18 @@ export const industriesPart2 = {
         service: 'linkedin-branding',
         why: 'For B2B payments, payroll and business lending products, LinkedIn reaches CFOs, finance heads and founders. Founder and product posts about how money moves inside a business build the credibility those deals need.',
       },
+      {
+        service: 'crm-development',
+        why: 'Merchant onboarding and business-lending sales run through document collection, KYC checks and go-live, often with DSAs and partners feeding leads in. Tracking each application by stage and source, with sensitive details behind role-based access, shows which partner or campaign brings merchants who go on to transact.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'A fintech’s internal tools carry as much risk as its app. Operations staff reviewing KYC exceptions, disputed transactions and merchant onboarding need maker-checker approvals, masked customer data and a log of every action – the trail a partner bank or auditor will ask to see.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'Every time someone asks about KYC drop-off, first transactions, payment volume or 30-day retention, an engineer writes a fresh query and the answer differs slightly from last week’s. Founders, product and growth teams need one funnel built on the app analytics and backend, plus an alert when failed transactions spike after a release.',
+      },
     ],
     seasonality:
       'Demand gathers around specific moments – tax-saving investments from January to March, festive shopping and credit in October and November, and spikes whenever markets are in the news. Payments products follow merchants’ festive and sale-season volumes.',
@@ -1244,6 +1344,14 @@ export const industriesPart2 = {
         service: 'marketing-automation',
         why: 'A CRM that tracks every policy’s renewal date, family members and cross-sell opportunities turns a book of customers into a planned pipeline. For insurtechs, drop-off journeys recover quotes that were started but never paid.',
       },
+      {
+        service: 'crm-development',
+        why: 'Health, motor and term policies for a whole household are grouped on one record, with renewal dates, members covered and claim history. Lead-ad and WhatsApp enquiries reach an advisor with a follow-up date attached, and reports show which renewals fall due this month and who is turning quotes into paid policies.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'For an agency or broker, the numbers that pay the bills are renewals due this month, policies lapsed, premium by product and commission received from each insurer. Renewals stop slipping through the gap between the CRM, insurer portals and a spreadsheet when each advisor works from their own list and the agency head sees everyone’s.',
+      },
     ],
     seasonality:
       'Life and health insurance sales rise from January to March as people look for tax-saving options before the financial year ends. Motor insurance follows vehicle sales around Dasara and Diwali, and renewals keep demand steady through the rest of the year.',
@@ -1357,6 +1465,10 @@ export const industriesPart2 = {
       {
         service: 'marketing-automation',
         why: 'A CRM that tracks each client’s filings, due dates and services lets a firm offer the next service – GST returns after registration, an audit as the business grows – at the right moment.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Around ITR and audit due dates, calls, WhatsApp messages and JustDial enquiries arrive faster than partners can return them. A CRM logs each one with the service needed and documents pending, hands it to the right team member, and follows up after filing so one-off filers become GST, bookkeeping and payroll clients.',
       },
     ],
     seasonality:
@@ -1472,6 +1584,10 @@ export const industriesPart2 = {
       {
         service: 'video-production',
         why: 'Short videos explaining a legal process step by step – registering a property, filing a consumer complaint – make the law less intimidating and keep the firm’s content informative rather than promotional.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Enquiries to a law firm need sorting by type of matter and a conflict check before a consultation is booked. The CRM records the matter, the opposing party and the consultation fee, keeps client details visible only to the advocates on the file, and shows which referrers send the most work.',
       },
     ],
     seasonality:
@@ -1592,6 +1708,14 @@ export const industriesPart2 = {
         service: 'google-business-profile',
         why: 'Candidates and clients look up an agency’s office on Maps before they visit or share documents. A verified profile with photos, timings and reviews is a quick way to show the agency is genuine.',
       },
+      {
+        service: 'crm-development',
+        why: 'Employer leads, open mandates and the candidates submitted against each role live in one system, so anyone can see who was shortlisted, interviewed or offered without opening a spreadsheet. Reports by client and recruiter show where roles actually close, and placement invoices go out on the candidate’s joining date.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'Recruitment runs on a funnel – mandates open, CVs shared, interviews, offers, joinings and offer drop-outs – and a stuck desk is obvious once it’s tracked per recruiter and per client. Staffing firms add associates deployed, payroll processed and invoices outstanding, so the founder spots trouble mid-month instead of waiting for the month-end tracker.',
+      },
     ],
     seasonality:
       'Hiring tends to pick up in the new financial year, after appraisals and bonus payouts, and slows over the December holidays. Volume hiring for retail, e-commerce and logistics peaks ahead of the festive season, and campus hiring follows the academic calendar.',
@@ -1709,6 +1833,18 @@ export const industriesPart2 = {
         service: 'ai-search-visibility',
         why: 'Buyers now ask AI tools to suggest suppliers for a part or process. Clear capability pages and consistent listings help ChatGPT and Gemini mention the manufacturer accurately.',
       },
+      {
+        service: 'crm-development',
+        why: 'RFQs come in from the website, IndiaMART, trade-fair visiting cards, dealers and overseas buyers, then run for months through drawings, quotation revisions, samples and audits. Every revision stays on one account record with each person involved – design engineer, purchase, quality – and trial orders that should become repeat schedules get a reminder.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'A dealer portal backed by an admin panel gives each dealer the product catalogue with specifications and drawings, the price list for their tier, and their open RFQs and orders. Regional sales teams approve their own dealers’ orders, dispatch marks them shipped, and dealers stop phoning to ask where their material is.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'A plant head shouldn’t learn about a slow line or a spike in rejections from next week’s Excel report. Output by shift, OEE and rework can come straight off the machines and the ERP, beside raw-material stock, order-to-dispatch time and receivables from Tally, so the plant head and owner read the same screen.',
+      },
     ],
     seasonality:
       'Demand follows customers’ budget cycles, with procurement often active around the start and end of the financial year. Major trade fairs create peaks in enquiries and follow-up, and export demand follows buyers’ own calendars.',
@@ -1825,6 +1961,18 @@ export const industriesPart2 = {
         service: 'photography',
         why: 'Clear product photos on a consistent background make catalogues, portal listings and the website look reliable – and save buyers asking for pictures before they place an order.',
       },
+      {
+        service: 'crm-development',
+        why: 'A maintenance buyer who needs a bearing today orders from whoever quotes first. IndiaMART, website, call and WhatsApp enquiries land in one queue with part numbers and quantities, quotes go out from the price list, and each account’s order history and Tally dues stay with the company, not in one rep’s phone.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'Distributors stock part numbers from many brands, with different prices for contractors, retailers and key accounts. With the catalogue, specifications and tiered price lists in an admin panel, buyers reorder through a portal, special discounts wait for approval and dispatch is tracked – so repeat business no longer lives in one salesperson’s phone.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'A regular buyer who quietly stops reordering, or an item sitting unsold in the godown for months, rarely shows up when stock lives in Tally, quotes in the CRM and follow-ups in a rep’s notebook. Customer-wise sales, SKU-wise stock, open quotes and overdue payments together give the owner that warning within the week.',
+      },
     ],
     seasonality:
       'Demand follows customers’ project and maintenance calendars – construction and infrastructure supplies slow in the monsoon, while factories buy around planned shutdowns and towards the start and end of the financial year. Steady consumables keep a base of repeat orders through the year.',
@@ -1933,6 +2081,18 @@ export const industriesPart2 = {
         service: 'video-production',
         why: 'Short videos of packing, loading, warehouse operations and the fleet show care and capacity that a rate card can’t. They work in ads, sales emails and on the website.',
       },
+      {
+        service: 'crm-development',
+        why: 'Household moves need a survey, an itemised quote and a confirmed date; freight and warehousing deals need lane-wise rate cards, trial loads and contract renewals. Both pipelines run side by side, enquiries are assigned by city or route, and quotes lost on price are marked so sales can revisit the lanes worth winning.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'Too often, the only trace of where a consignment is sits in a driver’s WhatsApp chat. Once every shipment has one record – pickup, vehicle, rate and proof of delivery – branches, drivers and customers can each see their part of it, and customer queries get answered without chasing anyone.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'How many trucks ran empty yesterday, which depot has the most PODs pending and which clients are past 60 days on freight bills? A dashboard fed by GPS, the booking system and Tally answers that for each branch manager’s depot and for the owner’s whole network – without a round of evening phone calls.',
+      },
     ],
     seasonality:
       'House moves rise in the April–June school holidays and around month-ends, when rental agreements turn over, while courier and freight volumes climb through the festive and sale season from September to December. Warehousing demand follows e-commerce and retail stocking ahead of festivals.',
@@ -2039,6 +2199,14 @@ export const industriesPart2 = {
       {
         service: 'google-business-profile',
         why: 'Retailers visiting a wholesale market look up shops by name and product. A profile with the exact shop location, photos of the range and wholesale timings helps buyers find you among many similar shops.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Export enquiries go through costing, lab dips, proto and fit samples before a buying house places a season’s order, while domestic retailers reorder on WhatsApp. Each sample round and costing version sits under its buyer, agent and season, trade-fair contacts get a follow-up list, and retailers who usually restock before festivals are flagged.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'An export order moves through cutting, stitching, finishing and packing, and a lagging line shows up in the floor sheets only near the ship date. If the factory head and merchandisers see line-wise output and efficiency, alteration rates and fabric stock by style daily, there’s time to add a shift before the buyer starts asking.',
       },
     ],
     seasonality:
@@ -2156,6 +2324,14 @@ export const industriesPart2 = {
       {
         service: 'drone-shoots',
         why: 'Aerial footage of demonstration plots, orchards and large farms shows results and scale that ground shots miss. It works in films for farmers and dealers, investor decks and organic brand stories.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Farmer enquiries from regional-language ads, missed calls and WhatsApp are routed by district to the nearest dealer or field officer, with crop and acreage noted. Demo-plot visits, dealer orders and FPO deals are logged season by season, showing which territories convert before the sowing window closes.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'Agri input businesses live by district-wise sales, stock lying with each dealer and credit outstanding as the sowing season approaches. Tally and the field team’s app hold those numbers separately; together, they let the sales head and regional managers move stock to districts where sowing has started before dealers there run short.',
       },
     ],
     seasonality:

@@ -43,4 +43,7 @@ export const serviceCardLines: Record<ServiceSlug, string> = {
   photography: 'Products, food, interiors and teams, edited and ready for ads, sites and marketplaces.',
   'video-production': 'Reels, ads, brand films and testimonials – scripted, shot and edited for social.',
   'drone-shoots': 'Aerial video and photos for real estate, resorts, events and construction sites.',
+  'crm-development': 'Every lead in one place, assigned and followed up, with reports on what converts.',
+  'admin-panel-development': 'Back offices where staff manage products, orders, bookings, users and access.',
+  'dashboard-development': 'Sales, collections, stock and production numbers live on one screen for owners.',
 };

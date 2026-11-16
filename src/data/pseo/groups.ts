@@ -353,6 +353,57 @@ export const serviceGroups = {
       text: 'Tell us your product and audience. We’ll suggest creators, hooks and a written plan within three working days.',
     },
   },
+  'crm-and-business-software': {
+    group: 'CRM & Business Software',
+    tagline: 'Every lead and number in one place',
+    intro:
+      'Custom CRMs, admin panels and live dashboards that replace spreadsheets and WhatsApp groups – built around how your team actually works.',
+    price: 'Priced per project – free estimate',
+    offers: [
+      {
+        title: 'CRM Development',
+        text: 'Leads from every source in one pipeline, with follow-up reminders and reports on what converts.',
+        price: 'Free estimate',
+        service: 'crm-development',
+      },
+      {
+        title: 'Admin Panel Development',
+        text: 'Back offices where staff manage products, orders, bookings, users and roles without a developer.',
+        price: 'Free estimate',
+        service: 'admin-panel-development',
+      },
+      {
+        title: 'Dashboard Development',
+        text: 'Sales, collections, stock and production on one live screen, with a view for every role.',
+        price: 'Free estimate',
+        service: 'dashboard-development',
+      },
+    ],
+    stats: [
+      { value: '3', label: 'Core services', text: 'CRM, admin panels and dashboards' },
+      { value: '1', label: 'Place for every lead', text: 'Web, ads, WhatsApp, calls and portals' },
+      { value: 'Live', label: 'Numbers', text: 'Synced from Tally, sheets and your CRM' },
+      { value: 'Phone', label: 'Ready', text: 'For owners, managers and field teams' },
+    ],
+    phases: [
+      {
+        title: 'Map',
+        points: ['Lead sources and sales stages', 'Daily back-office jobs', 'The numbers each role needs'],
+      },
+      {
+        title: 'Build',
+        points: ['Screens tested with your team', 'Connections to Tally, forms and portals', 'Old data moved across'],
+      },
+      {
+        title: 'Launch',
+        points: ['Training for every role', 'Alerts and daily summaries', 'Support and next features'],
+      },
+    ],
+    cta: {
+      heading: 'Ready to run on one system, not ten spreadsheets?',
+      text: 'Tell us how your team handles leads, orders and reports today. We’ll map it and send a written plan and estimate within three working days.',
+    },
+  },
 } satisfies Record<string, ServiceGroupContent>;
 
 export type ServiceGroupSlug = keyof typeof serviceGroups;
