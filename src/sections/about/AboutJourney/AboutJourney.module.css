@@ -112,22 +112,6 @@
   font-weight: 600;
 }
 
-.live::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 8px var(--color-accent);
-  animation: blink 1.6s ease-in-out infinite;
-}
-
-@keyframes blink {
-  50% {
-    opacity: 0.3;
-  }
-}
-
 /* Uppercase label, as on the conversion timeline */
 .title {
   margin-top: var(--space-3);
@@ -281,7 +265,6 @@
     --line: 1;
   }
 
-  .live::before,
   .current .dot {
     animation: none;
   }

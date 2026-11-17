@@ -1,14 +1,19 @@
 import type { Metadata } from 'next';
 import { site } from '@/data/site';
 import type { PseoPage } from '@/types/pseo';
+import { regionalAlternates } from './regions';
 
 // Title, description, canonical URL and Open Graph tags for a programmatic page. Pages outside the
 // current launch batch get "noindex, follow": they can be previewed and pass links on, but stay
-// out of Google until their batch goes live.
+// out of Google until their batch goes live. A service page and each country's main page for it
+// also name each other (hreflang – see regions.ts), so Google shows people their country's one.
 export const pageMetadata = (page: PseoPage): Metadata => ({
   title: { absolute: page.title },
   description: page.description,
-  alternates: { canonical: page.path },
+  alternates: {
+    canonical: page.path,
+    languages: page.indexable ? regionalAlternates(page.path) : undefined,
+  },
   openGraph: {
     type: 'website',
     siteName: site.name,

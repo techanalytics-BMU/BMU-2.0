@@ -136,14 +136,6 @@
   font-size: 0.75rem;
 }
 
-.noteDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(140, 198, 63, 0.18);
-}
-
 /* ---------- Bento grid: one tall card on the left, a wide card top-right, three along the bottom ---------- */
 .grid {
   display: grid;

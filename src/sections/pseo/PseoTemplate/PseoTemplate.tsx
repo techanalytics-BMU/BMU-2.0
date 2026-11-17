@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import Badge from '@/components/ui/Badge/Badge';
 import Button from '@/components/ui/Button/Button';
+import { hasPlaces } from '@/lib/pseo/regions';
 import type { PageSection, PseoPage, SectionItem } from '@/types/pseo';
 import PseoMobileBar from './PseoMobileBar';
 import PseoMore from './PseoMore';
+import PseoNearby from './PseoNearby';
 import PseoGridLight from './PseoGridLight';
 import PseoProgress from './PseoProgress';
 import PseoReveal from './PseoReveal';
@@ -17,8 +19,7 @@ import styles from './PseoTemplate.module.css';
 //
 // Layout, landing-page style: a full-screen hero (the heading in silver, on a grid under light
 // from above, a planet's lit horizon across the bottom) →
-// "At a glance" facts → a band of big words drifting sideways →
-// the sections, each with its own entrance (the first text section lights up word by word as you
+// "At a glance" facts → the sections, each with its own entrance (the first text section lights up word by word as you
 // scroll, cards tip up into place, the timeline fills in, searches type themselves) → FAQ → a
 // full-width closing call to action over a planet horizon with light running along arcs.
 // Every call to action is the same single button, to the contact page. Phones get a sticky bar.
@@ -431,18 +432,6 @@ function Section({
   }
 }
 
-// The words for the drifting band: the page's first list of ticks (who we work with, what's
-// common here), else its first cards (what you get)
-function marqueeWords(page: PseoPage) {
-  let checks: SectionItem[] | undefined;
-  let cards: SectionItem[] | undefined;
-  for (const section of page.sections) {
-    if (section.kind === 'checks' && section.display !== 'search') checks ??= section.items;
-    if (section.kind === 'cards') cards ??= section.items;
-  }
-  return (checks ?? cards ?? []).map((item) => item.title);
-}
-
 // The hero grid's squares that light up in turn: [columns from the centre, rows from the top].
 // Phones only show the middle five columns, so some sit near the centre; none go below row 5,
 // where the horizon starts on a laptop.
@@ -470,7 +459,6 @@ const ARCS = [
 
 export default function PseoTemplate({ page }: { page: PseoPage }) {
   const statementId = page.sections.find((s) => s.kind === 'prose')?.id;
-  const marquee = marqueeWords(page);
 
   return (
     <main className={styles.page}>
@@ -505,6 +493,7 @@ export default function PseoTemplate({ page }: { page: PseoPage }) {
             <Button href="/contact" variant="accent">
               Know more
             </Button>
+            {hasPlaces(page.path) && <PseoNearby path={page.path} />}
           </div>
         </div>
       </header>
@@ -520,21 +509,6 @@ export default function PseoTemplate({ page }: { page: PseoPage }) {
             ))}
           </dl>
         </PseoReveal>
-      )}
-
-      {marquee.length >= 4 && (
-        <div className={styles.marquee} aria-hidden="true">
-          <div className={styles.marqueeTrack} style={vars({ '--count': marquee.length })}>
-            {/* two copies, so the band can loop without a seam */}
-            {[0, 1].map((copy) => (
-              <ul key={copy} className={styles.marqueeList}>
-                {marquee.map((word) => (
-                  <li key={word}>{word}</li>
-                ))}
-              </ul>
-            ))}
-          </div>
-        </div>
       )}
 
       <div className={styles.body}>

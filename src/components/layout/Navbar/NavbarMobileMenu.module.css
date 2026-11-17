@@ -69,30 +69,12 @@
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  padding: 7px 13px 7px 11px;
+  padding: 7px 13px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-pill);
   background: rgba(255, 255, 255, 0.03);
   color: #a9adb3;
   font-size: 0.75rem;
-}
-
-.statusDot {
-  position: relative;
-  flex-shrink: 0;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--color-accent);
-}
-
-.statusDot::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border: 1px solid rgba(140, 198, 63, 0.55);
-  border-radius: 50%;
-  animation: ping 2.4s ease-out infinite;
 }
 
 /* ---------- Pages: one glass list ---------- */
@@ -175,16 +157,6 @@
   font-size: 0.8125rem;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.currentDot {
-  flex-shrink: 0;
-  width: 7px;
-  height: 7px;
-  margin-right: 4px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 0 4px rgba(140, 198, 63, 0.15);
 }
 
 /* ---------- Services: six tiles, three a row, so all of them sit above the dock ---------- */
@@ -376,18 +348,6 @@
   }
 }
 
-@keyframes ping {
-  from {
-    opacity: 1;
-    transform: scale(0.5);
-  }
-
-  to {
-    opacity: 0;
-    transform: scale(1.6);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .menu,
   .menu[data-open='true'] {
@@ -396,10 +356,6 @@
   }
 
   .menu[data-open='true'] :is(.status, .pages > li, .sectionHead, .services > li, .dock) {
-    animation: none;
-  }
-
-  .statusDot::after {
     animation: none;
   }
 }

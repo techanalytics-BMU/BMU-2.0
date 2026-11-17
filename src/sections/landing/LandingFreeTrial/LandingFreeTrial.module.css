@@ -338,20 +338,6 @@
   color: #f5f3ee;
 }
 
-.queueDot {
-  flex-shrink: 0;
-  width: calc(var(--u) * 0.5);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.16);
-}
-
-.queue li:first-child .queueDot {
-  background: var(--color-accent);
-  box-shadow: 0 0 calc(var(--u) * 0.8) var(--color-accent);
-  animation: pulse 1.6s ease-in-out infinite;
-}
-
 .queueText {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -437,14 +423,6 @@
   animation: tag-in 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.tagDot {
-  width: calc(var(--u) * 0.5);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 calc(var(--u) * 0.8) var(--color-accent);
-}
-
 @keyframes tag-in {
   from {
     opacity: 0;
@@ -519,15 +497,6 @@
   font-weight: 400;
 }
 
-.status::before {
-  content: '';
-  width: calc(var(--u) * 0.45);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: var(--color-accent);
-  animation: pulse 1.6s ease-in-out infinite;
-}
-
 /* Skeleton paragraph with a slow shimmer */
 .lines {
   display: flex;
@@ -567,16 +536,8 @@
   }
 }
 
-@keyframes pulse {
-  50% {
-    opacity: 0.35;
-  }
-}
-
 /* Off screen: the endless animations rest, so they cost nothing while the page scrolls elsewhere */
-.screen[data-on-screen='false'] .queue li:first-child .queueDot,
 .screen[data-on-screen='false'] .caret,
-.screen[data-on-screen='false'] .status::before,
 .screen[data-on-screen='false'] .lines span {
   animation-play-state: paused;
 }
@@ -626,19 +587,11 @@
 .chip {
   z-index: 1;
   gap: 0.55rem;
-  padding: 0.55rem 1.15rem 0.55rem 0.95rem;
+  padding: 0.55rem 1.15rem;
   color: var(--color-light);
   font-size: 0.875rem;
   font-weight: 500;
   pointer-events: auto;
-}
-
-.chipDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 8px var(--color-accent);
 }
 
 /* ---------- Narrow windows: drop the builder panel and the site's links,
@@ -703,10 +656,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .queue,
-  .queue li:first-child .queueDot,
   .tag,
   .caret,
-  .status::before,
   .lines span {
     animation: none;
   }

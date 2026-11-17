@@ -129,7 +129,7 @@
   list-style: none;
 }
 
-/* Small green dots for bullets */
+/* Short silver dash bullets */
 .list li {
   position: relative;
   padding-left: 22px;
@@ -138,13 +138,11 @@
 .list li::before {
   content: '';
   position: absolute;
-  top: 0.72em;
-  left: 4px;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 8px rgba(140, 198, 63, 0.5);
+  top: 0.78em;
+  left: 2px;
+  width: 9px;
+  height: 1.5px;
+  background: rgba(255, 255, 255, 0.45);
 }
 
 .term {

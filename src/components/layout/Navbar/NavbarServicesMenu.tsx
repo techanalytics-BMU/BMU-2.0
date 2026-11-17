@@ -90,7 +90,6 @@ export default function NavbarServicesMenu({
             ))}
           </ul>
           <p className={styles.note}>
-            <span className={styles.noteDot} aria-hidden="true" />
             Reply within one working day
           </p>
         </div>

@@ -422,16 +422,6 @@
   color: var(--color-text-muted);
 }
 
-.enquiries li::before {
-  content: '';
-  flex: none;
-  width: 0.5em;
-  height: 0.5em;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 6px rgba(140, 198, 63, 0.6);
-}
-
 /* Curves between the boxes.
    The SVG is stretched to fit its column, so dash sizes are in screen pixels
    (curves are always shorter than 400px). The containers reach --pad into this column

@@ -269,7 +269,6 @@ export default function Navbar() {
               {account.label}
             </Link>
             <Button href={navCta.href} size="sm" className={styles.cta}>
-              <span className={styles.liveDot} aria-hidden="true" />
               {navCta.label}
             </Button>
           </div>

@@ -9,11 +9,3 @@
   color: var(--color-text-muted);
   font-size: var(--font-size-xs);
 }
-
-.dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 8px var(--color-accent);
-}

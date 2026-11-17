@@ -337,14 +337,6 @@
   letter-spacing: 0.04em;
 }
 
-.ownerDot {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #e3f6bf, #8cc63f 60%, #4f7d22);
-  box-shadow: 0 0 8px rgba(140, 198, 63, 0.7);
-}
-
 /* Lit line with a glass chip on it (the free-trial section's horizon) */
 .horizon {
   position: relative;
@@ -370,7 +362,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 6px 14px 6px 11px;
+  padding: 6px 14px;
   border: 1px solid rgba(140, 198, 63, 0.4);
   border-radius: var(--radius-pill);
   background: rgba(10, 14, 9, 0.85);
@@ -378,15 +370,6 @@
   font-size: 0.75rem;
   font-weight: 600;
   box-shadow: 0 0 0 4px rgba(140, 198, 63, 0.06);
-}
-
-.chip::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 8px var(--color-accent);
 }
 
 /* ---------- Scene: the receipt ---------- */

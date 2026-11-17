@@ -55,7 +55,6 @@ export default function NavbarMobileMenu({ id, open, pathname, account, onClose 
     <div id={id} className={styles.menu} data-open={open} inert={!open}>
       <div className={styles.scroll} data-lenis-prevent>
         <p className={styles.status} style={{ '--i': step++ } as React.CSSProperties}>
-          <span className={styles.statusDot} aria-hidden="true" />
           Reply within one working day
         </p>
 
@@ -83,7 +82,6 @@ export default function NavbarMobileMenu({ id, open, pathname, account, onClose 
                         <span className={styles.pageHint}>{link.description}</span>
                       )}
                     </span>
-                    {current && <span className={styles.currentDot} aria-hidden="true" />}
                   </Link>
                 </li>
               );
@@ -121,7 +119,6 @@ export default function NavbarMobileMenu({ id, open, pathname, account, onClose 
       {/* The dock: always at the bottom, the page scrolling under it */}
       <div className={styles.dock}>
         <Button href={navCta.href} className={styles.cta} onClick={onClose}>
-          <span className={styles.statusDot} aria-hidden="true" />
           {navCta.label}
         </Button>
         <div className={styles.quick}>

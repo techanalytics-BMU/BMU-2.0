@@ -224,10 +224,46 @@
 }
 
 .actions {
+  position: relative;
   display: flex;
   justify-content: center;
   margin-top: var(--space-6);
   animation: rise-in 1s var(--ease) 0.95s both;
+}
+
+/* "In Dubai? Dashboard development in Dubai" – hangs under the button, so nothing moves when it
+   arrives */
+.nearby {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: max-content;
+  max-width: calc(100vw - 2 * var(--page-gutter));
+  margin: 22px 0 0;
+  color: var(--color-text-dim);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  translate: -50% 0;
+  animation: nearby-in 0.6s ease both;
+}
+
+.nearby a {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.2s ease;
+}
+
+.nearby a:hover,
+.nearby a:focus-visible {
+  text-decoration-color: currentColor;
+}
+
+@keyframes nearby-in {
+  from {
+    opacity: 0;
+  }
 }
 
 /* =====================================================================================
@@ -313,74 +349,11 @@
   text-transform: uppercase;
 }
 
-.fact dt::before {
-  content: '';
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--color-accent);
-}
-
 .fact dd {
   margin: 10px 0 0;
   color: var(--color-text);
   font-size: var(--text-body);
   line-height: 1.45;
-}
-
-/* =====================================================================================
-   A band of big words drifting sideways – alternately outlined and solid
-   ===================================================================================== */
-.marquee {
-  margin-top: clamp(72px, 9vw, 128px);
-  padding: 6px 0;
-  overflow: clip;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-}
-
-.marqueeTrack {
-  display: flex;
-  width: max-content;
-  animation: marquee calc(var(--count) * 5s) linear infinite;
-}
-
-.marqueeList {
-  display: flex;
-  flex-shrink: 0;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.marqueeList li {
-  display: flex;
-  align-items: center;
-  gap: clamp(28px, 3.5vw, 56px);
-  padding-right: clamp(28px, 3.5vw, 56px);
-  color: transparent;
-  font-size: clamp(2rem, 4.4vw, 4rem);
-  letter-spacing: -0.035em;
-  line-height: 1.25;
-  white-space: nowrap;
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.26);
-}
-
-.marqueeList li:nth-child(even) {
-  background: var(--heading-fill);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-stroke: 0;
-}
-
-/* A small lime star between words */
-.marqueeList li::after {
-  content: '';
-  flex-shrink: 0;
-  width: 0.34em;
-  height: 0.34em;
-  background: var(--color-accent);
-  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
 }
 
 /* =====================================================================================
@@ -725,15 +698,6 @@ a.cardInner:focus-visible {
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-}
-
-.phaseLabel::before {
-  content: '';
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 0 4px rgba(140, 198, 63, 0.15);
 }
 
 .phaseTitle {
@@ -1515,12 +1479,6 @@ a.cardInner:focus-visible {
   }
 }
 
-@keyframes marquee {
-  to {
-    transform: translateX(-50%);
-  }
-}
-
 @keyframes type {
   from {
     clip-path: inset(0 100% 0 0);
@@ -1709,7 +1667,6 @@ a.cardInner:focus-visible {
   .intro,
   .actions,
   .facts::before,
-  .marqueeTrack,
   .arcPulse {
     animation: none;
   }

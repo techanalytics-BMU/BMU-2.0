@@ -211,7 +211,7 @@
   align-self: center;
 }
 
-/* "Still have a question?" with a small pulsing lime dot */
+/* "Still have a question?" */
 .eyebrow {
   display: flex;
   align-items: center;
@@ -221,23 +221,6 @@
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-}
-
-.eyebrow::before {
-  content: '';
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 0 0 rgba(140, 198, 63, 0.6);
-  animation: ping 2.2s ease-out infinite;
-}
-
-@keyframes ping {
-  70%,
-  100% {
-    box-shadow: 0 0 0 8px rgba(140, 198, 63, 0);
-  }
 }
 
 /* White fading softly to silver, as the footer card's heading */
@@ -505,7 +488,6 @@
     transform: none;
   }
 
-  .eyebrow::before,
   .bubbleIn span {
     animation: none;
   }

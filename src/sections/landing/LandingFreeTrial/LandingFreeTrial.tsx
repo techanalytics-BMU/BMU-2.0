@@ -103,7 +103,6 @@ export default function LandingFreeTrial() {
                 <ul key={index} className={styles.queue}>
                   {queue.map((i) => (
                     <li key={i}>
-                      <span className={styles.queueDot} />
                       <span className={styles.queueText}>
                         {site.questions[i].service} · {site.questions[i].industry}
                       </span>
@@ -135,7 +134,6 @@ export default function LandingFreeTrial() {
 
                 {/* `key` re-mounts the tag for each question so it fades in again */}
                 <span key={index} className={styles.tag}>
-                  <span className={styles.tagDot} />
                   {current.service} · {current.industry}
                 </span>
                 <span className={styles.postTitle}>
@@ -160,7 +158,6 @@ export default function LandingFreeTrial() {
         {/* Soft green horizon the window fades into */}
         <div className={styles.horizon}>
           <Button href={chip.href} size="sm" className={styles.chip}>
-            <span className={styles.chipDot} aria-hidden="true" />
             {chip.label}
           </Button>
         </div>

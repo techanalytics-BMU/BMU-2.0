@@ -26,7 +26,6 @@ export default function FooterSignature({ wordmark, backToTop }: Props) {
       </span>
       <span className={styles.horizon} aria-hidden="true" />
       <button type="button" className={styles.toTop} onClick={scrollToTop}>
-        <span className={styles.toTopDot} aria-hidden="true" />
         {backToTop}
         <span className={styles.toTopArrow} aria-hidden="true">
           ↑

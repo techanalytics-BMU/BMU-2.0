@@ -758,17 +758,15 @@
   line-height: 1.7;
 }
 
-/* Lime dot bullets */
+/* Short silver dash bullets */
 .list li::before {
   content: '';
   position: absolute;
-  top: 0.68em;
-  left: 0.3em;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 8px rgba(140, 198, 63, 0.6);
+  top: 0.82em;
+  left: 0.2em;
+  width: 9px;
+  height: 1.5px;
+  background: rgba(255, 255, 255, 0.45);
 }
 
 .quote {

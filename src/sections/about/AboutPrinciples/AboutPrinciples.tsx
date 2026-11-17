@@ -63,7 +63,6 @@ function Scene({ item }: { item: AboutPrinciple }) {
               >
                 <span>{row.label}</span>
                 <span className={styles.owner}>
-                  <span className={styles.ownerDot} />
                   {row.value}
                 </span>
               </li>

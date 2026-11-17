@@ -272,15 +272,6 @@ a.link:focus-visible {
   font-weight: 600;
 }
 
-.subscribed::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 8px var(--color-accent);
-}
-
 /* ---------- Closing signature: the wordmark dissolving into a green horizon ---------- */
 .signature {
   position: relative;
@@ -375,7 +366,7 @@ a.link:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  padding: 0.55rem 1rem 0.55rem 0.95rem;
+  padding: 0.55rem 1rem;
   border: 1px solid rgba(140, 198, 63, 0.35);
   border-radius: var(--radius-pill);
   background: rgba(10, 14, 9, 0.72);
@@ -410,14 +401,6 @@ a.link:focus-visible {
 .toTop:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
-}
-
-.toTopDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 8px var(--color-accent);
 }
 
 .toTopArrow {
