@@ -63,6 +63,10 @@ import {
 // from the studio, local competition, the buyer-journey stage a service covers, nearby areas – so
 // sibling pages differ in substance, not just in a swapped name.
 
+// The city in page titles: its official name, then the one people search – in Search Console
+// "bangalore" searches get about 25× the impressions of "bengaluru" ones
+const BENGALURU = 'Bengaluru (Bangalore)';
+
 const crumb = {
   home: { label: 'Home', href: '/' },
   services: { label: 'Services', href: paths.services() },
@@ -230,7 +234,7 @@ export const servicesIndex = (): PseoPage => {
   return withSchema({
     kind: 'index',
     path: paths.services(),
-    title: 'Digital Marketing Services in Bengaluru | BMU Marketing',
+    title: `Digital Marketing Services in ${BENGALURU} | ${site.name}`,
     description: clip(
       'SEO, ads, social media, branding, websites, AI and video production from one team in Bengaluru. See every service BMU Marketing offers.'
     ),
@@ -268,7 +272,7 @@ export const industriesIndex = (): PseoPage =>
   withSchema({
     kind: 'index',
     path: paths.industries(),
-    title: 'Industry Marketing in Bengaluru | BMU Marketing',
+    title: `Industry Marketing in ${BENGALURU} | ${site.name}`,
     description: clip(
       'Marketing built for your sector – real estate, healthcare, restaurants, education, retail and more. See how BMU Marketing works with each industry.'
     ),
@@ -345,7 +349,7 @@ export const serviceGroupPage = (slug: ServiceGroupSlug): PseoPage => {
   const page = {
     kind: 'service-group' as const,
     path: paths.serviceGroup(slug),
-    title: `${group} Services in Bengaluru | ${site.name}`,
+    title: `${group} Services in ${BENGALURU} | ${site.name}`,
     description: clip(`${content.intro} ${content.price}.`),
     h1: group,
     h1Accent: `${content.tagline}.`,
@@ -566,7 +570,7 @@ export const serviceHub = (slug: ServiceSlug): PseoPage => {
   const page = {
     kind: 'service-hub' as const,
     path: paths.serviceHub(slug),
-    title: `${titleCase(service.agencyNoun)} in Bengaluru | ${site.name}`,
+    title: `${titleCase(service.agencyNoun)} in ${BENGALURU} | ${site.name}`,
     description: clip(`${service.summary} ${upperFirst(service.agencyNoun)} in Bengaluru.`),
     h1: upperFirst(service.agencyNoun),
     h1Accent: 'in Bengaluru.',
@@ -688,7 +692,7 @@ export const industryHub = (slug: IndustrySlug): PseoPage => {
   const page = {
     kind: 'industry-hub' as const,
     path: paths.industryHub(slug),
-    title: `${titleCase(industry.marketingLabel)} Agency in Bengaluru | ${site.name}`,
+    title: `${titleCase(industry.marketingLabel)} Agency in ${BENGALURU} | ${site.name}`,
     description: clip(
       `${industry.marketingLabel} in Bengaluru for ${industry.audience}. ${firstSentence(industry.intro)}`
     ),
@@ -827,7 +831,7 @@ export const serviceIndustry = (
   const page = {
     kind: 'service-industry' as const,
     path: paths.serviceIndustry(serviceSlug, industrySlug),
-    title: `${service.title} for ${industry.title} in Bengaluru | ${site.name}`,
+    title: `${service.title} for ${industry.title} in ${BENGALURU} | ${site.name}`,
     description: clip(`${service.title} for ${industry.name}: ${lowerFirst(channel.why)}`),
     h1: `${service.title} for`,
     h1Accent: `${industry.name}.`,
@@ -979,7 +983,7 @@ export const serviceBusiness = (
   const page = {
     kind: 'service-business' as const,
     path: paths.serviceBusiness(serviceSlug, businessSlug),
-    title: `${service.title} for ${business.title} in Bengaluru | ${site.name}`,
+    title: `${service.title} for ${business.title} in ${BENGALURU} | ${site.name}`,
     description: clip(`${service.title} for ${business.name}: ${lowerFirst(channel.why)}`),
     h1: `${service.title} for`,
     h1Accent: `${business.name}.`,
@@ -1119,7 +1123,7 @@ export const serviceLocality = (serviceSlug: ServiceSlug, areaSlug: AreaSlug): P
   const page = {
     kind: 'service-locality' as const,
     path: paths.serviceLocality(serviceSlug, areaSlug),
-    title: `${titleCase(service.agencyNoun)} in ${area.name}, Bengaluru | ${site.name}`,
+    title: `${titleCase(service.agencyNoun)} in ${area.name}, ${BENGALURU} | ${site.name}`,
     description: clip(
       `${upperFirst(service.agencyNoun)} in ${area.name}, Bengaluru – for ${area.businesses[0]} and other local businesses. ${service.summary}`
     ),
@@ -1260,7 +1264,7 @@ export const industryLocality = (
   const page = {
     kind: 'industry-locality' as const,
     path: paths.industryLocality(industrySlug, areaSlug),
-    title: `${titleCase(industry.marketingLabel)} in ${area.name}, Bengaluru | ${site.name}`,
+    title: `${titleCase(industry.marketingLabel)} in ${area.name}, ${BENGALURU} | ${site.name}`,
     description: clip(
       `${industry.marketingLabel} in ${area.name}, Bengaluru. ${firstSentence(market[0])}`
     ),
