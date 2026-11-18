@@ -35,6 +35,7 @@ export type Service = {
   agencyNoun: string; // how people search for the provider – 'SEO agency', 'website development company'
   group: ServiceGroup;
   summary: string; // one line, under 140 characters – meta descriptions and link cards
+  tagline: string; // the text under the hero heading – 3 short sentences, under 340 characters
   intro: string; // 2–3 sentences: what it is and what it does for a business
   whyItMatters: string; // 2 sentences: what goes wrong without it
   deliverables: Point[]; // 6 – what BMU actually does / hands over
@@ -188,7 +189,8 @@ export type PageKind =
   | 'service-market'
   | 'service-dubai-area';
 
-export type PageLink = { label: string; href: string; note?: string };
+// group: the row it sits in, in a directory – a state, country, district, zone or category
+export type PageLink = { label: string; href: string; note?: string; group?: string };
 
 // One card / step / tick in a section; a tag is a small label on it ("#1", "Where SEO helps");
 // meta is a short line at the foot of a card ("From ₹25,000")
@@ -196,7 +198,15 @@ export type SectionItem = { title: string; text?: string; href?: string; tag?: s
 
 // The blocks a page is built from, in order. The one template knows how to draw each kind.
 export type PageSection =
-  | { kind: 'prose'; id: string; eyebrow?: string; heading: string; paragraphs: string[] }
+  | {
+      kind: 'prose';
+      id: string;
+      eyebrow?: string;
+      heading: string;
+      paragraphs: string[];
+      // one per paragraph, shown when it's the page's opening section – 'The problem', 'What it is'
+      labels?: string[];
+    }
   | {
       kind: 'cards' | 'steps' | 'checks';
       id: string;
@@ -204,7 +214,9 @@ export type PageSection =
       heading: string;
       intro?: string;
       items: SectionItem[];
-      display?: 'search'; // checks only: draw the items as search boxes (searches customers type)
+      // checks only: 'search' draws the items as search boxes (searches customers type);
+      // 'metrics' as one sheet of a monthly report (the numbers a service is measured by)
+      display?: 'search' | 'metrics';
     }
   | {
       kind: 'links';

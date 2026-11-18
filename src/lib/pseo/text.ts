@@ -39,6 +39,18 @@ export const withArticle = (noun: string) => {
 
 export const firstSentence = (text: string) => text.match(/^.+?[.!?](\s|$)/)?.[0].trim() ?? text;
 
+// As many whole sentences from the start as fit in max characters (always at least the first) –
+// keeps the text under a page's heading to about four lines
+export const leadSentences = (text: string, max = 340) => {
+  const sentences = text.match(/.+?[.!?](?=\s|$)/g)?.map((sentence) => sentence.trim()) ?? [text];
+  let lead = sentences[0];
+  for (const sentence of sentences.slice(1)) {
+    if (`${lead} ${sentence}`.length > max) break;
+    lead = `${lead} ${sentence}`;
+  }
+  return lead;
+};
+
 // A stable number from a string – picks which general FAQ a page shows, so siblings differ
 export const hash = (text: string) => {
   let h = 0;

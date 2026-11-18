@@ -54,6 +54,10 @@ export const businessesPart2 = {
         service: 'website-design',
         why: 'A simple mobile page with a click-to-call button, the areas covered, visiting charges and real job photos gives Maps and ad visitors a reason to call. It also shows Google and customers that this is a working plumber, not another lead-selling front.',
       },
+      {
+        service: 'crm-development',
+        why: 'Calls, WhatsApp messages and repeat customers get lost in phone logs. A simple CRM that records each job, assigns it to a plumber and reminds you about follow-ups turns one-off fixes into repeat work.',
+      },
     ],
     faqs: [
       {
@@ -123,6 +127,14 @@ export const businessesPart2 = {
       {
         service: 'whatsapp-automation',
         why: 'Customers can send a photo of the board or the fault before you visit, so you quote sensibly and bring the right parts. Reminders for inverter battery checks and a follow-up after a rewiring job bring repeat and referral work.',
+      },
+      {
+        service: 'digital-marketing',
+        why: 'Most electrical work is urgent and local, so Maps, “near me” search ads and quick WhatsApp replies need to work together. One monthly plan and one report make sure the budget goes to the areas and job types that keep the team busy.',
+      },
+      {
+        service: 'website-development',
+        why: 'A fast site with clear pages for wiring, repairs and installations, and a call and WhatsApp button on every page, turns “electrician near me” searches into jobs. It also gives your Google profile and ads a trustworthy page to send people to.',
       },
     ],
     faqs: [
@@ -198,6 +210,10 @@ export const businessesPart2 = {
         service: 'whatsapp-automation',
         why: 'Customers send photos and measurements of the space or the broken piece and get a quick rough estimate and a visit slot. A WhatsApp catalogue of past designs and laminate options helps them decide before you arrive.',
       },
+      {
+        service: 'dashboard-development',
+        why: 'Carpentry firms run several site jobs at once, each with its own material costs, advances and pending payments. A dashboard showing every project’s progress and the money still owed stops margins leaking on long jobs.',
+      },
     ],
     faqs: [
       {
@@ -271,6 +287,10 @@ export const businessesPart2 = {
       {
         service: 'whatsapp-automation',
         why: 'Sending an itemised quote and the chosen shades on WhatsApp right after the inspection, then a follow-up a few days later, wins jobs that would otherwise go quiet. A reminder years later brings repeat repainting work.',
+      },
+      {
+        service: 'digital-marketing',
+        why: 'Painting jobs come from Google searches, Maps, Facebook ads and WhatsApp referrals all at once. One plan that runs them together, with a single report of enquiries by channel, shows where the profitable repaint and waterproofing jobs come from.',
       },
     ],
     faqs: [
@@ -346,6 +366,10 @@ export const businessesPart2 = {
         service: 'website-design',
         why: 'A website with separate home and commercial sections, treatment details, safety information and an inspection booking form converts both kinds of enquiry. Restaurants and offices in particular look for treatment records and contract terms before they call.',
       },
+      {
+        service: 'admin-panel-development',
+        why: 'Annual contracts, recurring treatments and technician routes are hard to run from spreadsheets. An admin panel to manage customers, AMC schedules, technician jobs and service reports keeps every visit on time.',
+      },
     ],
     faqs: [
       {
@@ -419,6 +443,10 @@ export const businessesPart2 = {
       {
         service: 'google-ads',
         why: 'Search campaigns on recurring-intent terms – “weekly cleaning”, “maid service for apartment” – kept apart from one-off deep cleaning searches bring customers who want a plan. Tracking sign-ups by plan type shows which searches are worth the spend.',
+      },
+      {
+        service: 'ui-ux-design',
+        why: 'Customers book cleaning on their phone and give up if choosing rooms, add-ons and a slot gets confusing. A clear booking flow, designed and tested before it’s built, means fewer abandoned bookings and fewer calls asking what’s included.',
       },
     ],
     faqs: [
@@ -494,6 +522,10 @@ export const businessesPart2 = {
         service: 'local-seo',
         why: 'Ranking in Maps for deep cleaning, sofa cleaning and move-in cleaning nearby wins customers who want a team that can arrive quickly with equipment. A separate service entry for each job helps the listing appear for each kind of search.',
       },
+      {
+        service: 'web-apps',
+        why: 'Deep-cleaning prices depend on home size, rooms and add-ons, so customers want an instant quote. A web app that works out the price, books a slot and assigns a crew cuts the back-and-forth calls that lose leads.',
+      },
     ],
     faqs: [
       {
@@ -567,6 +599,10 @@ export const businessesPart2 = {
       {
         service: 'seo',
         why: 'Pages on why an AC stops cooling, how often to service it and what proper gas refilling involves rank for the questions people search before calling. They show you won’t oversell, which is the main worry in this trade.',
+      },
+      {
+        service: 'admin-panel-development',
+        why: 'Summer brings a flood of service calls and AMC visits that need assigning by area and technician. An admin panel for bookings, spare parts, AMC customers and job status keeps the team organised in the busiest months.',
       },
     ],
     faqs: [
@@ -642,6 +678,10 @@ export const businessesPart2 = {
         service: 'ai-chatbots',
         why: 'A chatbot on the website and WhatsApp asks for the appliance, brand, age and fault, states the inspection charge and books a slot at any hour. It captures late enquiries that would otherwise go to the next number in the results.',
       },
+      {
+        service: 'ui-ux-design',
+        why: 'A repair request needs the appliance, brand, problem and a time slot, and every extra step loses a customer. A booking flow designed around those four answers gets requests in faster and gives technicians the details they need.',
+      },
     ],
     faqs: [
       {
@@ -715,6 +755,10 @@ export const businessesPart2 = {
       {
         service: 'video-production',
         why: 'Short videos of the packing process – wrapping, labelling, loading – show the care customers worry about and work in ads, on the profile and in quote follow-ups. A real move filmed from start to finish answers more questions than any brochure.',
+      },
+      {
+        service: 'linkedin-branding',
+        why: 'Corporate relocations are booked by HR and admin teams who check a mover on LinkedIn before asking for a quote. A credible company page and regular posts about office and employee moves open the door to those higher-value contracts.',
       },
     ],
     faqs: [
@@ -868,6 +912,10 @@ export const businessesPart2 = {
         service: 'whatsapp-automation',
         why: 'Regular progress photos during the job reduce owner anxiety and earn referrals, while scheduled follow-ups keep early enquiries warm until they’re ready to start.',
       },
+      {
+        service: 'performance-marketing',
+        why: 'Renovation leads are expensive and many never become projects, so Google and Meta campaigns are measured on cost per site visit and signed quote rather than form fills. Spend shifts towards the localities and job types that turn into contracts.',
+      },
     ],
     faqs: [
       {
@@ -941,6 +989,10 @@ export const businessesPart2 = {
       {
         service: 'whatsapp-automation',
         why: 'Sending the proposal, system specifications and subsidy steps after the survey, followed by timed check-ins, keeps the installer in a long decision. After installation, cleaning and service reminders keep the customer happy enough to refer neighbours.',
+      },
+      {
+        service: 'pitch-decks',
+        why: 'Housing societies, factories and offices decide on rooftop solar in committee meetings. A clear proposal deck covering savings, subsidy steps, timelines and past installations helps your contact sell the project inside their organisation.',
       },
     ],
     faqs: [
@@ -1016,6 +1068,10 @@ export const businessesPart2 = {
         service: 'meta-ads',
         why: 'Ads to car owners nearby for monsoon check-ups, pre-trip inspections or festive service packages fill bays in quiet weeks. A form that asks for the car model helps plan the workshop’s schedule.',
       },
+      {
+        service: 'mobile-apps',
+        why: 'Car owners want pickup booking, live job status and their service history in one place. An app with service reminders brings customers back for the next service instead of the workshop down the road.',
+      },
     ],
     faqs: [
       {
@@ -1089,6 +1145,10 @@ export const businessesPart2 = {
       {
         service: 'google-ads',
         why: 'Search ads on board, class and subject tuition searches in a tight radius reach parents looking right now, especially in the months before exams. Tracking trial bookings and enrolments shows what each search term is worth.',
+      },
+      {
+        service: 'web-apps',
+        why: 'Parents want attendance, fee dues and test scores without chasing the front office. A simple parent portal with batch schedules and fee reminders saves staff time and shows parents the progress they’re paying for.',
       },
     ],
     faqs: [
@@ -1241,6 +1301,10 @@ export const businessesPart2 = {
         service: 'local-seo',
         why: 'Ranking for “play school near me” and “playgroup” searches in the immediate neighbourhood brings parents who want somewhere close. A simple website with the programme, timings and photos helps Google trust the listing.',
       },
+      {
+        service: 'brand-identity',
+        why: 'Parents judge a play school by how cared-for it looks – the sign outside, the uniforms, the bags and the updates they get on WhatsApp. A warm, consistent identity across all of it builds the trust that fills admissions.',
+      },
     ],
     faqs: [
       {
@@ -1314,6 +1378,10 @@ export const businessesPart2 = {
       {
         service: 'linkedin-branding',
         why: 'A LinkedIn presence for the founder and the centre helps when approaching HR teams about corporate childcare tie-ups. Establishments with 50 or more employees must provide creche facilities under the Maternity Benefit Act, and some meet that through a nearby daycare.',
+      },
+      {
+        service: 'pitch-decks',
+        why: 'Corporate creche tie-ups are decided by HR teams comparing options for their employees. A short, well-designed deck on your safety measures, staffing, routines and pricing makes those conversations quicker to close.',
       },
     ],
     faqs: [
@@ -1623,6 +1691,10 @@ export const businessesPart2 = {
         service: 'whatsapp-automation',
         why: 'After the first call, sending a portfolio of similar weddings, package outlines and a planning timeline, followed by timed check-ins, keeps the planner in mind while the family decides.',
       },
+      {
+        service: 'pitch-decks',
+        why: 'Couples and corporate clients compare several planners before they sign. A polished proposal deck – your story, past weddings, process and packages – makes you easier to choose and easier to share with the family.',
+      },
     ],
     faqs: [
       {
@@ -1696,6 +1768,10 @@ export const businessesPart2 = {
       {
         service: 'google-business-profile',
         why: 'Reviews from couples and a profile with recent wedding photos help the studio appear for local photographer searches and reassure parents, who often check Google before approving a booking.',
+      },
+      {
+        service: 'web-apps',
+        why: 'Couples wait weeks for their photos and then struggle to pick album favourites over WhatsApp. An online gallery where they view, shortlist and download makes delivery smoother – and every shared link shows off your work.',
       },
     ],
     faqs: [
@@ -1771,6 +1847,10 @@ export const businessesPart2 = {
         service: 'photography',
         why: 'A proper shoot of rooms, bathrooms, the dining area and common spaces gives honest, well-lit photos that look professional on Maps, listing sites and ads without misrepresenting the place.',
       },
+      {
+        service: 'admin-panel-development',
+        why: 'Running several PGs means tracking beds, rent dues, deposits, tenant documents and complaints. An admin panel built for this keeps occupancy and collections clear, so nothing depends on one person’s notebook.',
+      },
     ],
     faqs: [
       {
@@ -1844,6 +1924,10 @@ export const businessesPart2 = {
       {
         service: 'whatsapp-automation',
         why: 'Sending the menu, package options, available dates and a video tour right after an enquiry keeps the hall in the running, and a follow-up after the visit helps close the booking.',
+      },
+      {
+        service: 'linkedin-branding',
+        why: 'Annual days, offsites and conferences are booked by HR and admin managers who search and network on LinkedIn. A company page showing the corporate events you’ve hosted, and a founder who posts, puts the hall on their shortlist.',
       },
     ],
     faqs: [

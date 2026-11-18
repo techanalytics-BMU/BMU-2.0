@@ -10,6 +10,9 @@ import {
   getCity,
   indexable,
   industries,
+  industriesUsing,
+  isCityService,
+  isLocalService,
   linkable,
   localities,
   markets,
@@ -18,15 +21,23 @@ import {
 } from '@/lib/pseo/catalog';
 import { paths } from '@/lib/pseo/paths';
 import { titleCase } from '@/lib/pseo/text';
-import type { ServiceAreasContent, ServiceAreasItem } from '@/types/footer';
+import type {
+  FooterIndustry,
+  FooterPlace,
+  FooterService,
+  ServiceAreasContent,
+  ServiceAreasItem,
+} from '@/types/footer';
 
 // The footer's link groups, one block each. Every item links to a real programmatic page (built
 // from the same data), and only to pages Google may index. Server-only – the footer passes the
 // finished lists to its client component, so none of the page content reaches the browser.
 
-const FOOTER_SERVICE = 'digital-marketing'; // the service the place links use
+// Locations and Industries link to the pages of the service a page is about; Locations to this
+// one's everywhere else
+const FOOTER_SERVICE = 'digital-marketing';
 
-// The best-known places in each column; the rest are an "All …" link away
+// The best-known places, first in each column; the rest open with the column's "All …" button
 const POPULAR_AREAS: AreaSlug[] = [
   'koramangala',
   'indiranagar',
@@ -82,19 +93,78 @@ const POPULAR_MARKETS: MarketSlug[] = [
 const live = (items: (ServiceAreasItem & { live: boolean })[]): ServiceAreasItem[] =>
   items.filter((item) => linkable(item.live)).map(({ live: _live, ...item }) => item);
 
-const label = (where: string) => `Digital Marketing Agency in ${where}`;
-const hubSection = (id: string) => `${paths.serviceHub(FOOTER_SERVICE)}#${id}`;
+// The popular ones first, then the rest in their usual order
+const popularFirst = <T extends string>(popular: T[], all: readonly T[]) => [
+  ...popular,
+  ...all.filter((slug) => !popular.includes(slug)),
+];
+
+// A place: its name, and its address after the service ('/seo/pune' → 'pune'). Places whose
+// pages Google may not index are left out – which pages those are doesn't depend on the service.
+const place = (name: string, href: string, isLive: boolean): FooterPlace[] =>
+  linkable(isLive) ? [{ name, path: href.slice(`/${FOOTER_SERVICE}/`.length) }] : [];
+
+const areaPlaces = popularFirst(POPULAR_AREAS, LOCALITY_PAGE_SLUGS).flatMap((area) =>
+  place(
+    localities[area].name,
+    paths.serviceLocality(FOOTER_SERVICE, area),
+    indexable.serviceLocality(FOOTER_SERVICE, area)
+  )
+);
+const cityPlaces = popularFirst(POPULAR_CITIES, CITY_PAGE_SLUGS).flatMap((city) =>
+  place(
+    getCity(city).name,
+    paths.serviceCity(FOOTER_SERVICE, city),
+    indexable.serviceCity(FOOTER_SERVICE, city)
+  )
+);
+const dubaiPlaces = [
+  ...place(
+    'Dubai',
+    paths.serviceMarket(FOOTER_SERVICE, 'dubai'),
+    indexable.serviceMarket(FOOTER_SERVICE, 'dubai')
+  ),
+  ...popularFirst(POPULAR_DUBAI_AREAS, DUBAI_AREA_SLUGS).flatMap((area) =>
+    place(
+      dubaiAreas[area].name,
+      paths.serviceDubaiArea(FOOTER_SERVICE, area),
+      indexable.serviceDubaiArea(FOOTER_SERVICE, area)
+    )
+  ),
+];
+const marketPlaces = popularFirst(POPULAR_MARKETS, OTHER_MARKET_SLUGS).flatMap((market) =>
+  place(
+    markets[market].name,
+    paths.serviceMarket(FOOTER_SERVICE, market),
+    indexable.serviceMarket(FOOTER_SERVICE, market)
+  )
+);
+
+// Every industry whose pages Google may index (which ones doesn't depend on the service), the
+// biggest first
+const industryList: FooterIndustry[] = INDUSTRY_SLUGS_BY_PRIORITY.filter((industry) =>
+  linkable(indexable.serviceIndustry(FOOTER_SERVICE, industry))
+).map((slug) => ({ slug, title: industries[slug].title }));
+
+// Every service: its name, the words its place links start with, which place pages it has, and
+// the industries it has a page for (positions in industryList, to keep the page light)
+const footerServices = Object.fromEntries(
+  SERVICE_SLUGS.map((slug): [string, FooterService] => {
+    const using = new Set<string>(industriesUsing(slug));
+    return [
+      slug,
+      {
+        title: services[slug].title,
+        noun: titleCase(services[slug].agencyNoun),
+        places: isCityService(slug),
+        local: isLocalService(slug),
+        industries: industryList.flatMap((industry, i) => (using.has(industry.slug) ? [i] : [])),
+      },
+    ];
+  })
+);
 
 const topIndustries: IndustrySlug[] = INDUSTRY_SLUGS_BY_PRIORITY.slice(0, 16);
-
-// How many place pages each column stands for (the Locations count badge adds them up)
-const indianCities = CITY_PAGE_SLUGS.filter((city) => indexable.serviceCity(FOOTER_SERVICE, city));
-const placeCount =
-  LOCALITY_PAGE_SLUGS.length +
-  indianCities.length +
-  DUBAI_AREA_SLUGS.length +
-  1 + // Dubai itself
-  OTHER_MARKET_SLUGS.length;
 
 export const serviceAreas: ServiceAreasContent = {
   groups: [
@@ -127,68 +197,29 @@ export const serviceAreas: ServiceAreasContent = {
         href: paths.industries(),
       },
     },
-    {
-      id: 'locations',
-      label: 'Locations',
-      heading: 'Digital Marketing Across Bangalore, India & Abroad',
-      total: placeCount,
-      columns: [
-        {
-          title: 'Bangalore',
-          items: live(
-            POPULAR_AREAS.map((area) => ({
-              label: label(localities[area].name),
-              href: paths.serviceLocality(FOOTER_SERVICE, area),
-              live: indexable.serviceLocality(FOOTER_SERVICE, area),
-            }))
-          ),
-          more: {
-            label: `All ${LOCALITY_PAGE_SLUGS.length} Bangalore areas`,
-            href: hubSection('areas-central'),
-          },
-        },
-        {
-          title: 'India',
-          items: live(
-            POPULAR_CITIES.map((city) => ({
-              label: label(getCity(city).name),
-              href: paths.serviceCity(FOOTER_SERVICE, city),
-              live: indexable.serviceCity(FOOTER_SERVICE, city),
-            }))
-          ),
-          more: { label: `All ${indianCities.length} Indian cities`, href: hubSection('cities') },
-        },
-        {
-          title: 'Dubai',
-          items: live([
-            {
-              label: label('Dubai'),
-              href: paths.serviceMarket(FOOTER_SERVICE, 'dubai'),
-              live: indexable.serviceMarket(FOOTER_SERVICE, 'dubai'),
-            },
-            ...POPULAR_DUBAI_AREAS.map((area) => ({
-              label: label(dubaiAreas[area].name),
-              href: paths.serviceDubaiArea(FOOTER_SERVICE, area),
-              live: indexable.serviceDubaiArea(FOOTER_SERVICE, area),
-            })),
-          ]),
-          more: { label: `All ${DUBAI_AREA_SLUGS.length} Dubai areas`, href: hubSection('dubai') },
-        },
-        {
-          title: 'International',
-          items: live(
-            POPULAR_MARKETS.map((market) => ({
-              label: label(markets[market].name),
-              href: paths.serviceMarket(FOOTER_SERVICE, market),
-              live: indexable.serviceMarket(FOOTER_SERVICE, market),
-            }))
-          ),
-          more: {
-            label: `All ${OTHER_MARKET_SLUGS.length} cities abroad`,
-            href: hubSection('international'),
-          },
-        },
-      ],
-    },
   ],
+  links: {
+    columns: [
+      {
+        title: 'Bangalore',
+        places: areaPlaces,
+        all: `All ${areaPlaces.length} Bangalore areas`,
+        local: true,
+      },
+      { title: 'India', places: cityPlaces, all: `All ${cityPlaces.length} Indian cities` },
+      {
+        title: 'Dubai',
+        places: dubaiPlaces,
+        all: `All ${dubaiPlaces.length - 1} Dubai areas`, // the first is Dubai itself
+      },
+      {
+        title: 'International',
+        places: marketPlaces,
+        all: `All ${marketPlaces.length} cities abroad`,
+      },
+    ],
+    industries: industryList,
+    services: footerServices,
+    fallback: FOOTER_SERVICE,
+  },
 };

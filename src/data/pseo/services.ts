@@ -14,6 +14,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Marketing & Visibility',
     summary:
       'SEO that gets your business found – technical fixes, service pages and content that help you rank for what customers search.',
+    tagline:
+      'Show up when customers search for what you sell. We fix your site, build pages that rank and track the enquiries they bring – so search becomes a steady source of business. Every month you see which pages climbed, which searches grew and how many calls and forms came from Google.',
     intro:
       'SEO is the work of getting your website to show up when people search Google for what you sell. It covers three things: a site Google can crawl and understand, pages that answer the exact searches your customers make, and links and mentions from other sites that show you’re trustworthy. Done well, it brings a steady flow of enquiries you don’t pay for per click.',
     whyItMatters:
@@ -101,6 +103,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Marketing & Visibility',
     summary:
       'Local SEO to rank in Google Maps and “near me” searches – profile, reviews, citations and location pages for your service area.',
+    tagline:
+      'Be the business people find first on Google Maps and in “near me” searches. Profile, reviews and local pages that turn nearby searches into calls and visits. We look after your profile, reviews and listings across the web, and report the calls, direction requests and website clicks they bring each month.',
     intro:
       'Local SEO gets your business into the map pack – the three listings with a map that Google shows for searches like “dentist near me”. It works on your Google Business Profile, reviews, directory listings and the location pages on your website together. Google ranks local results on relevance, distance and prominence, and each of these needs its own work.',
     whyItMatters:
@@ -192,6 +196,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Marketing & Visibility',
     summary:
       'Set up, verify and manage your Google Business Profile – categories, photos, posts and review replies, kept current every month.',
+    tagline:
+      'Your Google profile is often the first thing customers see. We set it up, keep it fresh and answer reviews, so more searches turn into calls, directions and visits. Photos, posts, categories and opening hours stay current, and every month you see the profile views, calls and direction requests it brings.',
     intro:
       'Your Google Business Profile is the listing that appears in Google Maps and beside the search results when someone looks up your business or your category nearby. It shows your hours, phone number, photos, reviews and services, and for many customers it’s the first – sometimes the only – thing they see before calling. We set it up properly and keep it active.',
     whyItMatters:
@@ -279,6 +285,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Marketing & Visibility',
     summary:
       'Google Ads – Search, Performance Max and YouTube – built around leads and sales, with conversion tracking set up before spend starts.',
+    tagline:
+      'Reach people at the moment they search for you. Google Ads built around leads and sales, with tracking in place before a rupee is spent. Search, Performance Max and YouTube campaigns are tuned against your cost per lead, so your budget goes to the searches that turn into customers.',
     intro:
       'Google Ads puts your business in front of people at the moment they search for what you sell. Search campaigns show text ads above the organic results, while Performance Max, Display and YouTube campaigns reach people across Google’s network. You pay when someone clicks, so the work is in choosing the right keywords, writing ads that earn the click and sending people to pages that turn that click into an enquiry.',
     whyItMatters:
@@ -361,6 +369,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Marketing & Visibility',
     summary:
       'Facebook and Instagram ads that bring leads and sales – audience setup, creative testing and lead forms tied to your WhatsApp or CRM.',
+    tagline:
+      'Put your business in front of the right people on Facebook and Instagram. Ads, creative tests and lead forms that land straight in your WhatsApp or CRM. We test hooks, formats and audiences side by side, cut what doesn’t sell and scale what does – judged on cost per lead and return on ad spend.',
     intro:
       'Meta ads run on Facebook and Instagram from one Ads Manager account, and can send people straight into a WhatsApp chat or an instant lead form. Unlike Google, people aren’t searching for you – the ads reach them while they scroll, based on their location, interests and behaviour. That makes Meta strong for creating demand: launches, offers, events and products people don’t yet know they want.',
     whyItMatters:
@@ -448,6 +458,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Marketing & Visibility',
     summary:
       'Paid campaigns across Google, Meta and more, run against a cost-per-lead or ROAS target and judged on the leads and sales they bring.',
+    tagline:
+      'Ads that answer to results, not clicks. We run Google, Meta and more against a target cost per lead, and keep moving budget to whatever brings customers in. Landing pages, tracking and follow-up are part of the plan, so you see the whole path from first click to closed sale – and a cost per lead you can trust.',
     intro:
       'Performance marketing means running paid campaigns where every rupee is measured against a business result – a lead, a booking or a sale. We plan the channel mix across Google Ads, Meta ads and others such as YouTube or LinkedIn, set a target cost per lead or return on ad spend, and move budget toward whatever hits it. The focus is the whole path from ad to landing page to follow-up, not one platform’s dashboard.',
     whyItMatters:
@@ -535,6 +547,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Marketing & Visibility',
     summary:
       'Help ChatGPT, Gemini, Perplexity and Google AI Overviews find, understand and recommend your business when people ask for options.',
+    tagline:
+      'When people ask ChatGPT, Gemini or Google’s AI for a recommendation, your business should be in the answer. We make you easy for AI to find, understand and suggest. Clear pages, structured information and mentions on trusted sites help AI tools quote you – and each month you see where you’re cited and the visits it sends.',
     intro:
       'More people now ask ChatGPT, Gemini, Perplexity or Google’s AI Overviews questions like “which interior designer should I hire for a 2BHK?”. These tools build answers from web pages, reviews, directories and forum discussions, and they name or cite the businesses they can find clear, consistent information about. AI search visibility is the work of making your business one of those sources.',
     whyItMatters:
@@ -622,6 +636,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Marketing & Visibility',
     summary:
       'One monthly digital marketing plan – SEO, Google and Meta ads, social media and a single report, run together by one team.',
+    tagline:
+      'One team, one plan, one monthly report. SEO, ads and social media working together, so your marketing brings in enquiries – not just activity. Search, Maps, ads and social are planned as one, so every rupee has a job – and each month one report shows enquiries by channel and what comes next.',
     intro:
       'Digital marketing, as we run it, is one monthly retainer that covers the whole online side of your business – search, Google Maps, Google and Meta ads, social media and the reporting that ties them together. Instead of a separate freelancer for each channel, one team plans the month, decides where the effort and ad budget go, and makes sure your ads, posts and website all say the same thing. You approve one plan and deal with one point of contact.',
     whyItMatters:
@@ -709,6 +725,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Marketing & Visibility',
     summary:
       'Blogs, guides, page copy and newsletters that answer your customers’ questions, rank in Google and get quoted in AI answers.',
+    tagline:
+      'Content that answers your customers’ questions before they ask. Blogs, guides and page copy that rank on Google, get quoted by AI and build trust over time. Each piece is planned around real searches and questions, written in your voice and linked to the page where readers can enquire.',
     intro:
       'Content marketing is the writing and publishing programme behind your website – blog posts, buying guides, service and landing-page copy, FAQs, case-study write-ups and email newsletters. Each piece answers a question your customers already ask, using real detail from your business, so it can rank in Google, be quoted in AI answers and be forwarded to a lead who is still deciding. We plan the topics, interview your team for the substance, then write, edit and publish.',
     whyItMatters:
@@ -797,6 +815,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Social & Personal Brand',
     summary:
       'Monthly Instagram, Facebook and LinkedIn management – content calendar, reels, design, captions, posting and replies to comments and DMs.',
+    tagline:
+      'A social presence that looks consistent and keeps showing up. We plan, design, post and reply on Instagram, Facebook and LinkedIn – every month, on schedule. Reels, posts and stories are designed to match your brand, and every month you see your reach, engagement and the enquiries that came through DMs.',
     intro:
       'Social media management covers planning, creating and posting content on your brand’s Instagram, Facebook, LinkedIn and YouTube, plus replying to comments and messages. We plan a monthly calendar around your business goals, shoot and design the posts, write the captions and publish on schedule. Your pages stay active without your team having to chase it.',
     whyItMatters:
@@ -879,6 +899,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Social & Personal Brand',
     summary:
       'Instagram growth for your business – profile and highlights, a reels-first calendar, stories, collabs, DM replies and Instagram ads.',
+    tagline:
+      'Turn Instagram into a source of customers, not just followers. Reels, stories, collabs and ads planned around what your audience actually stops for. Your profile and highlights are set up to convert, DMs get quick replies, and every month you see your reach to new people and the enquiries it brings.',
     intro:
       'Instagram marketing focuses on one platform and works every part of it – the profile and highlights people check first, reels that reach new viewers, stories for the people who already follow you, collaborations with other accounts and the DMs where enquiries arrive. We plan a reels-first calendar, shoot and edit the content, set up replies for the messages it brings in and add Instagram-placement ads when a strong reel deserves more reach.',
     whyItMatters:
@@ -966,6 +988,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Social & Personal Brand',
     summary:
       'Personal branding for founders, doctors and experts – positioning, scripted videos and steady posts on Instagram, YouTube and LinkedIn.',
+    tagline:
+      'Become the name people trust in your field. We shape your story and keep you visible with scripted videos and steady posts on Instagram, YouTube and LinkedIn. You bring the ideas; we handle scripting, editing and posting, so your expertise reaches the clients, patients and partners who should know you.',
     intro:
       'Personal branding builds the public reputation of a person rather than a company – a founder, doctor, lawyer, coach or consultant. We help you decide what you want to be known for, then turn your knowledge into regular videos and posts on Instagram, YouTube and LinkedIn. People buy from people they feel they know, and a visible expert gets referrals, speaking invites and enquiries that a logo alone doesn’t.',
     whyItMatters:
@@ -1053,6 +1077,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Social & Personal Brand',
     summary:
       'LinkedIn for founders and B2B companies – profile rewrite, ghostwritten posts and a company page that builds trust with buyers.',
+    tagline:
+      'Build trust with buyers before the first meeting. A sharper profile, ghostwritten posts in your voice and a company page that makes B2B decisions easier. Each post starts from a conversation with you and goes out only after you approve it, so prospects already know and trust you when they reply.',
     intro:
       'LinkedIn is where B2B buyers, investors, partners and senior hires check who you are before they reply. LinkedIn branding covers the founder’s personal profile and the company page: a clear profile, regular posts written in your voice and steady engagement with the people you want to reach. Posts from people usually travel further on LinkedIn than posts from company pages, so we start with the founder or leadership team.',
     whyItMatters:
@@ -1136,6 +1162,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'UGC & Creator Marketing',
     summary:
       'UGC-style videos made with real creators – unboxings, reviews and testimonials for Meta ads, Instagram and product pages.',
+    tagline:
+      'Real people, real reactions, videos that sell. UGC-style unboxings, reviews and testimonials made with creators for your ads, Instagram and product pages. Each video is scripted around one strong hook, made to feel native to the feed, and tested in ads to find the ones that bring sales.',
     intro:
       'UGC (user-generated content) videos are short, phone-shot videos that look like a real customer talking about your product or service – unboxings, honest reviews, “how I use it” demos and before-and-afters. We brief creators, manage the shoots and edit the videos into ads and organic posts. Because they look like the content people already watch on Instagram, they’re often less likely to be scrolled past than a polished advert.',
     whyItMatters:
@@ -1218,6 +1246,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'UGC & Creator Marketing',
     summary:
       'Influencer campaigns with Instagram and YouTube creators – matching, briefs, negotiation, ASCI-compliant disclosure and tracking.',
+    tagline:
+      'Borrow trust from creators your customers already follow. We find the right Instagram and YouTube voices, brief them well and track what each campaign brings. Every collaboration has a clear brief, ASCI-compliant disclosure and tracked links or codes, so you know exactly what each creator delivered.',
     intro:
       'Influencer marketing pays creators to feature your brand for their audience on Instagram, YouTube and other platforms. We find creators whose followers match your customers, check that their audience and engagement are genuine, negotiate deliverables, brief them and track what each collaboration brings in. It suits launches, store openings, new menus and products where trust in a familiar face speeds up the decision.',
     whyItMatters:
@@ -1306,6 +1336,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Brand & Design',
     summary:
       'Logo, colours, typography and brand guidelines that make your business look consistent and recognisable everywhere it appears.',
+    tagline:
+      'Look like the business you want to be. A logo, colours, type and guidelines that make you consistent and recognisable everywhere you appear. We start with what makes you different, then turn it into a visual system your team, printers and agencies can follow without guesswork.',
     intro:
       'Brand identity is the visual system people recognise you by – logo, colour palette, typefaces, imagery style and how these come together on signage, packaging, social posts and your website. We start with who you’re for and how you want to be seen, then design the identity. A set of guidelines makes sure everyone who creates something for your brand gets it right.',
     whyItMatters:
@@ -1393,6 +1425,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Brand & Design',
     summary:
       'Packaging design for D2C and retail products – boxes, labels, pouches and print-ready dielines that stand out on shelf and online.',
+    tagline:
+      'Packaging that gets picked up – on the shelf and on screen. Boxes, labels and pouches designed to stand out, with print-ready files for your printer. Every design is checked for print, sized to your dielines and planned for how it looks in a product photo, so your launch isn’t held up by corrections.',
     intro:
       'Packaging design covers the box, label, pouch or jar your product comes in – its structure, graphics, copy and printed information. Packaging has several jobs at once: stand out on a shelf or a marketplace thumbnail, explain the product in seconds, carry the mandatory details and survive printing and shipping. We design with your printer’s specifications and dielines in hand, so what you approve is what gets produced.',
     whyItMatters:
@@ -1480,6 +1514,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Brand & Design',
     summary:
       'UI/UX design for websites, web apps and mobile apps – user research, wireframes, Figma prototypes and design systems for developers.',
+    tagline:
+      'Products people understand on the first try. Research, wireframes and Figma prototypes for websites and apps, with design systems your developers can build from. We test with real users before anything is built, so less gets rebuilt later – and the screens your customers use most feel simple.',
     intro:
       'UI/UX design decides how a website or app works and feels. UX covers the structure – what users need to do, which screens they see and in what order – while UI covers the visual design of every button, form and screen. We design in Figma, test clickable prototypes with real users and give developers a design system they can build from without guessing.',
     whyItMatters:
@@ -1567,6 +1603,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Brand & Design',
     summary:
       'Investor and sales pitch decks – story, structure, copy and design that make your business easy to understand and act on.',
+    tagline:
+      'Make your story easy to say yes to. Investor and sales decks with a clear structure, sharp copy and design that helps people understand – and act. We work out the story first – problem, proof, plan and ask – then write and design every slide so it works in the room and when it’s forwarded.',
     intro:
       'A pitch deck is the short presentation you use to raise funding or win a client. Investor decks cover the problem, your solution, the market, traction, team and the ask; sales decks walk a buyer from their problem to why you’re the right choice. We work on the story and the words as much as the design, so each slide makes one clear point.',
     whyItMatters:
@@ -1655,6 +1693,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Web & AI',
     summary:
       'Website design that turns visits into enquiries – page structure, mobile-first layouts and well-placed call, form and WhatsApp buttons.',
+    tagline:
+      'A website that turns visitors into enquiries. Clear pages, mobile-first layouts and call, form and WhatsApp buttons placed where people are ready to act. Every page is planned around the questions customers ask before they get in touch, and built to look sharp and load fast on any phone.',
     intro:
       'Website design decides how your site looks and how it works for a visitor – which pages exist, what goes on each one, the order of the information and what someone sees first on a phone screen. We plan the structure, design every key page for mobile and desktop, and place calls, forms and WhatsApp buttons where visitors are ready to use them. You approve the designs page by page, and your developer or our build team follows them exactly.',
     whyItMatters:
@@ -1742,6 +1782,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Web & AI',
     summary:
       'Fast, mobile-first websites built to bring enquiries – clear service pages, call and WhatsApp buttons, SEO setup and tracking.',
+    tagline:
+      'Fast, mobile-first websites built to bring in business. Clear service pages, easy call and WhatsApp buttons, and SEO and tracking set up from day one. Pages load quickly, rank properly and track every call, form and WhatsApp tap, so you can see exactly which pages bring you business.',
     intro:
       'Website development covers planning, designing and building your business website – the pages, the content structure, the code and the setup behind it. We build sites that load quickly on phones, explain what you do on the first screen and make it easy to call, WhatsApp or fill in a form. Every site goes live with basic SEO, analytics and conversion tracking already in place.',
     whyItMatters:
@@ -1829,6 +1871,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Web & AI',
     summary:
       'Custom web apps – customer portals, booking systems, dashboards and internal tools – planned, designed and built around how you work.',
+    tagline:
+      'Software shaped around how your business works. Customer portals, booking systems and internal tools – planned, designed and built for your team. We map the workflow with you first, then design and build in short sprints, so your team starts using the most important parts early.',
     intro:
       'A web app is software that runs in the browser – a customer portal, booking system, dealer dashboard, inventory tool or SaaS product. Unlike a website, it has logins, stored data and workflows. We help you define what the first version must do, design the screens and build it, so you can launch, learn from real users and add features from there.',
     whyItMatters:
@@ -1911,6 +1955,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Web & AI',
     summary:
       'Android and iOS app development – scope, design, build, Play Store and App Store launch, and updates after release.',
+    tagline:
+      'Apps your customers keep on their phones. Android and iOS, from scope and design to the Play Store and App Store launch – and updates after. We plan what the first version must do, design it to feel easy, build it for both stores and keep improving it as your customers’ needs grow.',
     intro:
       'Mobile app development covers planning, designing and building apps for Android and iPhone, then getting them through Google Play and App Store review. Many apps are now built with cross-platform frameworks such as React Native or Flutter, so one codebase runs on both – we recommend this unless the app needs heavy use of native features. We focus on apps people will open again and again: ordering, booking, loyalty, learning and field-team tools.',
     whyItMatters:
@@ -1993,6 +2039,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Web & AI',
     summary:
       'AI chatbots for your website and WhatsApp that answer questions from your own information, qualify leads and book appointments.',
+    tagline:
+      'Answer every customer, any time. AI chatbots for your website and WhatsApp that reply from your own information, qualify leads and book appointments. The bot learns from your own pages, prices and policies, hands a chat to your team when a person is needed, and passes every lead to WhatsApp or your CRM.',
     intro:
       'An AI chatbot answers customer questions on your website or WhatsApp at any hour, using your own information – services, prices, timings, policies and FAQs. Chatbots built on large language models understand questions written in everyday language, not just fixed menu options. We set them up to collect contact details, qualify the enquiry and hand over to your team when a person is needed.',
     whyItMatters:
@@ -2080,6 +2128,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Web & AI',
     summary:
       'WhatsApp Business API setup with broadcasts, automated follow-ups, catalogues and a team inbox, so no enquiry or reorder slips through.',
+    tagline:
+      'Meet customers where they already are. WhatsApp broadcasts, automatic follow-ups and a shared team inbox, so no enquiry or reorder slips through. Built on the official WhatsApp Business API, with templates, catalogues and tags, so offers reach the right customers and replies never get lost.',
     intro:
       'WhatsApp automation uses the WhatsApp Business Platform (the API) to message customers at scale – broadcasts to opted-in lists, instant replies, order and appointment updates, follow-ups and product catalogues. Unlike the free WhatsApp Business app, the API supports several agents on one number, approved message templates and connections to your website, CRM and ads. We set it up through a Meta business partner platform and build the flows your team needs.',
     whyItMatters:
@@ -2167,6 +2217,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Web & AI',
     summary:
       'CRM setup, lead routing and automated email and WhatsApp follow-ups, so every lead gets a fast reply and a clear next step.',
+    tagline:
+      'Every lead, followed up – automatically. CRM setup, lead routing and email and WhatsApp follow-ups that give each enquiry a fast reply and a clear next step. Leads from ads, forms and WhatsApp land in one place, go to the right person and trigger reminders on time, so nothing waits for someone to remember.',
     intro:
       'Marketing automation connects the places leads come from – website forms, ads, WhatsApp and calls – to a CRM, then follows up automatically. Each lead is assigned to the right salesperson, gets an instant acknowledgement and receives a planned series of emails or WhatsApp messages until they’re ready to buy. We set up the CRM, build the workflows and make sure your team actually uses them.',
     whyItMatters:
@@ -2250,6 +2302,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Content & Production',
     summary:
       'Commercial photography for products, food, interiors and teams – planned shoots and edited images ready for ads, websites and marketplaces.',
+    tagline:
+      'Images that make people want what you sell. Planned shoots for products, food, interiors and teams, edited and ready for ads, websites and marketplaces. We plan the shot list with you, style each setup and deliver images sized for every place you’ll use them, so your listings and ads look their best.',
     intro:
       'Commercial photography covers the images a business uses to sell – product shots for Amazon and your website, food photography for menus and delivery apps, interiors for hotels, clinics and real estate, and portraits and office shots for corporate use. We plan each shoot around where the images will be used. Then we light, style and edit them so they look consistent across every channel.',
     whyItMatters:
@@ -2342,6 +2396,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Content & Production',
     summary:
       'Video production for reels, ads, brand films and testimonials – scripting, shooting and editing in formats made for Instagram and YouTube.',
+    tagline:
+      'Videos made to be watched to the end. Reels, ads, brand films and testimonials – scripted, shot and edited for Instagram and YouTube. We plan the story and the first three seconds before the camera rolls, then deliver cuts sized for reels, ads and YouTube.',
     intro:
       'Video production covers everything from a single reel to a full brand film: concept, script, shoot, edit, music, captions and the versions each platform needs. We make short reels and ads for Instagram and YouTube, customer testimonials, product demos, property and space walkthroughs, and longer brand films. Every video starts with where it will run and what it should get people to do.',
     whyItMatters:
@@ -2429,6 +2485,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'Content & Production',
     summary:
       'Aerial drone video and photos for real estate, resorts, events and construction – planned within India’s drone rules and edited for use.',
+    tagline:
+      'Show the full picture from above. Aerial video and photos for real estate, resorts, events and construction – planned within India’s drone rules. Flights are planned around permissions, weather and the best light, and the footage is edited into reels, walkthroughs and stills ready to use.',
     intro:
       'Drone shoots capture aerial video and photos that show scale, location and surroundings in a way ground cameras can’t – a villa project with its access roads, a resort’s layout, a wedding venue or a construction site’s progress. We plan the flight path and shots in advance and check airspace and permissions. Then we edit the footage into walkthroughs, reels and ad cuts.',
     whyItMatters:
@@ -2515,6 +2573,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'CRM & Business Software',
     summary:
       'Custom CRMs that pull every lead into one place, assign it, remind your team to follow up and show what converts.',
+    tagline:
+      'Stop losing leads in spreadsheets and chats. A custom CRM that gathers every enquiry in one place, reminds your team to follow up and shows what converts. Built around how your sales team already works, with WhatsApp, calls and your website feeding in, and reports that show which sources and people close deals.',
     intro:
       'A CRM is where every enquiry lives – from the website, ads, WhatsApp, calls and portals like IndiaMART – with who owns it, what was said and what happens next. We build CRMs around how your team actually sells: your stages, your follow-up rules and your reports, on a phone as well as a laptop.',
     whyItMatters:
@@ -2602,6 +2662,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'CRM & Business Software',
     summary:
       'Back-office admin panels to manage products, orders, bookings, users and staff roles – built for your website or app.',
+    tagline:
+      'Run your business from one clean back office. Admin panels to manage products, orders, bookings, users and staff roles – built for your website or app. Clear roles give each person only the screens they need, so your team runs daily operations without calling a developer.',
     intro:
       'An admin panel is the back office of a website or app – where your team adds products, updates prices, approves orders, manages bookings, members or students, and controls who can see what. We build admin panels around the jobs your staff do every day, so routine work takes a few clicks instead of a developer.',
     whyItMatters:
@@ -2687,6 +2749,8 @@ export const services: Record<ServiceSlug, Service> = {
     group: 'CRM & Business Software',
     summary:
       'Live business dashboards that bring sales, collections, production and stock numbers from your systems into one screen.',
+    tagline:
+      'See your whole business on one screen. Live dashboards that pull sales, collections, production and stock from your systems – no more waiting for reports. Owners see what matters at a glance, managers drill into their team’s figures, and alerts flag problems before the month-end review.',
     intro:
       'A business dashboard puts the numbers you check every day – sales, collections, orders, production, stock, leads – on one screen, updated automatically from the systems you already use, such as Tally, your CRM, Google Sheets or your online store. We build dashboards for owners, managers and branches, each seeing the numbers they’re responsible for.',
     whyItMatters:

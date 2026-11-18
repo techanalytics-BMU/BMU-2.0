@@ -7,7 +7,7 @@
   --width: 1180px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --hairline: rgba(255, 255, 255, 0.08);
-  --gap-section: clamp(112px, 13vw, 184px);
+  --gap-section: clamp(64px, 7vw, 100px); /* between sections – about 85px on a laptop */
   /* One type scale for every block below the hero, so the same kind of text is always the same
      size: titles (cards, steps, FAQ questions), body (lists, links, answers, paragraphs), small
      (the line under a title), labels (small capitals) */
@@ -214,7 +214,7 @@
 }
 
 .intro {
-  max-width: 640px;
+  max-width: 860px;
   margin-top: var(--space-5);
   color: var(--color-text-muted);
   font-size: var(--font-size-subheading);
@@ -392,7 +392,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  font-size: clamp(2rem, 3.7vw, 3.5rem);
+  font-size: clamp(1.625rem, 2.6vw, 2.25rem); /* about 32px on a laptop */
   font-weight: 400;
   letter-spacing: var(--heading-letter-spacing);
   line-height: 1.1;
@@ -406,11 +406,20 @@
   line-height: 1.7;
 }
 
-/* ---------- The statement: one big paragraph that lights up word by word ---------- */
+/* ---------- The opening spread: the page's first text section. Heading pinned on the left
+   (see .split below); on the right the statement, lighting up word by word as it scrolls up
+   beside a lime line that fills with it, then numbered notes that rise in ---------- */
+.openingBody {
+  --indent: clamp(20px, 2.4vw, 32px); /* the text's distance from the line */
+  display: grid;
+  gap: clamp(28px, 3vw, 40px);
+  padding-top: 52px; /* level with the heading, under the badge */
+}
+
 .statement {
   --progress: 1;
-  max-width: 1040px;
-  margin: clamp(40px, 5vw, 64px) auto 0;
+  position: relative;
+  padding-left: var(--indent);
 }
 
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
@@ -419,12 +428,33 @@
   }
 }
 
+/* The line: a faint track, and a lime fill that keeps pace with the words lighting up */
+.statement::before,
+.statement::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  bottom: 6px;
+  left: 0;
+  width: 2px;
+  border-radius: 2px;
+}
+
+.statement::before {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.statement::after {
+  background: linear-gradient(to bottom, #8cc63f, #d6f5a1);
+  transform: scaleY(min(1, calc(var(--progress) * 1.2)));
+  transform-origin: top;
+}
+
 .statementText {
   color: var(--color-text);
-  font-size: clamp(1.375rem, 2.3vw, 2.125rem);
-  letter-spacing: -0.02em;
-  line-height: 1.4;
-  text-align: center;
+  font-size: clamp(1.25rem, 1.85vw, 1.75rem);
+  letter-spacing: -0.018em;
+  line-height: 1.45;
   text-wrap: pretty;
 }
 
@@ -435,14 +465,69 @@
   transition: opacity 0.2s linear;
 }
 
-.statementMore {
-  display: grid;
-  gap: 16px;
-  max-width: 68ch;
-  margin: 40px auto 0;
+/* "01 · The problem" */
+.noteLabel {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 14px;
   color: var(--color-text-muted);
-  line-height: 1.8;
-  text-align: center;
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.noteNumber {
+  color: var(--color-text-dim);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+}
+
+/* A note: a hairline drawing across above it as it rises in */
+.note {
+  position: relative;
+  padding: 22px 0 0 var(--indent);
+}
+
+.note::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: var(--indent);
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
+  transform-origin: left;
+  transition: transform 1.1s var(--ease);
+  transition-delay: calc(var(--i, 0) * 120ms + 0.2s);
+}
+
+.noteText {
+  max-width: 66ch;
+  color: var(--color-text-muted);
+  font-size: 0.9375rem;
+  line-height: 1.75;
+}
+
+/* "1–2 weeks": white, with a lime underline drawn in once the note is in */
+.duration {
+  padding-bottom: 1px;
+  background: linear-gradient(var(--color-accent), var(--color-accent)) no-repeat 0 100% / 100% 1px;
+  color: var(--color-text);
+  font-weight: 500;
+  transition: background-size 0.9s var(--ease);
+  transition-delay: calc(var(--i, 0) * 120ms + 0.9s);
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  [data-reveal='out'] .note::before {
+    transform: scaleX(0);
+  }
+
+  [data-reveal='out'] .duration {
+    background-size: 0 1px;
+  }
 }
 
 /* ---------- Later text sections: heading pinned on the left, text on the right ---------- */
@@ -889,6 +974,98 @@ a.cardInner:focus-visible {
   }
 }
 
+/* ---------- Report: one glass sheet, a column per measure split by hairlines; under each
+   name a year of bars rising in, this month's in lime ---------- */
+.report {
+  margin-top: clamp(40px, 4.5vw, 56px);
+  overflow: clip;
+  border: 1px solid transparent;
+  border-radius: 22px;
+  background:
+    var(--card-fill) padding-box,
+    var(--card-edge) border-box;
+  box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.95);
+}
+
+.reportHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0;
+  padding: 14px 24px;
+  color: var(--color-text-dim);
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Hairlines above and between (the ones on the sheet's own edge are clipped away) */
+.metric {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 20px 24px 22px;
+  box-shadow:
+    -1px 0 0 var(--hairline),
+    0 -1px 0 var(--hairline);
+}
+
+.metricIndex {
+  color: var(--color-text-dim);
+  font-size: var(--text-label);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+}
+
+.metricName {
+  margin: 10px 0 26px;
+  color: var(--color-text);
+  font-size: var(--text-body);
+  font-weight: 500;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+/* Pushed to the foot, so the bars line up across columns however the names wrap */
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 30px;
+  margin-top: auto;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.bars span {
+  flex: 0 0 5px;
+  height: calc(var(--h) * 100%);
+  border-radius: 1px 1px 0 0;
+  background: rgba(255, 255, 255, 0.2);
+  transform-origin: bottom;
+  transition: transform 0.7s var(--ease);
+  transition-delay: calc(var(--i, 0) * 90ms + var(--m) * 30ms + 0.3s);
+}
+
+.bars span:last-child {
+  background: var(--color-accent);
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  [data-reveal='out'] .bars span {
+    transform: scaleY(0);
+  }
+}
+
 /* ---------- Ticks: equal glass tiles over a halftone glow ---------- */
 .checksWrap {
   position: relative;
@@ -981,77 +1158,159 @@ a.cardInner:focus-visible {
   }
 }
 
-/* ---------- Link tiles ---------- */
-/* Same balanced columns as the tick tiles: full rows, a short last row centred */
-.links {
-  --gap: 12px;
+/* ---------- Directory and index: long link lists ---------- */
+/* Lists in a row (Bengaluru's areas, then business types) read as one directory: closer together */
+.directory + .directory {
+  margin-top: clamp(56px, 5.5vw, 72px);
+}
+
+.sectionHead > .h2:first-child {
+  margin-top: 0;
+}
+
+/* ---------- Blocks: link lists as glass blocks, three a row; a short last row sits centred ---------- */
+.blocks {
+  --gap: 14px;
   --c: var(--cols);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: var(--gap);
-  margin: clamp(40px, 5vw, 56px) 0 0;
+  margin: clamp(36px, 4vw, 48px) 0 0;
   padding: 0;
   list-style: none;
 }
 
-.links > li {
-  flex: 0 0 calc((100% - (var(--c) - 1) * var(--gap)) / var(--c));
-}
-
-.linkCard {
+/* Blocks in a row share the tallest one's height */
+.blocks > li {
   display: flex;
+  flex: 0 0 calc((100% - (var(--c) - 1) * var(--gap)) / var(--c));
   flex-direction: column;
-  gap: 6px;
-  height: 100%;
-  padding: 20px 22px;
-  border: 1px solid var(--hairline);
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.01));
-  transition:
-    transform 0.35s var(--ease),
-    border-color 0.25s ease,
-    background-color 0.25s ease;
+  min-width: 0;
 }
 
-.linkCard:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  background-color: rgba(255, 255, 255, 0.03);
-  transform: translateY(-3px);
+.block {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 22px 24px 24px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  background:
+    var(--card-fill) padding-box,
+    var(--card-edge) border-box;
 }
 
-.linkCard:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
+/* A directory block: the group's name and count over a hairline, then its links */
+.dirHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--hairline);
 }
 
-/* A tile shows just the name ("Real estate") – the heading above gives the rest */
-.linkLabel {
-  color: var(--color-text);
+.dirLabel {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.dirCount {
+  flex-shrink: 0;
+  color: var(--color-text-dim);
+  font-size: var(--text-label);
+  font-variant-numeric: tabular-nums;
+}
+
+.dirLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dirLink {
+  display: inline-block;
+  font-size: var(--text-small);
+  line-height: 1.55;
+}
+
+/* "Hair transplant clinics" – the name starts the visible text, so it takes a capital */
+.dirLink .name {
+  display: inline-block;
+}
+
+.dirLink .name::first-letter {
+  text-transform: uppercase;
+}
+
+/* An index block: its number, the name, then the whole line about it – never cut short */
+.indexNo {
+  margin-bottom: 14px;
+  color: var(--color-text-dim);
+  font-size: var(--text-label);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+}
+
+.indexName {
   font-size: var(--text-title);
   font-weight: 500;
   letter-spacing: -0.01em;
   line-height: 1.3;
 }
 
-.linkLabel .name {
+.indexName .name {
   display: block;
 }
 
-.linkLabel .name::first-letter {
+.indexName .name::first-letter {
   text-transform: uppercase;
 }
 
-/* At most two lines */
-.linkNote {
-  display: -webkit-box;
-  overflow: hidden;
+.indexNote {
+  margin-top: 8px;
   color: var(--color-text-dim);
   font-size: var(--text-small);
-  line-height: 1.55;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  line-height: 1.6;
+}
+
+/* Links: the name brightens to lime and gains a hairline underline – no movement, no glow */
+.name {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  transition:
+    color 0.2s ease,
+    text-decoration-color 0.2s ease;
+}
+
+.dirLink:hover .name,
+.indexCard:hover .name {
+  color: var(--color-accent);
+  text-decoration-color: rgba(140, 198, 63, 0.4);
+}
+
+.dirLink:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+.indexCard:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 /* Kept for search engines and screen readers, not shown */
@@ -1074,10 +1333,10 @@ a.cardInner:focus-visible {
   }
 }
 
-/* Phones show one item a row, so fewer before "Show all": 4 tiles, 8 rows, 4 cards */
+/* Phones show one block a row, so fewer before "Show all": 4 index blocks, 2 directory blocks, 4 cards */
 @media (scripting: enabled) and (max-width: 760px) {
-  .more[data-expanded='false'] .links > li:nth-child(n + 5),
-  .more[data-expanded='false'] .linkRows > li:nth-child(n + 9),
+  .more[data-expanded='false'] .indexBlocks > li:nth-child(n + 5),
+  .more[data-expanded='false'] .dirBlocks > li:nth-child(n + 3),
   .more[data-expanded='false'] .cards > li:nth-child(n + 5) {
     display: none;
   }
@@ -1119,82 +1378,18 @@ a.cardInner:focus-visible {
   outline-offset: 3px;
 }
 
-/* ---------- Compact link lists: text columns ---------- */
-/* Lists in a row (the zones of Bengaluru, then cities, Dubai, abroad) read as one directory:
-   smaller headings, closer together (a badge repeating the one above is left out) */
-.directory .h2 {
-  font-size: clamp(1.625rem, 2.6vw, 2.25rem);
-}
-
-.directory + .directory {
-  margin-top: clamp(64px, 7vw, 96px);
-}
-
-.sectionHead > .h2:first-child {
-  margin-top: 0;
-}
-
-/* Rows in a grid, so every row lines up across the columns; a hairline above each */
-.linkRows {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
-  column-gap: 32px;
-  margin: clamp(36px, 4vw, 48px) 0 0;
-  padding: 0;
-  border-bottom: 1px solid var(--hairline);
-  list-style: none;
-}
-
-.linkRows li {
-  border-top: 1px solid var(--hairline);
-}
-
-.linkRow {
-  display: block;
-  padding: 13px 0;
-  font-size: var(--text-list);
-  line-height: 1.45;
-  transition: transform 0.3s var(--ease);
-}
-
-.linkRow:hover {
-  transform: translateX(4px);
-}
-
-.linkRow:focus-visible {
-  border-radius: 6px;
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-}
-
-/* "Video Production for" dimmed, "hair transplant clinics" bright */
-.prefix {
-  color: var(--color-text-dim);
-}
-
-.name {
-  color: var(--color-text);
-  transition: color 0.2s ease;
-}
-
-.linkRow:hover .name,
-.linkCard:hover .name {
-  color: var(--color-accent);
-}
-
 /* =====================================================================================
-   FAQ: centred, each question a glass row that opens smoothly
+   FAQ: the full width of the page, each question a glass row that opens smoothly
    ===================================================================================== */
 .faqs {
   display: grid;
-  gap: 12px;
-  max-width: 880px;
-  margin: clamp(44px, 5vw, 60px) auto 0;
+  gap: 10px;
+  margin: clamp(40px, 4.5vw, 56px) 0 0;
 }
 
 .faq {
   border: 1px solid transparent;
-  border-radius: 22px;
+  border-radius: 18px;
   background:
     var(--card-fill) padding-box,
     var(--card-edge) border-box;
@@ -1206,9 +1401,9 @@ a.cardInner:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  padding: 22px 26px;
+  padding: 17px 24px;
   color: var(--color-text);
-  font-size: var(--text-title);
+  font-size: 0.9375rem;
   font-weight: 500;
   line-height: 1.45;
   cursor: pointer;
@@ -1220,7 +1415,7 @@ a.cardInner:focus-visible {
 }
 
 .faq summary:focus-visible {
-  border-radius: 22px;
+  border-radius: 18px;
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
@@ -1229,8 +1424,8 @@ a.cardInner:focus-visible {
 .faqIcon {
   position: relative;
   flex-shrink: 0;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 50%;
   transition:
@@ -1244,7 +1439,7 @@ a.cardInner:focus-visible {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 11px;
+  width: 10px;
   height: 1.5px;
   border-radius: 1px;
   background: var(--color-text-muted);
@@ -1279,11 +1474,11 @@ a.cardInner:focus-visible {
 }
 
 .faq p {
-  max-width: 68ch;
-  padding: 0 72px 24px 26px;
+  max-width: 110ch;
+  padding: 0 64px 20px 24px;
   color: var(--color-text-muted);
-  font-size: var(--text-body);
-  line-height: 1.8;
+  font-size: var(--text-small);
+  line-height: 1.7;
 }
 
 /* "Still have a question?" under the questions */
@@ -1293,13 +1488,12 @@ a.cardInner:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 14px 24px;
-  max-width: 880px;
-  margin: 20px auto 0;
-  padding: 18px 18px 18px 26px;
+  margin: 16px 0 0;
+  padding: 14px 16px 14px 24px;
   border: 1px solid var(--hairline);
-  border-radius: 22px;
+  border-radius: 18px;
   color: var(--color-text-muted);
-  font-size: var(--text-body);
+  font-size: var(--text-small);
   line-height: 1.6;
 }
 
@@ -1511,9 +1705,16 @@ a.cardInner:focus-visible {
   }
 
   .checks,
-  .links,
   .stats {
     --c: var(--cols-tablet);
+  }
+
+  .blocks {
+    --c: min(var(--cols), 2);
+  }
+
+  .metrics {
+    grid-template-columns: repeat(var(--cols-tablet), minmax(0, 1fr));
   }
 
   .split {
@@ -1525,7 +1726,8 @@ a.cardInner:focus-visible {
     position: static;
   }
 
-  .paragraphs {
+  .paragraphs,
+  .openingBody {
     padding-top: 32px;
   }
 }
@@ -1592,9 +1794,18 @@ a.cardInner:focus-visible {
 
   /* tick tiles two a row */
   .checks,
-  .links,
   .stats {
     --c: min(var(--cols), 2);
+  }
+
+  /* Blocks one a row */
+  .blocks {
+    --c: 1;
+    --gap: 12px;
+  }
+
+  .block {
+    padding: 20px 20px 22px;
   }
 
   .phases {
@@ -1620,16 +1831,48 @@ a.cardInner:focus-visible {
     padding: 16px 18px;
   }
 
+  /* The report as rows: number, name, and the bars on the right */
+  .reportHead {
+    padding: 13px 18px;
+  }
+
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .metric {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 12px;
+    padding: 15px 18px;
+  }
+
+  .metricName {
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+
+  .bars {
+    gap: 3px;
+    height: 22px;
+    margin: 0;
+  }
+
+  .bars span {
+    flex-basis: 3px;
+  }
+
   .faq summary {
-    padding: 18px 20px;
+    padding: 15px 18px;
   }
 
   .faq p {
-    padding: 0 20px 20px;
+    padding: 0 18px 18px;
   }
 
   .help {
-    padding: 18px 20px;
+    padding: 14px 18px;
   }
 
   .fact {
@@ -1644,13 +1887,12 @@ a.cardInner:focus-visible {
   }
 
   .statementText {
-    font-size: 1.375rem;
+    font-size: 1.25rem;
   }
 }
 
 @media (max-width: 420px) {
-  .checks,
-  .links {
+  .checks {
     --c: 1;
   }
 }
@@ -1680,7 +1922,10 @@ a.cardInner:focus-visible {
   .rise,
   .tilt,
   .word,
-  .tick path {
+  .tick path,
+  .bars span,
+  .note::before,
+  .duration {
     transition: none;
   }
 

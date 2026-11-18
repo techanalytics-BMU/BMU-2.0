@@ -58,12 +58,74 @@
   list-style: none;
 }
 
-/* Locations: four titled columns, each its own list with an "All …" link under it */
+/* Locations: four titled columns (three for services without Bangalore's areas), each its own
+   list with an "All …" button under it. An opened column takes the whole width below the others
+   ("dense" lets the closed ones close the gap it leaves) and flows into text columns. */
 .columns {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  grid-auto-flow: row dense;
   gap: var(--space-5);
   margin-top: var(--space-4);
+}
+
+.columns[data-count='3'] {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.column {
+  min-width: 0;
+}
+
+.column[data-expanded='true'] {
+  grid-column: 1 / -1;
+}
+
+/* With one open, the closed ones share the row above it */
+@media (min-width: 1025px) {
+  .columns:has(> [data-expanded='true']) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .columns[data-count='3']:has(> [data-expanded='true']) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.column[data-expanded='true'] .columnList {
+  display: block;
+  columns: 4 200px;
+  column-gap: var(--space-5);
+}
+
+.column[data-expanded='true'] .columnList li {
+  margin-bottom: 0.75rem;
+  break-inside: avoid;
+}
+
+/* The first ten until "All …" is pressed (the service's own page has every link in the page) */
+.column:not([data-expanded='true']) .columnList li:nth-child(n + 11) {
+  display: none;
+}
+
+/* "All 146 Indian cities": a button that reads like the link it replaces */
+.allButton {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.group .allButton[data-short] {
+  display: none;
+}
+
+.allButton:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
 }
 
 .columnTitle {
@@ -133,7 +195,8 @@ a.item:hover {
     grid-template-columns: repeat(3, 1fr);
   }
 
-  .columns {
+  .columns,
+  .columns[data-count='3'] {
     grid-template-columns: repeat(2, 1fr);
     row-gap: var(--space-6);
   }
@@ -151,8 +214,12 @@ a.item:hover {
   }
 
   .list:not([data-expanded='true']) li:nth-child(n + 9),
-  .columns:not([data-expanded='true']) li:nth-child(n + 6) {
+  .column:not([data-expanded='true']) .columnList li:nth-child(n + 6) {
     display: none;
+  }
+
+  .group .allButton[data-short] {
+    display: inline-block;
   }
 
   .more {
@@ -179,7 +246,8 @@ a.item:hover {
 
 /* ---------- Narrow phones: one column ---------- */
 @media (max-width: 560px) {
-  .columns {
+  .columns,
+  .columns[data-count='3'] {
     grid-template-columns: 1fr;
     row-gap: var(--space-5);
   }

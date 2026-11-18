@@ -1,4 +1,4 @@
-import { DUBAI_DISTRICTS, type DubaiAreaSlug, type MarketSlug } from '@/data/pseo/abroad';
+import type { DubaiAreaSlug, MarketSlug } from '@/data/pseo/abroad';
 import { serviceGroups, type ServiceGroupSlug } from '@/data/pseo/groups';
 import { site } from '@/data/site';
 import {
@@ -17,13 +17,11 @@ import type {
   PageSection,
   PseoPage,
   SectionItem,
+  Service,
   ServiceGroupContent,
 } from '@/types/pseo';
 import {
-  CITY_PAGE_SLUGS,
-  DUBAI_AREA_SLUGS,
   LOCALITY_PAGE_SLUGS,
-  OTHER_MARKET_SLUGS,
   businessChannelsOf,
   dubaiAreas,
   markets,
@@ -35,7 +33,6 @@ import {
   indexable,
   industries,
   industriesUsing,
-  isCityService,
   isLocalIndustry,
   isLocalService,
   linkable,
@@ -49,6 +46,7 @@ import {
   clip,
   distanceKm,
   firstSentence,
+  leadSentences,
   listJoin,
   lowerFirst,
   rotate,
@@ -197,31 +195,28 @@ const ZONES = ['Central', 'North', 'East', 'South', 'West'] as const;
 // One compact link section per Bengaluru zone – for hubs that link to every locality
 const zoneSections = (
   id: string,
+  heading: string,
   link: (area: AreaSlug) => PageLink & { live: boolean }
-): PageSection[] =>
-  ZONES.flatMap((zone) => {
-    const links = keep(
-      LOCALITY_PAGE_SLUGS.filter((area) => localities[area].zone === zone).map(link)
-    );
-    return links.length
-      ? [
-          {
-            kind: 'links' as const,
-            id: `${id}-${zone.toLowerCase()}`,
-            eyebrow: 'Across Bengaluru',
-            heading: `${zone} Bengaluru`,
-            links,
-            compact: true,
-          },
-        ]
-      : [];
-  });
+): PageSection[] => {
+  const links = keep(
+    ZONES.flatMap((zone) =>
+      LOCALITY_PAGE_SLUGS.filter((area) => localities[area].zone === zone).map((area) => ({
+        ...link(area),
+        group: zone,
+      }))
+    )
+  );
+  return links.length
+    ? [{ kind: 'links', id, eyebrow: 'Across Bengaluru', heading, links, compact: true }]
+    : [];
+};
 
 // A business type has no hub of its own – the page for its first-ranked service stands in for it
 const businessLink = (business: BusinessSlug, label = businesses[business].title) => {
   const top = businessChannelsOf(business)[0]?.service ?? 'local-seo';
   return {
     label,
+    group: businesses[business].category,
     href: paths.serviceBusiness(top, business),
     live: exists.serviceBusiness(top, business) && indexable.serviceBusiness(top, business),
   };
@@ -437,6 +432,13 @@ export const serviceGroupPage = (slug: ServiceGroupSlug): PseoPage => {
   ]);
 };
 
+// The text under a city page's heading: the service's promise (its first two sentences) and one
+// line about the place, or the service's whole text when the two don't fit in about four lines
+const placeLine = (service: Service, place: string) => {
+  const line = `${leadSentences(service.tagline, 200)} ${firstSentence(place)}`;
+  return line.length <= 340 ? line : service.tagline;
+};
+
 // ---------- 1. Service hub: /services/[service] ----------
 
 export const serviceHub = (slug: ServiceSlug): PseoPage => {
@@ -448,7 +450,9 @@ export const serviceHub = (slug: ServiceSlug): PseoPage => {
       id: 'why',
       eyebrow: 'Why it matters',
       heading: `What ${service.name} does for your business`,
-      paragraphs: [service.whyItMatters, service.timeline],
+      // what it is (the longer intro the hero used to carry) between why it matters and how long it takes
+      paragraphs: [service.whyItMatters, service.intro, service.timeline],
+      labels: ['The problem', 'What it is', 'How long it takes'],
     },
     deliverables(slug, `${service.title}, done properly`),
     process(slug),
@@ -458,6 +462,7 @@ export const serviceHub = (slug: ServiceSlug): PseoPage => {
       eyebrow: 'Reporting',
       heading: 'What you’ll see every month',
       items: service.reportsOn.map((title) => ({ title })),
+      display: 'metrics',
     },
   ];
 
@@ -482,6 +487,7 @@ export const serviceHub = (slug: ServiceSlug): PseoPage => {
   const byBusiness = keep(
     businessesUsing(slug).map((business) => ({
       label: `${service.title} for ${businesses[business].name}`,
+      group: businesses[business].category,
       href: paths.serviceBusiness(slug, business),
       live: indexable.serviceBusiness(slug, business),
     }))
@@ -497,75 +503,8 @@ export const serviceHub = (slug: ServiceSlug): PseoPage => {
     });
   }
 
-  // Bengaluru's neighbourhoods for the local services; other cities, Dubai and abroad for those
-  // and business software
-  if (isLocalService(slug)) {
-    sections.push(
-      ...zoneSections('areas', (area) => ({
-        label: `${service.title} in ${localities[area].name}`,
-        href: paths.serviceLocality(slug, area),
-        live: indexable.serviceLocality(slug, area),
-      }))
-    );
-  }
-  if (isCityService(slug)) {
-    const byCity = keep(
-      CITY_PAGE_SLUGS.map((city) => ({
-        label: `${service.title} in ${getCity(city).name}`,
-        href: paths.serviceCity(slug, city),
-        live: indexable.serviceCity(slug, city),
-      }))
-    );
-    if (byCity.length) {
-      sections.push({
-        kind: 'links',
-        id: 'cities',
-        eyebrow: 'Across India',
-        heading: `${service.title} in other cities`,
-        links: byCity,
-        compact: true,
-      });
-    }
-    const inDubai = keep([
-      {
-        label: `${service.title} in Dubai`,
-        href: paths.serviceMarket(slug, 'dubai'),
-        live: indexable.serviceMarket(slug, 'dubai'),
-      },
-      ...DUBAI_AREA_SLUGS.map((area) => ({
-        label: `${service.title} in ${dubaiAreas[area].name}`,
-        href: paths.serviceDubaiArea(slug, area),
-        live: indexable.serviceDubaiArea(slug, area),
-      })),
-    ]);
-    if (inDubai.length) {
-      sections.push({
-        kind: 'links',
-        id: 'dubai',
-        eyebrow: 'Across Dubai',
-        heading: `${service.title} in Dubai`,
-        links: inDubai,
-        compact: true,
-      });
-    }
-    const abroad = keep(
-      OTHER_MARKET_SLUGS.map((market) => ({
-        label: `${service.title} in ${markets[market].name}`,
-        href: paths.serviceMarket(slug, market),
-        live: indexable.serviceMarket(slug, market),
-      }))
-    );
-    if (abroad.length) {
-      sections.push({
-        kind: 'links',
-        id: 'international',
-        eyebrow: 'International',
-        heading: `${service.title} in the GCC, USA and Canada`,
-        links: abroad,
-        compact: true,
-      });
-    }
-  }
+  // The service's place pages – Bengaluru's areas, other cities, Dubai, abroad – are linked from
+  // the footer's Locations block, which follows the service a page is about
 
   const page = {
     kind: 'service-hub' as const,
@@ -574,7 +513,7 @@ export const serviceHub = (slug: ServiceSlug): PseoPage => {
     description: clip(`${service.summary} ${upperFirst(service.agencyNoun)} in Bengaluru.`),
     h1: upperFirst(service.agencyNoun),
     h1Accent: 'in Bengaluru.',
-    intro: service.intro,
+    intro: service.tagline,
     facts: [
       { label: 'Part of', value: service.group },
       { label: 'Tailored for', value: `${using.length} industries` },
@@ -645,6 +584,7 @@ export const industryHub = (slug: IndustrySlug): PseoPage => {
       eyebrow: industry.compliance ? 'Timing and rules' : 'Timing',
       heading: industry.compliance ? 'Seasons and advertising rules' : 'When demand peaks',
       paragraphs: [industry.seasonality, ...(industry.compliance ? [industry.compliance] : [])],
+      labels: ['When demand peaks', ...(industry.compliance ? ['Advertising rules'] : [])],
     },
     {
       kind: 'checks',
@@ -652,6 +592,7 @@ export const industryHub = (slug: IndustrySlug): PseoPage => {
       eyebrow: 'Measuring it',
       heading: 'The numbers we watch',
       items: industry.kpis.map((title) => ({ title })),
+      display: 'metrics',
     },
     {
       kind: 'checks',
@@ -681,7 +622,7 @@ export const industryHub = (slug: IndustrySlug): PseoPage => {
 
   if (isLocalIndustry(slug)) {
     sections.push(
-      ...zoneSections('areas', (area) => ({
+      ...zoneSections('areas', `${industry.marketingLabel} in your area`, (area) => ({
         label: `${industry.marketingLabel} in ${localities[area].name}`,
         href: paths.industryLocality(slug, area),
         live: indexable.industryLocality(slug, area),
@@ -799,6 +740,7 @@ export const serviceIndustry = (
       eyebrow: 'Measuring it',
       heading: 'What we track',
       items: measures.map((title) => ({ title })),
+      display: 'metrics',
     },
   ];
 
@@ -922,6 +864,7 @@ export const serviceBusiness = (
       eyebrow: 'Your customers',
       heading: `How customers choose ${withArticle(business.businessNoun)}`,
       paragraphs: [business.intro, business.localAngle],
+      labels: ['Your customers', 'Winning locally'],
     },
     {
       kind: 'cards',
@@ -949,6 +892,7 @@ export const serviceBusiness = (
       items: [...new Set([...service.reportsOn, ...parent.kpis])]
         .slice(0, 6)
         .map((title) => ({ title })),
+      display: 'metrics',
     },
   ];
 
@@ -1062,6 +1006,7 @@ export const serviceLocality = (serviceSlug: ServiceSlug, areaSlug: AreaSlug): P
       eyebrow: `${area.zone} Bengaluru`,
       heading: `Doing business in ${area.name}`,
       paragraphs: [area.character, area.searchHabits],
+      labels: ['The area', 'How people search'],
     },
     {
       kind: 'prose',
@@ -1240,6 +1185,7 @@ export const industryLocality = (
       eyebrow: industry.compliance ? 'Timing and rules' : 'Timing',
       heading: industry.compliance ? 'Seasons and advertising rules' : 'When demand peaks',
       paragraphs: [industry.seasonality, ...(industry.compliance ? [industry.compliance] : [])],
+      labels: ['When demand peaks', ...(industry.compliance ? ['Advertising rules'] : [])],
     },
   ];
 
@@ -1339,6 +1285,7 @@ export const serviceCity = (serviceSlug: ServiceSlug, citySlug: CitySlug): PseoP
       eyebrow: city.state,
       heading: `Doing business in ${city.name}`,
       paragraphs: [city.character, city.searchHabits],
+      labels: ['The market', 'How people search'],
     },
     {
       kind: 'prose',
@@ -1388,7 +1335,7 @@ export const serviceCity = (serviceSlug: ServiceSlug, citySlug: CitySlug): PseoP
     ),
     h1: upperFirst(service.agencyNoun),
     h1Accent: `in ${city.name}.`,
-    intro: `${firstSentence(service.intro)} ${firstSentence(city.character)}`,
+    intro: placeLine(service, city.character),
     facts: [
       { label: 'From our studio', value: `About ${km} km` },
       { label: 'Languages', value: upperFirst(city.languages) },
@@ -1421,30 +1368,6 @@ export const serviceCity = (serviceSlug: ServiceSlug, citySlug: CitySlug): PseoP
 };
 
 // ---------- 7. Service × city abroad: /[service]/[market] (Dubai's is /[service]/dubai) ----------
-
-// One compact link section per Dubai district – for the Dubai page and hubs
-const dubaiDistrictSections = (serviceSlug: ServiceSlug): PageSection[] =>
-  DUBAI_DISTRICTS.flatMap((district) => {
-    const links = keep(
-      DUBAI_AREA_SLUGS.filter((area) => dubaiAreas[area].district === district).map((area) => ({
-        label: `${services[serviceSlug].title} in ${dubaiAreas[area].name}`,
-        href: paths.serviceDubaiArea(serviceSlug, area),
-        live: indexable.serviceDubaiArea(serviceSlug, area),
-      }))
-    );
-    return links.length
-      ? [
-          {
-            kind: 'links' as const,
-            id: `dubai-${district.toLowerCase().replace(/[^a-z]+/g, '-')}`,
-            eyebrow: 'Across Dubai',
-            heading: district,
-            links,
-            compact: true,
-          },
-        ]
-      : [];
-  });
 
 // "Do you work with businesses in …?" for anywhere outside India
 const remoteAnswer = (workingHours: string) =>
@@ -1490,6 +1413,7 @@ export const serviceMarket = (
       eyebrow: market.country,
       heading: `Doing business in ${market.name}`,
       paragraphs: [market.character, market.searchHabits],
+      labels: ['The market', 'How people search'],
     },
     {
       kind: 'prose',
@@ -1536,8 +1460,6 @@ export const serviceMarket = (
       items: byIndustry,
     });
   }
-  // Dubai's page is the hub for its areas
-  if (marketSlug === 'dubai') sections.push(...dubaiDistrictSections(serviceSlug));
 
   const page = {
     kind: 'service-market' as const,
@@ -1548,7 +1470,7 @@ export const serviceMarket = (
     ),
     h1: upperFirst(service.agencyNoun),
     h1Accent: `in ${market.name}.`,
-    intro: `${firstSentence(service.intro)} ${firstSentence(market.character)}`,
+    intro: placeLine(service, market.character),
     facts: [
       { label: 'Country', value: market.country },
       { label: 'Time difference', value: market.timeDifference },
@@ -1631,6 +1553,7 @@ export const serviceDubaiArea = (
       eyebrow: `${area.district}, Dubai`,
       heading: `Doing business in ${area.name}`,
       paragraphs: [area.character, area.searchHabits],
+      labels: ['The area', 'How people search'],
     },
     {
       kind: 'prose',

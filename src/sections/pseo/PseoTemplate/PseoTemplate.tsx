@@ -2,7 +2,8 @@ import Link from 'next/link';
 import Badge from '@/components/ui/Badge/Badge';
 import Button from '@/components/ui/Button/Button';
 import { hasPlaces } from '@/lib/pseo/regions';
-import type { PageSection, PseoPage, SectionItem } from '@/types/pseo';
+import { leadSentences } from '@/lib/pseo/text';
+import type { PageLink, PageSection, PseoPage, SectionItem } from '@/types/pseo';
 import PseoMobileBar from './PseoMobileBar';
 import PseoMore from './PseoMore';
 import PseoNearby from './PseoNearby';
@@ -65,8 +66,9 @@ const headOf = (section: PageSection) => ({
 });
 
 // How many items a long list shows before "Show all" – a page asks for attention on a few things
-// at a time. Lists only one or two over stay whole (a button for two more isn't worth it).
-const LIMIT = { cards: 6, tiles: 8, rows: 12 };
+// at a time. Lists only one or two over stay whole (a button for two more isn't worth it). A
+// directory of more than 40 links shows its first 6 blocks (two rows), each with its first 12.
+const LIMIT = { cards: 6, index: 6, directory: { links: 40, groups: 6, each: 12 } };
 const collapses = (total: number, limit: number) => total > limit + 2;
 
 // Past the limit: hidden until "Show all" is pressed (see PseoMore)
@@ -140,15 +142,60 @@ const Tick = () => (
   </svg>
 );
 
-// Columns for a grid of tiles (ticks, links), so every row is full or the last one sits centred:
+// Twelve bars, one a month, the last (this month) lit – a drawing of a report, not real figures.
+// The heights come from the measure's name, so a page always draws the same bars.
+function monthBars(seed: string) {
+  let s = 0;
+  for (const ch of seed) s = (Math.imul(s, 31) + ch.charCodeAt(0)) | 0;
+  return Array.from({ length: 12 }, (_, month) => {
+    s = (Math.imul(s, 1103515245) + 12345) | 0;
+    const noise = ((s >>> 16) & 0x7fff) / 0x7fff;
+    return Math.round(30 + 42 * (month / 11) + 28 * noise) / 100;
+  });
+}
+
+// The numbers a service is measured by, as one sheet of the monthly report: a column per
+// measure (a row on phones) – its number, its name and a year of bars
+function Report({ items }: { items: SectionItem[] }) {
+  const n = items.length;
+  return (
+    <div className={`${styles.report} ${styles.rise}`} style={vars({ '--i': 1 })}>
+      <p className={styles.reportHead}>
+        <span>Monthly report</span>
+        <span>
+          {pad(n)} {n === 1 ? 'measure' : 'measures'}
+        </span>
+      </p>
+      <ol
+        className={styles.metrics}
+        style={vars({ '--cols': n % 3 === 0 ? 3 : n, '--cols-tablet': n % 3 === 0 ? 3 : 2 })}
+      >
+        {items.map((item, i) => (
+          <li key={item.title} className={styles.metric} style={vars({ '--i': i })}>
+            <span className={styles.metricIndex} aria-hidden="true">
+              {pad(i + 1)}
+            </span>
+            <span className={styles.metricName}>{item.title}</span>
+            <span className={styles.bars} aria-hidden="true">
+              {monthBars(item.title).map((height, month) => (
+                <span key={month} style={vars({ '--h': height, '--m': month })} />
+              ))}
+            </span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+// Columns for a grid of tiles (ticks, stats), so every row is full or the last one sits centred:
 // 4 in a row, 5 as 3 + 2, 7 as 4 + 3 …; tablets get 2 or 3
 const tileColumns = (n: number) => ({
   '--cols': n <= 4 ? n : n % 3 === 0 || n === 5 ? 3 : 4,
   '--cols-tablet': n <= 3 || n % 3 === 0 ? Math.min(n, 3) : 2,
 });
 
-// The words every link in a list starts with ("Video Production for", "SEO in") – dimmed, so
-// the part that differs stands out. The link text itself stays whole.
+// The words every link in a list starts with ("Video Production for", "SEO in")
 function sharedPrefix(labels: string[]) {
   if (labels.length < 3) return '';
   const words = labels.map((label) => label.split(' '));
@@ -157,39 +204,161 @@ function sharedPrefix(labels: string[]) {
   return n ? `${words[0].slice(0, n).join(' ')} ` : '';
 }
 
-// In rows the prefix shows dimmed; on tiles only the name shows ("Real estate") – the section
-// heading already says it – and the prefix stays in the link for search engines and screen readers
-function LinkText({
-  label,
-  prefix,
-  tile = false,
-}: {
-  label: string;
-  prefix: string;
-  tile?: boolean;
-}) {
+// Only the part that differs shows ("Pune", "Real estate") – the section heading already says the
+// rest – and the whole label stays in the link for search engines and screen readers
+function LinkText({ label, prefix }: { label: string; prefix: string }) {
   return (
     <>
-      {prefix && <span className={tile ? styles.srOnly : styles.prefix}>{prefix}</span>}
+      {prefix && <span className={styles.srOnly}>{prefix}</span>}
       <span className={styles.name}>{label.slice(prefix.length)}</span>
     </>
   );
 }
 
-// The first text section: its opening paragraph set large, lighting up word by word as it
-// scrolls up the screen
-function Statement({ text }: { text: string }) {
-  const words = text.split(' ');
+// Long lists of places and business types, as blocks three a row: one per group (a state,
+// country, district, zone or category) – its name and count, then its links. A long list shows
+// two rows of blocks, each with its first dozen links, then "Show all".
+function Directory({ links }: { links: PageLink[] }) {
+  const prefix = sharedPrefix(links.map((link) => link.label));
+  const groups: { name?: string; links: PageLink[] }[] = [];
+  for (const link of links) {
+    const group = groups.find((g) => g.name === link.group);
+    if (group) group.links.push(link);
+    else groups.push({ name: link.group, links: [link] });
+  }
+  const long = links.length > LIMIT.directory.links;
+  const hiddenGroup = (g: number) => long && g >= LIMIT.directory.groups;
+  const hiddenLink = (g: number, i: number) => hiddenGroup(g) || (long && i >= LIMIT.directory.each);
+  const hidden = groups.some((group, g) => group.links.some((_, i) => hiddenLink(g, i)));
+  const shown = hidden ? Math.min(groups.length, LIMIT.directory.groups) : groups.length;
+
+  const list = (
+    <ul
+      className={`${styles.blocks} ${styles.dirBlocks}`}
+      style={vars({ '--cols': Math.min(shown, 3) })}
+    >
+      {groups.map((group, g) => (
+        <li
+          key={group.name ?? g}
+          className={`${styles.rise} ${hiddenGroup(g) ? styles.extra : ''}`}
+          style={vars({ '--i': g })}
+        >
+          <div className={styles.block}>
+            {group.name && (
+              <div className={styles.dirHead}>
+                <h3 className={styles.dirLabel}>{group.name}</h3>
+                <span className={styles.dirCount}>{group.links.length}</span>
+              </div>
+            )}
+            <ul className={styles.dirLinks}>
+              {group.links.map((link, i) => (
+                <li key={link.href} className={hiddenLink(g, i) ? styles.extra : undefined}>
+                  <Link href={link.href} className={styles.dirLink}>
+                    <LinkText label={link.label} prefix={prefix} />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+  return hidden ? <PseoMore total={links.length}>{list}</PseoMore> : list;
+}
+
+// Links with a line about each (industries, services, areas next door), as numbered blocks three
+// a row: the number, the name, then the whole line – never cut short. Two rows, then "Show all".
+function IndexTable({ links }: { links: PageLink[] }) {
+  const prefix = sharedPrefix(links.map((link) => link.label));
+  const total = links.length;
+  const shown = collapses(total, LIMIT.index) ? LIMIT.index : total;
   return (
-    <PseoProgress className={styles.statement} distance={0.75}>
-      <p className={styles.statementText} style={vars({ '--n': words.length })}>
-        {words.map((word, i) => (
-          <span key={i} className={styles.word} style={vars({ '--i': i })}>
-            {word}{' '}
-          </span>
+    <Collapsible total={total} limit={LIMIT.index}>
+      <ul
+        className={`${styles.blocks} ${styles.indexBlocks}`}
+        style={vars({ '--cols': Math.min(shown, 3) })}
+      >
+        {links.map((link, i) => (
+          <li
+            key={link.href}
+            className={`${styles.rise} ${extra(i, total, LIMIT.index)}`}
+            style={vars({ '--i': i })}
+          >
+            <Link href={link.href} className={`${styles.block} ${styles.indexCard}`}>
+              <span className={styles.indexNo} aria-hidden="true">
+                {pad(i + 1)}
+              </span>
+              <span className={styles.indexName}>
+                <LinkText label={link.label} prefix={prefix} />
+              </span>
+              {link.note && <span className={styles.indexNote}>{link.note}</span>}
+            </Link>
+          </li>
         ))}
-      </p>
-    </PseoProgress>
+      </ul>
+    </Collapsible>
+  );
+}
+
+// Spans of time in a note ("1–2 weeks", "6–12 weeks", "3 months") – picked out in white with a
+// lime underline that draws itself in
+const DURATION = /(\d+(?:[–-]\d+)?\s(?:days?|weeks?|months?|years?))/g;
+
+function withDurations(text: string) {
+  return text.split(DURATION).map((part, i) =>
+    i % 2 ? (
+      <strong key={i} className={styles.duration}>
+        {part}
+      </strong>
+    ) : (
+      part
+    )
+  );
+}
+
+// "01 · The problem" over a paragraph of the opening section (just the number without a label)
+function NoteLabel({ index, label }: { index: number; label?: string }) {
+  return (
+    <p className={styles.noteLabel}>
+      <span className={styles.noteNumber}>{pad(index)}</span>
+      {label}
+    </p>
+  );
+}
+
+// The page's first text section, as an editorial spread: the heading pinned on the left; on the
+// right the opening paragraph set large – lighting up word by word as it scrolls up, while a lime
+// line beside it fills – then the rest as numbered notes that rise in, a hairline drawing across
+// above each
+function Opening({ section, eyebrow }: { section: PageSection & { kind: 'prose' }; eyebrow?: string }) {
+  const [lead, ...rest] = section.paragraphs;
+  const labels = section.labels ?? [];
+  const words = lead.split(' ');
+  return (
+    <PseoReveal id={section.id} className={`${styles.section} ${styles.split} ${styles.opening}`}>
+      <div className={styles.splitHead}>
+        <SectionHead {...headOf(section)} eyebrow={eyebrow} align="start" />
+      </div>
+      <div className={styles.openingBody}>
+        <PseoProgress className={styles.statement} distance={0.75}>
+          {labels[0] && <NoteLabel index={1} label={labels[0]} />}
+          <p className={styles.statementText} style={vars({ '--n': words.length })}>
+            {words.map((word, i) => (
+              <span key={i} className={styles.word} style={vars({ '--i': i })}>
+                {word}{' '}
+              </span>
+            ))}
+          </p>
+        </PseoProgress>
+        {rest.map((text, i) => (
+          <div key={text} className={`${styles.note} ${styles.rise}`} style={vars({ '--i': i + 2 })}>
+            <NoteLabel index={i + 2} label={labels[i + 1]} />
+            <p className={styles.noteText}>{withDurations(text)}</p>
+          </div>
+        ))}
+      </div>
+    </PseoReveal>
   );
 }
 
@@ -208,22 +377,9 @@ function Section({
 
   switch (section.kind) {
     case 'prose': {
-      // The statement: centred, the opening paragraph lighting up, the rest below
+      // The page's first text section: an editorial spread (see Opening)
       if (statement) {
-        const [lead, ...rest] = section.paragraphs;
-        return (
-          <PseoReveal id={section.id} className={styles.section}>
-            {head}
-            <Statement text={lead} />
-            {rest.length > 0 && (
-              <div className={`${styles.statementMore} ${styles.rise}`}>
-                {rest.map((text) => (
-                  <p key={text}>{text}</p>
-                ))}
-              </div>
-            )}
-          </PseoReveal>
-        );
+        return <Opening section={section} eyebrow={repeated ? undefined : section.eyebrow} />;
       }
       // Later text sections: heading pinned on the left, the text on the right
       return (
@@ -242,12 +398,15 @@ function Section({
       );
     }
 
-    // Searches customers type, as search bars that type themselves; other lists as ticks
+    // Searches customers type, as search bars that type themselves; measures as a monthly
+    // report; other lists as ticks
     case 'checks':
       return (
         <PseoReveal id={section.id} className={styles.section}>
           {head}
-          {section.display === 'search' ? (
+          {section.display === 'metrics' ? (
+            <Report items={section.items} />
+          ) : section.display === 'search' ? (
             <ul className={styles.searches}>
               {section.items.map((item, i) => (
                 <li
@@ -282,54 +441,21 @@ function Section({
         </PseoReveal>
       );
 
-    case 'links': {
-      const prefix = sharedPrefix(section.links.map((link) => link.label));
-      const total = section.links.length;
+    // Places and business types as a directory; links with a line about each as an index
+    case 'links':
       return (
         <PseoReveal
           id={section.id}
           className={`${styles.section} ${section.compact ? styles.directory : ''}`}
         >
           {head}
-          {/* Long lists (every locality, every city) as rows in a grid, lined up across columns */}
           {section.compact ? (
-            <Collapsible total={total} limit={LIMIT.rows}>
-              <ul className={`${styles.linkRows} ${styles.rise}`}>
-                {section.links.map((link, i) => (
-                  <li key={link.href} className={extra(i, total, LIMIT.rows)}>
-                    <Link href={link.href} className={styles.linkRow}>
-                      <LinkText label={link.label} prefix={prefix} />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </Collapsible>
+            <Directory links={section.links} />
           ) : (
-            <Collapsible total={total} limit={LIMIT.tiles}>
-              <ul
-                className={styles.links}
-                style={vars(tileColumns(collapses(total, LIMIT.tiles) ? LIMIT.tiles : total))}
-              >
-                {section.links.map((link, i) => (
-                  <li
-                    key={link.href}
-                    className={`${styles.rise} ${extra(i, total, LIMIT.tiles)}`}
-                    style={vars({ '--i': i })}
-                  >
-                    <Link href={link.href} className={styles.linkCard}>
-                      <span className={styles.linkLabel}>
-                        <LinkText label={link.label} prefix={prefix} tile />
-                      </span>
-                      {link.note && <span className={styles.linkNote}>{link.note}</span>}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </Collapsible>
+            <IndexTable links={section.links} />
           )}
         </PseoReveal>
       );
-    }
 
     // A timeline that fills in as it scrolls up; the stages where this page's service works are lime
     case 'steps':
@@ -488,7 +614,8 @@ export default function PseoTemplate({ page }: { page: PseoPage }) {
               </span>
             )}
           </h1>
-          <p className={styles.intro}>{page.intro}</p>
+          {/* about four lines: whole sentences only */}
+          <p className={styles.intro}>{leadSentences(page.intro)}</p>
           <div id="pseo-hero-actions" className={styles.actions}>
             <Button href="/contact" variant="accent">
               Know more

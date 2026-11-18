@@ -58,6 +58,10 @@ export const businessesPart1 = {
         service: 'website-design',
         why: 'A simple site with the full service menu, stylist profiles and an online booking button gives Maps and Instagram visitors a way to book late at night, when the salon phone is off.',
       },
+      {
+        service: 'influencer-marketing',
+        why: 'Local beauty and lifestyle creators already shape where people in your area get their hair done. A hosted visit with a clear brief and a tracked booking code turns their audience into first-time clients.',
+      },
     ],
     faqs: [
       {
@@ -132,6 +136,10 @@ export const businessesPart1 = {
         service: 'whatsapp-automation',
         why: 'Men often need a cut every few weeks, and a reminder with a one-tap booking link brings them back before they walk in elsewhere. Family and couple memberships can be tracked and renewed over WhatsApp too.',
       },
+      {
+        service: 'crm-development',
+        why: 'A CRM that remembers each client’s services, stylist and usual visit gap can remind them when a haircut or colour is due. It turns walk-ins into regulars and shows which stylists and offers bring people back.',
+      },
     ],
     faqs: [
       {
@@ -201,6 +209,10 @@ export const businessesPart1 = {
       {
         service: 'meta-ads',
         why: 'Small Facebook and Instagram budgets aimed within a couple of kilometres can promote a facial package or pre-bridal offer before the festival and wedding season. Count WhatsApp enquiries and walk-ins who mention the ad.',
+      },
+      {
+        service: 'ugc',
+        why: 'A real client’s before-and-after makeover, filmed as a simple reel, says more than any offer poster. UGC-style videos for bridal, party and facial packages give your Instagram and ads proof that feels genuine.',
       },
     ],
     faqs: [
@@ -276,6 +288,10 @@ export const businessesPart1 = {
         service: 'whatsapp-automation',
         why: 'Booking confirmations with arrival instructions, gift-voucher delivery, membership balances and birthday offers on WhatsApp keep regulars returning and make the spa easy to recommend.',
       },
+      {
+        service: 'brand-identity',
+        why: 'A spa sells calm and quality before anyone walks in. A considered logo, colour palette and tone carried through the signage, menu, Instagram and website support premium pricing and repeat visits.',
+      },
     ],
     faqs: [
       {
@@ -349,6 +365,10 @@ export const businessesPart1 = {
       {
         service: 'whatsapp-automation',
         why: 'An instant reply with packages, a date-availability check, trial booking, advance payment reminders and a day-before checklist keep each bride organised and cut last-minute confusion.',
+      },
+      {
+        service: 'influencer-marketing',
+        why: 'Brides shortlist artists from the wedding creators and planners they follow on Instagram. Collaborations with wedding influencers – styled shoots, features and honest reviews – put your work in front of brides months before the date.',
       },
     ],
     faqs: [
@@ -424,6 +444,10 @@ export const businessesPart1 = {
         service: 'google-business-profile',
         why: 'Patients check Google reviews and clinic photos before travelling for a consultation, sometimes from other cities. A profile with the surgeon’s name, photos of the theatre and replies to every review supports everything else.',
       },
+      {
+        service: 'performance-marketing',
+        why: 'A hair transplant is a high-value decision people research for weeks, so Google, Meta and YouTube spend is judged together on cost per consultation booked, not on clicks. Budget moves to whichever channel brings people who actually turn up for the scalp analysis.',
+      },
     ],
     faqs: [
       {
@@ -497,6 +521,10 @@ export const businessesPart1 = {
       {
         service: 'social-media-management',
         why: 'Instagram and Facebook posts on oral care, a child’s first dental visit and how treatments work keep the clinic familiar to families nearby. Patient smiles can be shared with written consent, without promising results.',
+      },
+      {
+        service: 'ui-ux-design',
+        why: 'Patients want to see treatments, what to expect and a free slot without calling the front desk. A clear, mobile-first booking experience designed around those questions turns more visits to your site into appointments.',
       },
     ],
     faqs: [
@@ -572,6 +600,10 @@ export const businessesPart1 = {
         service: 'whatsapp-automation',
         why: 'Chronic conditions such as psoriasis and eczema are reviewed over months, so follow-up reminders matter. Appointment confirmations and review-due nudges keep patients on track with their treatment.',
       },
+      {
+        service: 'content-marketing',
+        why: 'People research acne, pigmentation and hair fall online long before booking, and they trust clear, doctor-reviewed explanations. Condition guides and treatment pages written with the dermatologist bring in patients who already understand their options.',
+      },
     ],
     faqs: [
       {
@@ -645,6 +677,10 @@ export const businessesPart1 = {
       {
         service: 'whatsapp-automation',
         why: 'Session reminders spaced to each treatment plan, package balance updates and aftercare instructions on WhatsApp help clients complete their sessions – which is where reviews and referrals come from.',
+      },
+      {
+        service: 'crm-development',
+        why: 'Treatments run as packages of several sessions, and missed sessions mean unhappy clients and lost revenue. A CRM that tracks consultations, packages and upcoming sessions, with automatic reminders, keeps every plan on schedule.',
       },
     ],
     faqs: [
@@ -720,6 +756,10 @@ export const businessesPart1 = {
         service: 'meta-ads',
         why: 'Facebook and Instagram ads about cataract check-ups and LASIK eligibility tests reach adult children and young professionals around the hospital. Keep claims to the procedure, the surgeons and the technology, with no promises about vision outcomes.',
       },
+      {
+        service: 'dashboard-development',
+        why: 'Eye hospitals juggle OPD footfall, cataract and refractive surgeries, optical sales and insurance claims across branches. A live dashboard shows each branch’s numbers every day, so problems are spotted before month-end.',
+      },
     ],
     faqs: [
       {
@@ -793,6 +833,10 @@ export const businessesPart1 = {
       {
         service: 'instagram-marketing',
         why: 'Exercise demonstrations, desk-stretch routines and sports rehab clips build familiarity with the therapists before the first visit. They work especially well for younger patients with sports injuries or posture problems.',
+      },
+      {
+        service: 'mobile-apps',
+        why: 'Recovery depends on the exercises patients do at home between sessions. An app with each patient’s exercise videos, reminders and session bookings keeps them on track and coming back until they’re discharged.',
       },
     ],
     faqs: [
@@ -946,6 +990,10 @@ export const businessesPart1 = {
         service: 'whatsapp-automation',
         why: 'Appointment and cycle-day reminders, counsellor follow-ups and report alerts in neutral wording keep treatment organised without exposing anything on a shared phone.',
       },
+      {
+        service: 'ai-search-visibility',
+        why: 'Couples increasingly ask ChatGPT and Google’s AI Overviews to compare IVF centres, treatments and costs before they call. Clear doctor profiles, treatment pages and well-sourced answers help your centre appear in those recommendations.',
+      },
     ],
     faqs: [
       {
@@ -1019,6 +1067,10 @@ export const businessesPart1 = {
       {
         service: 'whatsapp-automation',
         why: 'Discreet reminders for scan days and test appointments, report alerts and follow-up nudges keep the timing of each cycle on track.',
+      },
+      {
+        service: 'marketing-automation',
+        why: 'Fertility decisions can take months, and enquiries go cold without steady, sensitive follow-up. Automated WhatsApp and email sequences – consultation reminders, doctor videos and next steps – keep couples informed until they’re ready.',
       },
     ],
     faqs: [
@@ -1094,6 +1146,10 @@ export const businessesPart1 = {
         service: 'google-ads',
         why: 'Search ads for maternity packages at the doctor’s hospital, or for PCOS consultations, reach women ready to book. Keep copy factual about services and never promise a type of delivery.',
       },
+      {
+        service: 'digital-marketing',
+        why: 'Patients find a gynaecologist through Google, Maps reviews and recommendations shared on WhatsApp and Instagram. Running search, Maps, social and ads as one plan keeps the doctor’s name and reviews consistent everywhere a patient checks before booking.',
+      },
     ],
     faqs: [
       {
@@ -1167,6 +1223,10 @@ export const businessesPart1 = {
       {
         service: 'personal-branding',
         why: 'Talks at running and cycling groups, residents’ associations and corporate wellness sessions, shared on Instagram and LinkedIn, build a name for sports and joint care. Keeping the focus on education keeps it within NMC rules.',
+      },
+      {
+        service: 'dashboard-development',
+        why: 'An orthopaedic practice tracks consultations, surgeries, physiotherapy follow-ups and where referrals come from. A dashboard that brings these together shows which referrals and services are growing the practice.',
       },
     ],
     faqs: [
@@ -1242,6 +1302,10 @@ export const businessesPart1 = {
         service: 'google-business-profile',
         why: 'An accurate profile with the surgeon’s qualifications, consulting locations and replies to reviews – never discussing any patient’s procedure – supports every other channel.',
       },
+      {
+        service: 'marketing-automation',
+        why: 'Most people enquire about a procedure long before they book a consultation. Automated follow-ups with guides, consultation reminders and doctor Q&As keep you front of mind without the team chasing every lead.',
+      },
     ],
     faqs: [
       {
@@ -1315,6 +1379,10 @@ export const businessesPart1 = {
       {
         service: 'google-ads',
         why: 'Search ads on “gym near me” and “personal trainer near me”, limited to a short radius and weighted towards the new-year and pre-summer peaks, catch people ready to join this week.',
+      },
+      {
+        service: 'mobile-apps',
+        why: 'Members want to book classes, track workouts and renew their membership from their phone. A gym app with reminders and renewal offers helps keep members coming back after the first month.',
       },
     ],
     faqs: [
@@ -1468,6 +1536,10 @@ export const businessesPart1 = {
         service: 'whatsapp-automation',
         why: 'A WhatsApp list built from a QR code on the counter lets the café announce new drinks, events and loyalty perks directly, without depending on Instagram’s reach.',
       },
+      {
+        service: 'packaging-design',
+        why: 'Takeaway cups, bags and boxes travel further than any ad, and customers photograph them. Distinctive packaging – and retail packs for your own coffee or bakes – turns every order into a reminder of the café.',
+      },
     ],
     faqs: [
       {
@@ -1620,6 +1692,10 @@ export const businessesPart1 = {
         service: 'whatsapp-automation',
         why: 'Instant replies with menu PDFs, follow-ups after tastings, and reminders for final guest counts and payments keep each booking moving and cut last-minute surprises.',
       },
+      {
+        service: 'packaging-design',
+        why: 'Boxed meals for offices, events and gifting are judged the moment the lid opens. Well-designed boxes, sleeves and labels make corporate and festive orders look premium and keep food presentable on the way.',
+      },
     ],
     faqs: [
       {
@@ -1693,6 +1769,10 @@ export const businessesPart1 = {
       {
         service: 'google-ads',
         why: 'Local search and Performance Max campaigns aimed at store visits, run around festivals and sale dates, reach shoppers deciding where to buy nearby. Compare calls, direction requests and sales on campaign days with ordinary days.',
+      },
+      {
+        service: 'ugc',
+        why: 'Shoppers want to see how a fit looks on a real person before they visit or order. Try-on and haul videos made with everyday creators often hold attention in Instagram and Meta ads far better than catalogue shots.',
       },
     ],
     faqs: [
@@ -1846,6 +1926,10 @@ export const businessesPart1 = {
         service: 'whatsapp-automation',
         why: 'Festive previews sent to past customers, catalogues shared with families who want to choose at home and alteration-ready messages keep regulars returning every season.',
       },
+      {
+        service: 'ugc',
+        why: 'Kurtas, lehengas and sarees sell on drape and movement, which flat photos can’t show. Short try-on videos from real customers and creators give festive and wedding-season ads the trust that brings people into the store.',
+      },
     ],
     faqs: [
       {
@@ -1919,6 +2003,10 @@ export const businessesPart1 = {
       {
         service: 'meta-ads',
         why: 'Ads aimed at women in the city and at relatives abroad, ahead of the wedding season, Varamahalakshmi and Deepavali, promote new collections and video-call shopping. Track WhatsApp conversations started from each ad.',
+      },
+      {
+        service: 'packaging-design',
+        why: 'Sarees are often bought as wedding and festival gifts, so the box matters almost as much as the weave. Elegant saree boxes, bags and tags make your shop’s name part of the gifting moment.',
       },
     ],
     faqs: [
