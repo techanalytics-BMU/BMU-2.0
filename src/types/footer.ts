@@ -64,13 +64,16 @@ export type ServiceAreasGroup = {
 // (/seo/pune, /seo-for-real-estate) – the footer picks the service from the page's address. The
 // places and industries are the same for every service; only the service in the link changes.
 // Locations is in titled columns – Bangalore / India / Dubai / International.
-export type FooterPlace = {
-  name: string; // 'Koramangala'
-  path: string; // after the service – 'bengaluru/koramangala', 'pune', 'dubai/business-bay'
-};
+//
+// Every page carries these lists, so they're kept small: a place is just its name when its address
+// (after the service) is the column's prefix plus the name as a slug – 'Koramangala' →
+// 'bengaluru/koramangala' – and [name, address] only when it isn't – ['Jumeirah Lakes Towers',
+// 'dubai/jlt']
+export type FooterPlace = string | [name: string, path: string];
 
 export type FooterPlaceColumn = {
   title: string; // 'India'
+  prefix: string; // the start of its places' addresses – 'bengaluru/', 'dubai/' or ''
   places: FooterPlace[]; // the best-known first
   all: string; // the button that opens the whole column – 'All 146 Indian cities'
   local?: boolean; // Bangalore's areas – only services with neighbourhood pages have them

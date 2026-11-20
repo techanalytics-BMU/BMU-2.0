@@ -20,7 +20,7 @@ import {
   type AreaSlug,
 } from '@/lib/pseo/catalog';
 import { paths } from '@/lib/pseo/paths';
-import { titleCase } from '@/lib/pseo/text';
+import { slugify, titleCase } from '@/lib/pseo/text';
 import type {
   FooterIndustry,
   FooterPlace,
@@ -99,36 +99,47 @@ const popularFirst = <T extends string>(popular: T[], all: readonly T[]) => [
   ...all.filter((slug) => !popular.includes(slug)),
 ];
 
-// A place: its name, and its address after the service ('/seo/pune' → 'pune'). Places whose
-// pages Google may not index are left out – which pages those are doesn't depend on the service.
-const place = (name: string, href: string, isLive: boolean): FooterPlace[] =>
-  linkable(isLive) ? [{ name, path: href.slice(`/${FOOTER_SERVICE}/`.length) }] : [];
+// The start of each column's addresses, after the service ('/seo/bengaluru/koramangala')
+const PREFIX = { areas: 'bengaluru/', cities: '', dubai: 'dubai/', markets: '' };
+
+// A place, kept small (see FooterPlace): just its name when its address after the service is the
+// column's prefix plus the name as a slug, [name, address] when it isn't. Places whose pages
+// Google may not index are left out – which pages those are doesn't depend on the service.
+const place = (name: string, href: string, isLive: boolean, prefix: string): FooterPlace[] => {
+  if (!linkable(isLive)) return [];
+  const path = href.slice(`/${FOOTER_SERVICE}/`.length);
+  return [path === prefix + slugify(name) ? name : [name, path]];
+};
 
 const areaPlaces = popularFirst(POPULAR_AREAS, LOCALITY_PAGE_SLUGS).flatMap((area) =>
   place(
     localities[area].name,
     paths.serviceLocality(FOOTER_SERVICE, area),
-    indexable.serviceLocality(FOOTER_SERVICE, area)
+    indexable.serviceLocality(FOOTER_SERVICE, area),
+    PREFIX.areas
   )
 );
 const cityPlaces = popularFirst(POPULAR_CITIES, CITY_PAGE_SLUGS).flatMap((city) =>
   place(
     getCity(city).name,
     paths.serviceCity(FOOTER_SERVICE, city),
-    indexable.serviceCity(FOOTER_SERVICE, city)
+    indexable.serviceCity(FOOTER_SERVICE, city),
+    PREFIX.cities
   )
 );
 const dubaiPlaces = [
   ...place(
     'Dubai',
     paths.serviceMarket(FOOTER_SERVICE, 'dubai'),
-    indexable.serviceMarket(FOOTER_SERVICE, 'dubai')
+    indexable.serviceMarket(FOOTER_SERVICE, 'dubai'),
+    PREFIX.dubai
   ),
   ...popularFirst(POPULAR_DUBAI_AREAS, DUBAI_AREA_SLUGS).flatMap((area) =>
     place(
       dubaiAreas[area].name,
       paths.serviceDubaiArea(FOOTER_SERVICE, area),
-      indexable.serviceDubaiArea(FOOTER_SERVICE, area)
+      indexable.serviceDubaiArea(FOOTER_SERVICE, area),
+      PREFIX.dubai
     )
   ),
 ];
@@ -136,7 +147,8 @@ const marketPlaces = popularFirst(POPULAR_MARKETS, OTHER_MARKET_SLUGS).flatMap((
   place(
     markets[market].name,
     paths.serviceMarket(FOOTER_SERVICE, market),
-    indexable.serviceMarket(FOOTER_SERVICE, market)
+    indexable.serviceMarket(FOOTER_SERVICE, market),
+    PREFIX.markets
   )
 );
 
@@ -202,18 +214,26 @@ export const serviceAreas: ServiceAreasContent = {
     columns: [
       {
         title: 'Bangalore',
+        prefix: PREFIX.areas,
         places: areaPlaces,
         all: `All ${areaPlaces.length} Bangalore areas`,
         local: true,
       },
-      { title: 'India', places: cityPlaces, all: `All ${cityPlaces.length} Indian cities` },
+      {
+        title: 'India',
+        prefix: PREFIX.cities,
+        places: cityPlaces,
+        all: `All ${cityPlaces.length} Indian cities`,
+      },
       {
         title: 'Dubai',
+        prefix: PREFIX.dubai,
         places: dubaiPlaces,
         all: `All ${dubaiPlaces.length - 1} Dubai areas`, // the first is Dubai itself
       },
       {
         title: 'International',
+        prefix: PREFIX.markets,
         places: marketPlaces,
         all: `All ${marketPlaces.length} cities abroad`,
       },

@@ -69,6 +69,10 @@ const headOf = (section: PageSection) => ({
 // at a time. Lists only one or two over stay whole (a button for two more isn't worth it). A
 // directory of more than 40 links shows its first 6 blocks (two rows), each with its first 12.
 const LIMIT = { cards: 6, index: 6, directory: { links: 40, groups: 6, each: 12 } };
+
+// Links in lists (cards, directories, index blocks) don't prefetch: a page carries hundreds, and
+// loading each one that scrolls into view – also when Google renders the page – ran the hosting's
+// page reads past Vercel's limits (November 2026). A click still opens the page normally.
 const collapses = (total: number, limit: number) => total > limit + 2;
 
 // Past the limit: hidden until "Show all" is pressed (see PseoMore)
@@ -118,7 +122,7 @@ function Card({
       style={vars({ '--i': index })}
     >
       {item.href ? (
-        <Link href={item.href} className={styles.cardInner}>
+        <Link href={item.href} className={styles.cardInner} prefetch={false}>
           {body}
         </Link>
       ) : (
@@ -253,7 +257,7 @@ function Directory({ links }: { links: PageLink[] }) {
             <ul className={styles.dirLinks}>
               {group.links.map((link, i) => (
                 <li key={link.href} className={hiddenLink(g, i) ? styles.extra : undefined}>
-                  <Link href={link.href} className={styles.dirLink}>
+                  <Link href={link.href} className={styles.dirLink} prefetch={false}>
                     <LinkText label={link.label} prefix={prefix} />
                   </Link>
                 </li>
@@ -285,7 +289,7 @@ function IndexTable({ links }: { links: PageLink[] }) {
             className={`${styles.rise} ${extra(i, total, LIMIT.index)}`}
             style={vars({ '--i': i })}
           >
-            <Link href={link.href} className={`${styles.block} ${styles.indexCard}`}>
+            <Link href={link.href} className={`${styles.block} ${styles.indexCard}`} prefetch={false}>
               <span className={styles.indexNo} aria-hidden="true">
                 {pad(i + 1)}
               </span>

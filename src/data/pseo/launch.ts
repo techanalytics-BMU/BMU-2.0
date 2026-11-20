@@ -30,6 +30,6 @@ export const launch: {
   // Dubai and the UAE & GCC / USA & Canada cities (not on the sheet – added for the footer)
   serviceDubaiArea: 'all',
   serviceMarket: 'all',
-  // Not in the sheet's plan yet – built for preview only
-  industryLocality: [],
+  // Industry pages for each Bangalore area (not in the sheet's plan) – published November 2026
+  industryLocality: 'all',
 };

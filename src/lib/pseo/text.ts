@@ -39,6 +39,15 @@ export const withArticle = (noun: string) => {
 
 export const firstSentence = (text: string) => text.match(/^.+?[.!?](\s|$)/)?.[0].trim() ?? text;
 
+// A name as it appears in a web address: 'HSR Layout' → 'hsr-layout'
+export const slugify = (text: string) =>
+  text
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
 // As many whole sentences from the start as fit in max characters (always at least the first) –
 // keeps the text under a page's heading to about four lines
 export const leadSentences = (text: string, max = 340) => {

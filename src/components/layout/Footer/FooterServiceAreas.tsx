@@ -10,6 +10,7 @@ import type {
   ServiceAreasGroup,
   ServiceAreasItem,
 } from '@/types/footer';
+import { slugify } from '@/lib/pseo/text';
 import styles from './FooterServiceAreas.module.css';
 
 // The footer's link lists, each a block of its own, one under the other: green label → heading
@@ -24,6 +25,10 @@ import styles from './FooterServiceAreas.module.css';
 // A long list shows its first few, and its "All …" button opens the rest in place. Phones show
 // fewer. The service's own page (/services/seo) carries every place link from the start, so
 // search engines find all its place pages.
+//
+// These links don't prefetch (prefetch={false}). Next.js otherwise loads every link that scrolls
+// into view in the background – also when Google renders a page – and with dozens of links in
+// every footer that ran the hosting's page reads past Vercel's limits (November 2026).
 
 const PLACES_SHOWN = 10; // a Locations column, before its "All …" button is pressed
 const INDUSTRIES_SHOWN = 16; // the Industries list (four rows of four)
@@ -97,7 +102,7 @@ function Group({ group }: { group: ServiceAreasGroup }) {
         {group.items.map((item: ServiceAreasItem) => (
           <li key={item.label}>
             {item.href ? (
-              <Link href={item.href} className={styles.item}>
+              <Link href={item.href} className={styles.item} prefetch={false}>
                 {item.label}
               </Link>
             ) : (
@@ -118,7 +123,7 @@ function Group({ group }: { group: ServiceAreasGroup }) {
           {open ? 'Show less' : `Show all ${group.items.length}`}
         </button>
         {group.more?.href && (
-          <Link href={group.more.href} className={styles.viewAll}>
+          <Link href={group.more.href} className={styles.viewAll} prefetch={false}>
             {group.more.label}
           </Link>
         )}
@@ -144,7 +149,7 @@ function Industries({ slug, service, links }: { slug: string; service: FooterSer
       <ul id={listId} className={styles.list} data-expanded={open}>
         {shown.map((industry) => (
           <li key={industry.slug}>
-            <Link href={`/${slug}-for-${industry.slug}`} className={styles.item}>
+            <Link href={`/${slug}-for-${industry.slug}`} className={styles.item} prefetch={false}>
               {`${service.title} for ${industry.title}`}
             </Link>
           </li>
@@ -178,14 +183,19 @@ function PlaceColumn({
 }) {
   const [open, setOpen] = useState(false);
   const listId = useId();
-  const places = open || whole ? column.places : column.places.slice(0, PLACES_SHOWN);
+  const places = (open || whole ? column.places : column.places.slice(0, PLACES_SHOWN)).map(
+    (place) =>
+      typeof place === 'string'
+        ? { name: place, path: column.prefix + slugify(place) }
+        : { name: place[0], path: place[1] }
+  );
   return (
     <div className={styles.column} data-expanded={open}>
       <h3 className={styles.columnTitle}>{column.title}</h3>
       <ul id={listId} className={styles.columnList}>
         {places.map((place) => (
           <li key={place.path}>
-            <Link href={`/${slug}/${place.path}`} className={styles.item}>
+            <Link href={`/${slug}/${place.path}`} className={styles.item} prefetch={false}>
               {`${service.noun} in ${place.name}`}
             </Link>
           </li>
