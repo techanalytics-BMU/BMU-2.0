@@ -5,7 +5,7 @@ export const teamFounders: TeamFoundersContent = {
   heading: 'Meet the Founders',
   subheading: 'The people who built BMU',
   founders: [
-    { name: 'Co-founder Name', role: 'Co-founder' },
+    { name: 'Founder Name', role: 'Founder' },
     { name: 'Co-founder Name', role: 'Co-founder' },
   ],
 };

@@ -137,36 +137,39 @@
   opacity: 0.8;
 }
 
-/* Photo fills the lower part; black and white, multiplied into the pill colour */
+/* Photo fills the lowest 60%, leaving a gap under the role for the fun-fact sticker; half black
+   and white, multiplied into the pill colour. Photos are framed 0.65 wide : 1 tall to fit it exactly. */
 .photoWrap {
   position: absolute;
   right: 0;
   bottom: 0;
   left: 0;
-  height: 66%;
+  height: 60%;
 }
 
 .photo {
   object-fit: cover;
   object-position: center top;
-  filter: grayscale(1) contrast(1.05);
+  filter: grayscale(0.5) contrast(1.02); /* half colour until hovered */
   mix-blend-mode: multiply;
   transition:
     filter 0.5s ease,
     transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Hover: the photo comes back to colour and zooms in a little */
+/* Hover: the photo comes back to its original colour (no pill tint) and zooms in a little */
 .pill:hover .photo,
 .pill:focus .photo {
   filter: grayscale(0) contrast(1);
+  mix-blend-mode: normal;
   transform: scale(1.04);
 }
 
-/* ---------- Fun-fact sticker: pops on, slightly crooked, when a pill is hovered or tapped ---------- */
+/* ---------- Fun-fact sticker: pops on, slightly crooked, in the gap between the role and the photo
+   when a pill is hovered or tapped ---------- */
 .sticker {
   position: absolute;
-  top: 38%;
+  top: 30%; /* middle of the gap: the text ends near 20%, the photo starts at 40% */
   left: 50%;
   z-index: 2;
   max-width: 86%;
@@ -247,7 +250,7 @@
   --py: 0px;
 
   position: absolute;
-  top: 58%;
+  top: 70%; /* middle of the lower 60%, where the other pills have their photo */
   left: 50%;
   display: grid;
   grid-template-columns: auto auto;
