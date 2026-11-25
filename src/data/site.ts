@@ -39,7 +39,7 @@ export const site = {
     'https://www.linkedin.com/company/111769100/',
     'https://www.facebook.com/profile.php?id=61596078105445',
     'https://x.com/BMUmarketing',
-    'https://www.youtube.com/@BMUMarketing-e2v1t',
+    'https://www.youtube.com/@BMU_Marketing_official',
     'https://www.threads.com/@bmu_marketing_official',
     'https://www.pinterest.com/bmumarketing02/',
     'https://www.quora.com/profile/BMU-Marketing',
