@@ -1,3 +1,4 @@
+import { serviceGroups } from '@/data/pseo/groups';
 import { site } from '@/data/site';
 import type { Faq, PageLink } from '@/types/pseo';
 
@@ -10,8 +11,14 @@ export const businessSchema = () => ({
   '@type': 'ProfessionalService',
   '@id': `${site.url}/#business`,
   name: site.name,
+  alternateName: 'BMU',
+  description: site.description,
   url: site.url,
   logo: absolute(site.logo),
+  foundingDate: site.foundingYear,
+  foundingLocation: { '@type': 'Place', name: 'Bengaluru, Karnataka, India' },
+  areaServed: site.areaServed.map((name) => ({ '@type': 'Country', name })),
+  knowsAbout: Object.values(serviceGroups).map((g) => g.group),
   telephone: site.phone,
   email: site.email,
   address: {
@@ -23,6 +30,12 @@ export const businessSchema = () => ({
     addressCountry: site.address.country,
   },
   geo: { '@type': 'GeoCoordinates', latitude: site.coords[0], longitude: site.coords[1] },
+  openingHoursSpecification: {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: site.hours.days,
+    opens: site.hours.opens,
+    closes: site.hours.closes,
+  },
   ...(site.sameAs.length ? { sameAs: site.sameAs } : {}),
 });
 
