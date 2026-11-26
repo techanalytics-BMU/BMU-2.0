@@ -80,7 +80,7 @@ export default function TeamMembers() {
                 src={member.photo ?? PLACEHOLDER}
                 alt={member.name}
                 fill
-                sizes="(max-width: 860px) 45vw, 200px"
+                sizes="(max-width: 860px) 32vw, 200px"
                 className={styles.photo}
               />
             </span>

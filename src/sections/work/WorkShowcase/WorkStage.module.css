@@ -16,7 +16,7 @@
 .stage {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) clamp(300px, 30%, 380px);
+  grid-template-columns: minmax(0, 1fr) clamp(316px, 34%, 400px);
   height: 100%;
 }
 
@@ -160,7 +160,7 @@
 /* The opening mark hangs in the margin, so the words line up with everything above */
 .quote {
   margin: 0;
-  font-size: clamp(1.0625rem, 1.35vw, 1.3125rem);
+  font-size: clamp(1.0625rem, 1.28vw, 1.3125rem);
   letter-spacing: -0.015em;
   line-height: 1.42;
   text-indent: -0.44em;
@@ -349,6 +349,19 @@
 
   .pager {
     padding: 8px var(--space-3);
+  }
+}
+
+/* The narrowest phones: slightly smaller quotes, so every review still fits in 4 lines */
+@media (max-width: 380px) {
+  .quote {
+    font-size: 0.96rem;
+  }
+}
+
+@media (max-width: 340px) {
+  .quote {
+    font-size: 0.84rem;
   }
 }
 

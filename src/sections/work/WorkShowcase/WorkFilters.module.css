@@ -1,0 +1,92 @@
+/* Same look as the navbar's links (Navbar.module.css): grey names, a glass pill sliding behind */
+.filters {
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  position: relative;
+  display: flex;
+  gap: 2px;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: var(--space-3);
+  margin-left: -17px; /* the first name lines up with the heading, its pill reaches past it */
+  padding: 3px 0; /* room for the focus ring */
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.filters::-webkit-scrollbar {
+  display: none;
+}
+
+.filter {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  height: 38px;
+  padding: 0 17px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: #9da2a9;
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.filter:hover,
+.filter[aria-pressed='true'] {
+  color: var(--color-text);
+}
+
+.filter:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+/* Moved and sized from WorkFilters.tsx (--x, --w) */
+.indicator {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: var(--w, 0);
+  height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-pill);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  opacity: 0;
+  transform: translate(var(--x, 0), -50%);
+  transition:
+    transform 0.45s var(--ease),
+    width 0.45s var(--ease),
+    opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.indicator[data-visible='true'] {
+  opacity: 1;
+}
+
+/* Phones and tablets: the row scrolls edge to edge */
+@media (max-width: 1024px) {
+  .filters {
+    width: auto;
+    max-width: none;
+    margin-right: calc(var(--page-gutter) * -1);
+    margin-left: calc(var(--page-gutter) * -1);
+    padding-right: var(--page-gutter);
+    padding-left: calc(var(--page-gutter) - 17px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .indicator {
+    transition: none;
+  }
+}

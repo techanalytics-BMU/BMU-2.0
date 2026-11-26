@@ -1,6 +1,7 @@
 import type { TeamMembersContent } from '@/types/team';
 
-// The team, in display order. `photo` is a portrait .webp in public/images/team/members/: a colour
+// The team, in display order – 5 a row on desktop (3 on phones): row 1 Branch Manager, HR & Finance,
+// SEO Analyst, Graphic Designer, Senior Developer; row 2 the developers and designers; then the rest. `photo` is a portrait .webp in public/images/team/members/: a colour
 // cut-out with a transparent background, framed
 // to fit the photo area (lowest 60% of the pill) at 0.65 wide : 1 tall – shown black and white, in colour on hover.
 // `funFact` is the sticker that pops on when a pill is hovered – keep it short and fun.
@@ -18,16 +19,9 @@ export const teamMembers: TeamMembersContent = {
       funFact: 'Runs on calendar invites',
     },
     {
-      name: 'Harisha',
-      role: 'UI/UX & Development Lead',
-      photo: '/images/team/members/team-members-harisha-pill.webp',
-      tone: 'mist',
-      funFact: 'Designs it, then builds it',
-    },
-    {
       name: 'Prajna',
       role: 'HR & Finance',
-      photo: '/images/team/members/team-members-prajna-pill.webp',
+      photo: '/images/team/members/team-members-prajna-2-pill.webp',
       tone: 'mist',
       funFact: 'Knows where every rupee went',
     },
@@ -37,6 +31,13 @@ export const teamMembers: TeamMembersContent = {
       photo: '/images/team/members/team-members-tanmayadev-pill.webp',
       tone: 'mist',
       funFact: 'Googles things for fun',
+    },
+    {
+      name: 'Raffi',
+      role: 'Graphic Designer',
+      photo: '/images/team/members/team-members-raffi-pill.webp',
+      tone: 'mist',
+      funFact: 'Has opinions about kerning',
     },
     {
       name: 'Vinod',
@@ -60,11 +61,11 @@ export const teamMembers: TeamMembersContent = {
       funFact: 'It works on my machine',
     },
     {
-      name: 'Raffi',
-      role: 'Graphic Designer',
-      photo: '/images/team/members/team-members-raffi-pill.webp',
+      name: 'Harsha Vardhan',
+      role: 'UI/UX & Development Lead',
+      photo: '/images/team/members/team-members-harisha-pill.webp',
       tone: 'mist',
-      funFact: 'Has opinions about kerning',
+      funFact: 'Designs it, then builds it',
     },
     {
       name: 'Tushara',
@@ -72,6 +73,13 @@ export const teamMembers: TeamMembersContent = {
       photo: '/images/team/members/team-members-tushara-pill.webp',
       tone: 'mist',
       funFact: 'Counts pixels in her sleep',
+    },
+    {
+      name: 'Lokeshwari',
+      role: 'Social Media Manager',
+      photo: '/images/team/members/team-members-lokeshwari-pill.webp',
+      tone: 'mist',
+      funFact: 'Fluent in emoji',
     },
     {
       name: 'Bhupal',
@@ -86,13 +94,6 @@ export const teamMembers: TeamMembersContent = {
       photo: '/images/team/members/team-members-yethindra-pill.webp',
       tone: 'mist',
       funFact: 'Says “one more take” a lot',
-    },
-    {
-      name: 'Lokeshwari',
-      role: 'Social Media Manager',
-      photo: '/images/team/members/team-members-lokeshwari-pill.webp',
-      tone: 'mist',
-      funFact: 'Fluent in emoji',
     },
   ],
   hiring: {

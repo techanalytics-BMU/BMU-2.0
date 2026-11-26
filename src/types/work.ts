@@ -11,12 +11,13 @@ export type WorkHeroContent = {
   clients: WorkClientLogo[];
 };
 
-export type WorkCategoryId = 'graphic-design' | 'websites' | 'ui-ux' | 'videos';
+export type WorkCategoryId = 'logos' | 'graphic-design' | 'websites' | 'ui-ux' | 'videos';
 
 export type WorkCategory = {
   id: WorkCategoryId;
   label: string;
   ratio: number; // width ÷ height of its pieces
+  byClient?: boolean; // while chosen, the row shows only its clients, one panel each
 };
 
 // One page of a website, as a full-length screenshot (top to bottom)
@@ -63,7 +64,7 @@ export type WorkProject = {
 
 export type WorkShowcaseContent = {
   heading: string;
-  subheading: string;
+  filterLabel: string; // names the row of filters for screen readers
   stage: {
     servicesLabel: string;
     cta: { label: string; href: string };

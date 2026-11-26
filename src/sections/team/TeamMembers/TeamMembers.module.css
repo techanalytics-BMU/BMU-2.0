@@ -45,14 +45,14 @@
   text-wrap: balance;
 }
 
-/* ---------- Pills: 4 columns, every second column sits lower (as in the reference) ---------- */
+/* ---------- Pills: 5 columns (3 on phones), every second column sits lower (as in the reference) ---------- */
 .grid {
-  --drop: 30%; /* how far the even columns sit lower, as a share of a pill's height */
+  --drop: 30%; /* how far the lowered columns sit lower, as a share of a pill's height */
 
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-6) clamp(14px, 2.4vw, 32px);
-  max-width: 820px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-6) clamp(14px, 2.2vw, 30px);
+  max-width: 1000px;
   margin: var(--space-7) auto 0;
   padding: 0;
   list-style: none;
@@ -61,6 +61,7 @@
 .pill {
   /* Tints: pastel pill colour, and the dark tone the black-and-white photo is mixed into */
   --tint: #d5dde3;
+  --low: 0; /* 1 in the lowered columns (2nd and 4th of 5; the middle one of 3 on phones) */
 
   position: relative;
   display: flex;
@@ -78,13 +79,17 @@
     opacity 0.8s ease,
     transform 1s cubic-bezier(0.22, 1, 0.36, 1);
   transition-delay: calc(var(--i) * 0.08s);
-  /* Parallax: odd columns drift up and even columns down as the section scrolls past
+  /* Parallax: the other columns drift up and the lowered ones down as the section scrolls past
      (--progress 0 → 1 from useScrollProgress on the section) */
-  translate: 0 calc((0.5 - var(--progress, 0.5)) * 50px);
+  translate: 0
+    calc(
+      var(--low) * var(--drop) + (0.5 - var(--progress, 0.5)) * 50px * (1 - 2 * var(--low))
+    );
 }
 
-.pill:nth-child(even) {
-  translate: 0 calc(var(--drop) + (var(--progress, 0.5) - 0.5) * 50px);
+.pill:nth-child(5n + 2),
+.pill:nth-child(5n + 4) {
+  --low: 1;
 }
 
 .pill:focus-visible {
@@ -314,24 +319,45 @@
   }
 }
 
-/* ---------- Tablet and phone: 2 columns ---------- */
+/* ---------- Tablet and phone: 3 columns, the middle one lowered ---------- */
 @media (max-width: 860px) {
   .grid {
     --drop: 22%;
 
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 440px;
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 600px;
     row-gap: var(--space-5);
+  }
+
+  .pill:nth-child(5n + 2),
+  .pill:nth-child(5n + 4) {
+    --low: 0;
+  }
+
+  .pill:nth-child(3n + 2) {
+    --low: 1;
+  }
+
+  .sticker {
+    font-size: 0.625rem;
   }
 }
 
 @media (max-width: 420px) {
   .grid {
-    column-gap: 12px;
+    column-gap: 10px;
   }
 
   .text {
-    padding-inline: 8px;
+    padding: 24% 6px 0;
+  }
+
+  .name {
+    font-size: 0.66rem;
+  }
+
+  .role {
+    font-size: 0.62rem;
   }
 }
 
@@ -347,8 +373,8 @@
     translate: none;
   }
 
-  .pill:nth-child(even) {
-    translate: 0 var(--drop);
+  .pill {
+    translate: 0 calc(var(--low) * var(--drop));
   }
 
   .photo,
