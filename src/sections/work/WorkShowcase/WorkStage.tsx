@@ -110,6 +110,9 @@ export default function WorkStage({ projects, live }: Props) {
               </figure>
             )}
 
+            {/* No client review (a concept piece): a line about the work instead */}
+            {!review && project.summary && <p className={styles.summary}>{project.summary}</p>}
+
             <p className={styles.services}>
               <span className={styles.servicesLabel}>{servicesLabel}</span>
               {project.services.join(' · ')}

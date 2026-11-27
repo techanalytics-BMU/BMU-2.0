@@ -155,7 +155,11 @@ export default function WorkTour({ tour, label }: Props) {
   );
 
   if (device === 'phone') {
-    const sides = [pages[(index + 1) % pages.length], pages[(index + 2) % pages.length]];
+    // Other pages; a site with fewer than three shows further down the same page instead
+    const sides = [1, 2].map((step) => ({
+      page: pages[(index + step) % pages.length],
+      offset: pages.length < 3 ? step * 0.28 : 0,
+    }));
     return (
       <div
         ref={view.ref}
@@ -165,8 +169,8 @@ export default function WorkTour({ tour, label }: Props) {
         aria-label={label}
       >
         <span className={styles.glow} aria-hidden="true" />
-        {sides.map((side, i) => (
-          <PhoneSide key={i} page={side} side={i === 0 ? 'left' : 'right'} />
+        {sides.map(({ page: sidePage, offset }, i) => (
+          <PhoneSide key={i} page={sidePage} offset={offset} side={i === 0 ? 'left' : 'right'} />
         ))}
         <div className={styles.phone}>
           <div className={styles.phoneScreen}>
@@ -206,14 +210,27 @@ export default function WorkTour({ tour, label }: Props) {
   );
 }
 
-// A phone leaning in behind the main one, showing the top of another page
-function PhoneSide({ page, side }: { page: WorkTourPage; side: 'left' | 'right' }) {
+// A phone leaning in behind the main one, showing another page – from its top, or `offset` (0–1) of
+// the way down it
+function PhoneSide({
+  page,
+  offset,
+  side,
+}: {
+  page: WorkTourPage;
+  offset: number;
+  side: 'left' | 'right';
+}) {
   return (
     <div className={`${styles.phone} ${styles.sidePhone}`} data-side={side} aria-hidden="true">
       <div className={styles.phoneScreen}>
         <StatusBar />
         <div className={styles.screen}>
-          <div key={page.path} className={styles.page}>
+          <div
+            key={page.path}
+            className={styles.page}
+            style={offset ? { transform: `translateY(${-offset * 100}%)` } : undefined}
+          >
             <Image src={page.image} alt="" width={page.width} height={page.height} unoptimized />
           </div>
         </div>

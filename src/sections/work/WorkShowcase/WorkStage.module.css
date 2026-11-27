@@ -176,6 +176,22 @@
   line-clamp: 4;
 }
 
+/* In place of a review (concept work): the same size and place, plain words, no quote marks */
+.summary {
+  margin: auto 0;
+  padding: var(--space-4) 0;
+  color: var(--color-text-muted);
+  font-size: clamp(1.0625rem, 1.28vw, 1.3125rem);
+  letter-spacing: -0.015em;
+  line-height: 1.42;
+  text-wrap: pretty;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+}
+
 .quote::before {
   content: '“';
 }

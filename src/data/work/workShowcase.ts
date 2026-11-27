@@ -92,6 +92,9 @@ const CORECRETE_PATHS = ['/', '/#services', '/#projects', '/#process'];
 const HOMELY = '/images/work/homely';
 const HOMELY_PATHS = ['/', '/#services', '/#projects', '/#process'];
 
+const SERENO = '/images/work/sereno-dental'; // full-length screenshots of the Sereno Dental concept site
+const SERENO_SITE = 'https://dental-clinic-4s9g.vercel.app/';
+
 const EARTHELLA = '/images/work/earthella-nuts'; // logo and packaging posters
 const SHARAVATI = '/images/work/sharavati'; // logo and juice pouch posters
 
@@ -120,6 +123,7 @@ export const clientGradients: Record<string, string> = {
   Homely: 'linear-gradient(160deg, #c9ad8a, #6b5440 55%, #1e1813)',
   'Earthella Nuts': 'linear-gradient(160deg, #2f6b3a, #c0613a)',
   Sharavati: 'linear-gradient(160deg, #e8771f, #c2185b 50%, #5b2a86)',
+  'Sereno Dental': 'linear-gradient(160deg, #8fa9d6, #2a3a5c 60%, #12182a)',
 };
 export const FALLBACK_GRADIENT = 'linear-gradient(160deg, #4a5a3a, #161a12)';
 
@@ -299,6 +303,28 @@ export const workProjects: WorkProject[] = [
     services: ['Design', 'Development'],
     link: 'https://www.chiranvifarm.com/',
   },
+  // A concept site (no client yet), so a line about it instead of a review – one page, 1440 × 6792
+  {
+    id: 'sereno-dental-website',
+    category: 'websites',
+    client: 'Sereno Dental',
+    title: 'Dental clinic website · Concept',
+    media: [
+      {
+        image: `${SERENO}/desktop-cover.webp`,
+        tour: {
+          device: 'browser',
+          site: 'dental-clinic-4s9g.vercel.app',
+          pages: [{ path: '/', image: `${SERENO}/desktop-home.webp`, width: 1440, height: 6792 }],
+        },
+        alt: 'The Sereno Dental website scrolling from its tooth hero through treatments, dentists, first visit, reviews and booking',
+      },
+    ],
+    summary:
+      'A calm one-page site for a family dental clinic, from treatments and dentists to WhatsApp booking.',
+    services: ['Design', 'Development'],
+    link: SERENO_SITE,
+  },
   {
     id: 'stellar-23-resorts-website',
     category: 'websites',
@@ -450,6 +476,28 @@ export const workProjects: WorkProject[] = [
     },
     services: ['UI/UX', 'Mobile design'],
     link: 'https://www.chiranvifarm.com/',
+  },
+  // The same concept site on a phone – 600 × 10557
+  {
+    id: 'sereno-dental-mobile',
+    category: 'ui-ux',
+    client: 'Sereno Dental',
+    title: 'Mobile clinic experience · Concept',
+    media: [
+      {
+        image: `${SERENO}/mobile-cover.webp`,
+        tour: {
+          device: 'phone',
+          site: 'dental-clinic-4s9g.vercel.app',
+          pages: [{ path: '/', image: `${SERENO}/mobile-home.webp`, width: 600, height: 10557 }],
+        },
+        alt: 'The Sereno Dental website on a phone, scrolling through treatments, dentists, reviews, FAQs and booking',
+      },
+    ],
+    summary:
+      'Built for the phone first: clear sections, answers to common worries up front and WhatsApp booking a tap away.',
+    services: ['UI/UX', 'Mobile design'],
+    link: SERENO_SITE,
   },
   {
     id: 'stellar-23-resorts-mobile',

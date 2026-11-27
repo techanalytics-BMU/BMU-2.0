@@ -58,6 +58,7 @@ export type WorkProject = {
   ratio?: number; // only when this piece isn't the shape of its category
   media: WorkMedia[]; // each one gets its own thumbnail – left empty, the project waits off the page
   review?: WorkReview;
+  summary?: string; // shown instead of a review – for concept work that has no client to quote
   services: string[];
   link?: string; // the live site or post
 };
