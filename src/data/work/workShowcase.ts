@@ -94,6 +94,8 @@ const HOMELY_PATHS = ['/', '/#services', '/#projects', '/#process'];
 
 const SERENO = '/images/work/sereno-dental'; // full-length screenshots of the Sereno Dental concept site
 const SERENO_SITE = 'https://dental-clinic-4s9g.vercel.app/';
+const ASCEND = '/images/work/ascend'; // the Ascend Real Estate concept site, each distinct screen of its scroll
+const ASCEND_SITE = 'https://real-estate-six-roan-47.vercel.app/';
 
 const EARTHELLA = '/images/work/earthella-nuts'; // logo and packaging posters
 const SHARAVATI = '/images/work/sharavati'; // logo and juice pouch posters
@@ -124,6 +126,7 @@ export const clientGradients: Record<string, string> = {
   'Earthella Nuts': 'linear-gradient(160deg, #2f6b3a, #c0613a)',
   Sharavati: 'linear-gradient(160deg, #e8771f, #c2185b 50%, #5b2a86)',
   'Sereno Dental': 'linear-gradient(160deg, #8fa9d6, #2a3a5c 60%, #12182a)',
+  'Ascend Real Estate': 'linear-gradient(160deg, #1d3a63, #0e1c33 55%, #1a120a)',
 };
 export const FALLBACK_GRADIENT = 'linear-gradient(160deg, #4a5a3a, #161a12)';
 
@@ -325,6 +328,29 @@ export const workProjects: WorkProject[] = [
     services: ['Design', 'Development'],
     link: SERENO_SITE,
   },
+  // Another concept site, built around scroll animations – its page is each distinct screen of the
+  // scroll, one after another (17 screens, 1200 × 12596)
+  {
+    id: 'ascend-real-estate-website',
+    category: 'websites',
+    client: 'Ascend Real Estate',
+    title: 'Luxury homes website · Concept',
+    media: [
+      {
+        image: `${ASCEND}/desktop-cover.webp`,
+        tour: {
+          device: 'browser',
+          site: 'real-estate-six-roan-47.vercel.app',
+          pages: [{ path: '/', image: `${ASCEND}/desktop-home.webp`, width: 1200, height: 12596 }],
+        },
+        alt: 'The Ascend Real Estate website scrolling from its villa hero through the build story, the team, past homes and a consultation call to action',
+      },
+    ],
+    summary:
+      'A cinematic one-page site for a Bengaluru home builder: each scroll tells the build story, from plan to handover.',
+    services: ['Design', 'Development'],
+    link: ASCEND_SITE,
+  },
   {
     id: 'stellar-23-resorts-website',
     category: 'websites',
@@ -498,6 +524,28 @@ export const workProjects: WorkProject[] = [
       'Built for the phone first: clear sections, answers to common worries up front and WhatsApp booking a tap away.',
     services: ['UI/UX', 'Mobile design'],
     link: SERENO_SITE,
+  },
+  // The same concept site on a phone – 18 screens, 430 × 16155
+  {
+    id: 'ascend-real-estate-mobile',
+    category: 'ui-ux',
+    client: 'Ascend Real Estate',
+    title: 'Mobile home-buying experience · Concept',
+    media: [
+      {
+        image: `${ASCEND}/mobile-cover.webp`,
+        tour: {
+          device: 'phone',
+          site: 'real-estate-six-roan-47.vercel.app',
+          pages: [{ path: '/', image: `${ASCEND}/mobile-home.webp`, width: 430, height: 16155 }],
+        },
+        alt: 'The Ascend Real Estate website on a phone, scrolling through the build story, past homes and a call to book a consultation',
+      },
+    ],
+    summary:
+      'Full-screen moments sized for the phone, with a clear path from first look to booking a free consultation.',
+    services: ['UI/UX', 'Mobile design'],
+    link: ASCEND_SITE,
   },
   {
     id: 'stellar-23-resorts-mobile',

@@ -39,6 +39,15 @@
   object-position: top center;
 }
 
+/* The cover, sized and placed exactly like the page's top, under it until the page has arrived */
+.placeholder {
+  position: absolute;
+  top: 0;
+  left: -1px;
+  width: calc(100% + 2px);
+  height: auto;
+}
+
 /* While the next page is "loading" the current one fades back a little */
 .page[data-dim] {
   opacity: 0.6;

@@ -41,7 +41,7 @@ export default function WorkStage({ projects, live }: Props) {
           <div className={styles.fit}>
             <div key={media.image} className={styles.frame}>
               {media.tour ? (
-                <WorkTour tour={media.tour} label={media.alt} />
+                <WorkTour tour={media.tour} label={media.alt} cover={media.image} />
               ) : media.video && live ? (
                 <WorkVideo
                   src={media.video}

@@ -66,6 +66,48 @@ export default function WorkShowcase() {
     }
   }, [open]);
 
+  // As soon as the section is reached, fetch every website tour's cover in the background – small
+  // pictures of each first page's top, which the tours show at once while the full page loads
+  useEffect(() => {
+    if (!inView) return;
+    const covers = PANELS.flatMap((panel) =>
+      panel.projects.flatMap((project) =>
+        project.media.flatMap((media) => (media.tour ? [media.image] : []))
+      )
+    );
+    const idle = window.requestIdleCallback ?? ((run: () => void) => window.setTimeout(run, 200));
+    idle(() =>
+      covers.forEach((src) => {
+        new window.Image().src = src;
+      })
+    );
+  }, [inView]);
+
+  // Once a type with website tours is chosen, fetch the first page of every client's tour in the
+  // background, one after another, so switching between clients shows the page at once
+  const openCategory = open?.category;
+  useEffect(() => {
+    if (!inView || !openCategory) return;
+    const panel = PANELS.find((item) => item.id === openCategory);
+    const queue = (panel?.projects ?? []).flatMap((project) =>
+      project.media.flatMap((media) => (media.tour ? [media.tour.pages[0].image] : []))
+    );
+    if (!queue.length) return;
+    let stopped = false;
+    const fetchNext = () => {
+      const src = queue.shift();
+      if (stopped || !src) return;
+      const image = new window.Image();
+      image.onload = image.onerror = fetchNext;
+      image.src = src;
+    };
+    const idle = window.requestIdleCallback ?? ((run: () => void) => window.setTimeout(run, 400));
+    idle(fetchNext);
+    return () => {
+      stopped = true;
+    };
+  }, [inView, openCategory]);
+
   const choose = (next: Open) => {
     chosen.current = true;
     setOpen(next);

@@ -9,6 +9,9 @@ import styles from './WorkTour.module.css';
 type Props = {
   tour: WorkTourData;
   label: string; // what it shows, for screen readers
+  // A small picture of the first page's top (the piece's cover) – shown at once while the full,
+  // much larger page downloads, so the screen is never empty
+  cover?: string;
 };
 
 // Timing of the walk through each page (ms)
@@ -23,7 +26,7 @@ const LOADING = 700; // the address changes and the loading bar runs before the 
 // and round. It runs only while on screen and stops while the pointer is over it. With reduced
 // motion it stays still and the page can be scrolled by hand. On a phone, two more phones lean in
 // behind it showing other pages.
-export default function WorkTour({ tour, label }: Props) {
+export default function WorkTour({ tour, label, cover }: Props) {
   const { pages, device, site } = tour;
   const view = useInView<HTMLDivElement>({ threshold: 0.3, once: false });
   const screenRef = useRef<HTMLDivElement>(null);
@@ -167,6 +170,19 @@ export default function WorkTour({ tour, label }: Props) {
       onPointerLeave={() => setHovered(false)}
     >
       <span className={styles.loadingBar} data-loading={loading || undefined} aria-hidden="true" />
+      {/* Until the first page arrives: its top, from the small cover (the same picture) */}
+      {cover && index === 0 && loaded !== page.image && (
+        <Image
+          src={cover}
+          alt=""
+          width={device === 'phone' ? 600 : 1440}
+          height={device === 'phone' ? 1298 : 900}
+          unoptimized
+          priority
+          className={styles.placeholder}
+          onLoad={(event) => readTone(event.currentTarget)}
+        />
+      )}
       <div
         key={round}
         ref={pageRef}
@@ -181,6 +197,7 @@ export default function WorkTour({ tour, label }: Props) {
           height={page.height}
           unoptimized
           loading="eager"
+          fetchPriority="high"
           onLoad={(event) => {
             setLoaded(page.image);
             readTone(event.currentTarget);
