@@ -40,7 +40,7 @@ export const teamMembers: TeamMembersContent = {
       funFact: 'Has opinions about kerning',
     },
     {
-      name: 'Vinod',
+      name: 'Prabhas',
       role: 'Senior Developer',
       photo: '/images/team/members/team-members-vinod-pill.webp',
       tone: 'mist',

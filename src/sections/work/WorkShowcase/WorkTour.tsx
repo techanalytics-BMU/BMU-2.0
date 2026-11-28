@@ -36,6 +36,39 @@ export default function WorkTour({ tour, label }: Props) {
   const [hovered, setHovered] = useState(false);
   const [size, setSize] = useState(0); // changes when the screen is resized, to restart the scroll
   const [still, setStill] = useState(false);
+  // The colour along the top of the page showing – the phone's status bar and the screen behind the
+  // page take it, so a dark site gets no white band and no white flash between pages
+  const [tone, setTone] = useState<{ bg: string; fg: string } | null>(null);
+
+  const readTone = (image: HTMLImageElement) => {
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.width = 24;
+      canvas.height = 1;
+      const context = canvas.getContext('2d', { willReadFrequently: true });
+      if (!context) return;
+      const band = Math.max(2, Math.round(image.naturalHeight * 0.003));
+      context.drawImage(image, 0, 0, image.naturalWidth, band, 0, 0, 24, 1);
+      const data = context.getImageData(0, 0, 24, 1).data;
+      let r = 0;
+      let g = 0;
+      let b = 0;
+      for (let i = 0; i < data.length; i += 4) {
+        r += data[i];
+        g += data[i + 1];
+        b += data[i + 2];
+      }
+      const n = data.length / 4;
+      [r, g, b] = [r / n, g / n, b / n].map(Math.round);
+      const light = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 > 0.55;
+      setTone({ bg: `rgb(${r}, ${g}, ${b})`, fg: light ? '#111111' : '#ffffff' });
+    } catch {
+      // A picture the page can't read keeps the default white
+    }
+  };
+  const toneStyle = (tone
+    ? { '--screen-bg': tone.bg, '--status-fg': tone.fg }
+    : undefined) as React.CSSProperties | undefined;
 
   const page = pages[index];
   const next = (index + 1) % pages.length;
@@ -148,7 +181,10 @@ export default function WorkTour({ tour, label }: Props) {
           height={page.height}
           unoptimized
           loading="eager"
-          onLoad={() => setLoaded(page.image)}
+          onLoad={(event) => {
+            setLoaded(page.image);
+            readTone(event.currentTarget);
+          }}
         />
       </div>
     </div>
@@ -164,6 +200,7 @@ export default function WorkTour({ tour, label }: Props) {
       <div
         ref={view.ref}
         className={`${styles.tour} ${styles.phoneTour}`}
+        style={toneStyle}
         data-active={playing}
         role="img"
         aria-label={label}
@@ -190,7 +227,13 @@ export default function WorkTour({ tour, label }: Props) {
   }
 
   return (
-    <div ref={view.ref} className={`${styles.tour} ${styles.browserTour}`} role="img" aria-label={label}>
+    <div
+      ref={view.ref}
+      className={`${styles.tour} ${styles.browserTour}`}
+      style={toneStyle}
+      role="img"
+      aria-label={label}
+    >
       <div className={styles.browserBar} aria-hidden="true">
         <span className={styles.browserDots}>
           <span />

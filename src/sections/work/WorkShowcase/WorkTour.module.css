@@ -12,7 +12,8 @@
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  background: #ffffff;
+  background: var(--screen-bg, #ffffff); /* the top colour of the page showing (WorkTour) */
+  transition: background-color 0.4s ease;
 }
 
 .page {
@@ -69,7 +70,7 @@
 .browserTour {
   display: flex;
   flex-direction: column;
-  background: #ffffff;
+  background: var(--screen-bg, #ffffff);
 }
 
 .browserBar {
@@ -153,7 +154,7 @@
   height: 100%;
   overflow: hidden;
   border-radius: 5.3cqh;
-  background: #ffffff;
+  background: var(--screen-bg, #ffffff);
 }
 
 .statusBar {
@@ -164,8 +165,11 @@
   justify-content: space-between;
   height: 5.4cqh;
   padding: 0 3cqh 0 3.6cqh;
-  background: #ffffff;
-  color: #111111;
+  background: var(--screen-bg, #ffffff); /* matches the site, like a real phone */
+  color: var(--status-fg, #111111);
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease;
   font-size: 1.7cqh;
   font-weight: 600;
 }

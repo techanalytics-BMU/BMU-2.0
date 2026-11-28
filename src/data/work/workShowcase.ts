@@ -693,25 +693,21 @@ export const workProjects: WorkProject[] = [
     ratio: 1200 / 1513,
     media: [
       {
-        image: `${CHIRANVI}/ghee-2.webp`,
-        alt: 'Chiranvi Farms Jersey Cow Ghee jar with a gold lid and a green label with yellow cows',
+        image: `${CHIRANVI}/ghee-3.webp`,
+        alt: 'Chiranvi Farms Desi Ghee jar with a gold lid and a gold label on a green band with golden cows',
       },
       {
-        image: `${CHIRANVI}/milk-2.webp`,
-        alt: 'Chiranvi Farms Jersey Cow Milk glass bottle with a gold cap and a green label with yellow cows',
+        image: `${CHIRANVI}/milk-3.webp`,
+        alt: 'Chiranvi Farms Desi Cow Milk glass bottle with a gold cap and a gold label on a green band with golden cows',
       },
       {
-        image: `${CHIRANVI}/flours-2.webp`,
-        alt: 'Chiranvi Farms Ragi Flour and Jowar Flour packs with cream labels, beside bowls of grain and flour',
-      },
-      {
-        image: `${CHIRANVI}/idli-batter.webp`,
-        alt: 'Chiranvi Farm Idli & Dosa Batter pouch, cream and green, with idlis, a dosa and chutneys on a banana leaf',
+        image: `${CHIRANVI}/macaroni.webp`,
+        alt: 'Chiranvi Farm Palak Flavour Macaroni round label, cream and green, with green macaroni and spinach leaves',
       },
     ],
     review: {
       quote:
-        'From flour to ghee, every pack now looks like it comes from the same farm, clean, honest and easy to spot on the shelf.',
+        'From milk to macaroni, every pack now looks like it comes from the same farm, clean, honest and easy to spot on the shelf.',
       name: 'Praveen',
       role: 'Founder, Chiranvi Farm',
     },
