@@ -11,13 +11,20 @@
   position: relative;
   flex: 1;
   min-height: 0;
+  display: flex; /* so a short page can grow to the screen's height (.page) */
+  flex-direction: column;
   overflow: hidden;
   background: var(--screen-bg, #ffffff); /* the top colour of the page showing (WorkTour) */
   transition: background-color 0.4s ease;
 }
 
+/* The page reaches 1px past each side of the screen, so its edges are never drawn half on a pixel
+   with the screen showing through as a thin line; and it's never shorter than the screen – a short
+   page fills it, kept to its top */
 .page {
-  width: 100%;
+  flex: 1 0 auto; /* never shorter than the screen */
+  width: calc(100% + 2px);
+  margin-left: -1px;
   animation: page-in 0.5s ease;
   transition: opacity 0.35s ease;
   will-change: transform;
@@ -27,6 +34,9 @@
   display: block;
   width: 100%;
   height: auto;
+  min-height: 100%;
+  object-fit: cover;
+  object-position: top center;
 }
 
 /* While the next page is "loading" the current one fades back a little */
@@ -154,7 +164,9 @@
   height: 100%;
   overflow: hidden;
   border-radius: 5.3cqh;
-  background: var(--screen-bg, #ffffff);
+  /* The phone's own dark glass: the status bar and page cover it, and at the rounded edge it blends
+     into the frame instead of showing as a light line */
+  background: #141517;
 }
 
 .statusBar {
@@ -164,6 +176,7 @@
   align-items: center;
   justify-content: space-between;
   height: 5.4cqh;
+  margin: 0 -1px; /* 1px past each side, like the page */
   padding: 0 3cqh 0 3.6cqh;
   background: var(--screen-bg, #ffffff); /* matches the site, like a real phone */
   color: var(--status-fg, #111111);
